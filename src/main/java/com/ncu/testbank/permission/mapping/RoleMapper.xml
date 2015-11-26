@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.permission.dao.IRoleDao" >
+
+  <resultMap id="BaseResultMap" type="com.ncu.testbank.permission.data.Role" >
+    <id column="role_id" property="role_id"/>
+    <result column="role_name" property="role_name"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+  	role_id, role_name
+  </sql>
+  
+  <select id="searchRole" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT 
+  		R.role_id role_id, role_name
+  	FROM 
+  		role R INNER JOIN user_role U
+  	ON
+  		R.role_id = U.role_id
+  	WHERE 
+  		username = #{username}
+  </select>
+  
+</mapper>

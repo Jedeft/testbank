@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.permission.dao.IPermissionDao" >
+
+  <resultMap id="BaseResultMap" type="com.ncu.testbank.permission.data.Permission" >
+    <id column="permission_id" property="permission_id"/>
+    <result column="permission_name" property="permission_name"/>
+    <result column="name" property="name"/>
+    <result column="url" property="url"/>
+    <result column="icon" property="icon"/>
+    <result column="pid" property="pid"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+  	permission_id, permission_name, name, url, icon, pid
+  </sql>
+  
+  <select id="searchPermission" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	SELECT 
+  		P.permission_id, permission_⁯name, name, url, icon, pid
+  	FROM 
+  		permission P INNER JOIN role_permission R
+  	ON
+  		R.permission_id = P.permission_id
+  	WHERE 
+  		role_id = #{role_id}
+  </select>
+  
+</mapper>
