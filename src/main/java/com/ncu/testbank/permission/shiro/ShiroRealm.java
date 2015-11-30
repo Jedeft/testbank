@@ -18,6 +18,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ncu.testbank.base.exception.ErrorCode;
+import com.ncu.testbank.base.exception.ServiceException;
+import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
 import com.ncu.testbank.permission.data.User;
@@ -67,7 +70,7 @@ public class ShiroRealm extends AuthorizingRealm{
 
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
-			AuthenticationToken authcToken) throws AuthenticationException {
+			AuthenticationToken authcToken) throws AuthenticationException{
 		//获取基于用户名和密码的令牌  
         //实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的  
         //两个token的引用都是一样的
@@ -79,6 +82,8 @@ public class ShiroRealm extends AuthorizingRealm{
         		AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), user.getName());  
             	this.setSession("currentUser", user);  
             	return authcInfo;
+        	} else {
+//        		throw new ShiroException(new ErrorCode(1, "用户名或密码错误！"));
         	}
         }
         //没有返回登录用户名对应的SimpleAuthenticationInfo对象时,就会在LoginController中抛出UnknownAccountException异常  

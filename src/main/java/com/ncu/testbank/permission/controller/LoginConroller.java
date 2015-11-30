@@ -26,7 +26,7 @@ public class LoginConroller {
         token.setRememberMe(true);
         try {
         	currUser.login(token);
-        }catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
         	System.out.println("登录失败错误信息:"+e);
             token.clear();
         }

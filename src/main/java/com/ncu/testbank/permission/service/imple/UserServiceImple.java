@@ -3,6 +3,8 @@ package com.ncu.testbank.permission.service.imple;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.rpc.ServiceException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,7 @@ public class UserServiceImple implements IUserService {
 		} else {
 			role.setRole_id(3);
 			role.setRole_name("student");
-		}
+		} 
 		roleList.add(role);
 		return roleList;
 	}
