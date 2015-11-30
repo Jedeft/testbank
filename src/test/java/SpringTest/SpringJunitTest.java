@@ -1,44 +1,38 @@
 package SpringTest;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.MacProvider;
-
-import java.security.Key;
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
-import com.ncu.testbank.admin.dao.IAcademyDao;
 import com.ncu.testbank.admin.data.Academy;
-import com.ncu.testbank.base.utils.JSONUtils;
+import com.ncu.testbank.admin.service.IAcademyService;
+import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.JWTUtils;
-import com.ncu.testbank.base.utils.JedisPoolUtils;
-import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.permission.service.IUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:springTest.xml"})
+@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
 public class SpringJunitTest {
 	
 	@Autowired
-	private IAcademyDao dataDao;
+	private IAcademyService dataService;
+	
+	@Autowired
+	private IUserService userService;
 	
 	
 	@Test
 	public void test() {
-		Academy academy = new Academy();
-		academy.setAcademy_id("1");
-		academy.setName("demo");
-		int a = dataDao.updateOne(academy);
-		System.out.println(a);
+		PageInfo page = new PageInfo();
+		page.setRows(3);
+		page.setPage(0);
+		List<Academy> list = dataService.searchData(page);
+		System.out.println(page.getTotal());
+		System.out.println(list);
 	}
 	
 	
@@ -54,20 +48,21 @@ public class SpringJunitTest {
 	
 	@Test
 	public void testJedis() {
-		JedisPool jedisPool = JedisPoolUtils.getPool();
-		Jedis jedis = jedisPool.getResource();
-		
-		User user = new User();
-		user.setName("jedeft");
-		user.setUsername("admin");
-		user.setPassword("admin");
-		user.setRole_id(1);
-		
-		String json = JSONUtils.convertObject2Json(user);
-		jedis.setex("user", 20, json);
-		
-		//归还连接池
-		JedisPoolUtils.returnResource(jedisPool, jedis);
+//		JedisPool jedisPool = JedisPoolUtils.getPool();
+//		Jedis jedis = jedisPool.getResource();
+//		
+//		User user = new User();
+//		user.setName("jedeft");
+//		user.setUsername("admin");
+//		user.setPassword("admin");
+//		user.setRole_id(1);
+//		
+//		String json = JSONUtils.convertObject2Json(user);
+//		jedis.setex("user", 20, json);
+//		
+//		//归还连接池
+//		JedisPoolUtils.returnResource(jedisPool, jedis);
+		userService.createToken("admin");
 	}
 	     
 }

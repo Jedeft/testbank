@@ -19,7 +19,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ncu.testbank.base.exception.ErrorCode;
-import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
@@ -78,12 +77,14 @@ public class ShiroRealm extends AuthorizingRealm{
         User user = userService.getUser(token.getUsername());  
         if(null != user){  
         	//这里的密码没有加密，实际应该有加密操作的
-        	if (token.getPassword().equals(user.getPassword())) {
+        	char[] c = token.getPassword();
+        	String password = new String(c);
+        	if ( user.getPassword().equals(password) ) {
         		AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), user.getName());  
             	this.setSession("currentUser", user);  
             	return authcInfo;
         	} else {
-//        		throw new ShiroException(new ErrorCode(1, "用户名或密码错误！"));
+        		throw new ShiroException(ErrorCode.PASSWORD_ERROR);
         	}
         }
         //没有返回登录用户名对应的SimpleAuthenticationInfo对象时,就会在LoginController中抛出UnknownAccountException异常  

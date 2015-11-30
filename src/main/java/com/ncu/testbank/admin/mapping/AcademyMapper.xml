@@ -11,6 +11,21 @@
   	academy_id, name
   </sql>
   
+  <select id="getCount" resultType="java.lang.Integer">
+  	SELECT 
+  		COUNT(*)
+  	FROM
+  		academy
+  </select>
+  
+  <select id="searchData" parameterType="com.ncu.testbank.base.response.PageInfo" resultMap="BaseResultMap">
+  	SELECT 
+  		<include refid="Base_Column_List"></include>
+  	FROM 
+  		academy
+  	LIMIT ${page * rows}, #{rows}
+  </select>
+  
   <select id="getAcademy" resultMap="BaseResultMap" parameterType="java.lang.String">
   	SELECT 
   		<include refid="Base_Column_List"></include>

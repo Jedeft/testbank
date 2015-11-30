@@ -2,19 +2,13 @@ package com.ncu.testbank.base.exception;
 
 public class ErrorCode {
 	public static final ErrorCode LOGIN_SUCCESS = new ErrorCode(10000, "登录成功");
-	public static final ErrorCode USER_IS_NULL = new ErrorCode(10001, "用户不能为空");
-	public static final ErrorCode PASSWORD_IS_NULL = new ErrorCode(10002,"密码不能为空");
-	public static final ErrorCode PASS_CODE_IS_NULL = new ErrorCode(10003,"验证码不能为空");
-	public static final ErrorCode PASS_CODE_ERROR = new ErrorCode(10004,"验证码不匹配");
-	public static final ErrorCode USER_LOCKED = new ErrorCode(10005,"用户被锁定");
-	public static final ErrorCode PASSWORD_ERROR = new ErrorCode(10006,"密码错误");
-	public static final ErrorCode LOGIN_FAIL = new ErrorCode(10007,"登录系统失败，非法用户");
+	public static final ErrorCode PASSWORD_ERROR = new ErrorCode(10001,"用户名或密码错误");
 	public static final ErrorCode LOGOUT_SUCCESS = new ErrorCode(10010, "登出成功");
 	public static final ErrorCode LOGOUT_FAIL = new ErrorCode(10011,"登出系统失败");
-	public static final ErrorCode PASSWORD_RESET = new ErrorCode(10021,"初始密码，需重置");
-	public static final ErrorCode PASSWORD_IS_USED = new ErrorCode(10022,"密码在过去三次已经被使用");
-	public static final ErrorCode PASSWORD_NOT_MATCHED_4_RESET_PASSWORD = new ErrorCode(10023,"密码重置：新旧密码不一致");
 	public static final ErrorCode USER_ROLE_IS_NULL = new ErrorCode(10023,"登录失败，用户角色未授权");
+	
+	
+	public static final ErrorCode TOKEN_INVALID = new ErrorCode(20001, "用户登录失效，请重新登录！");
 
 	
 	public static final ErrorCode CALL_SUCCESS = new ErrorCode(0, "操作成功");

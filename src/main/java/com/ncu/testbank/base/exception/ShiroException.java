@@ -1,6 +1,6 @@
 package com.ncu.testbank.base.exception;
 
-public class ShiroException extends Exception{
+public class ShiroException extends RuntimeException{
 
 	/**
 	 * 

@@ -1,17 +1,15 @@
 package com.ncu.testbank.base.response;
 
 public class ResponseQueryMsg extends ResponseMsg{
-	public Object rows;
-	
 	//totals of returning records 
 	public int total;
 	
 	//pages in total 
-	public int total_pages;
+	public int totalPage;
 	
 	//current page position
-	public int current_page;
+	public int currentPage;
 	
 	//number records of current page
-	public int page_count;	
+	public int pageCount;	
 }

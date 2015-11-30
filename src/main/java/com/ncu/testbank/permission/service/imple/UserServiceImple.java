@@ -3,14 +3,20 @@ package com.ncu.testbank.permission.service.imple;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
+import com.ncu.testbank.base.exception.ErrorCode;
+import com.ncu.testbank.base.exception.ServiceException;
+import com.ncu.testbank.base.utils.JWTUtils;
+import com.ncu.testbank.base.utils.JedisPoolUtils;
 import com.ncu.testbank.permission.dao.IUserDao;
 import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
+import com.ncu.testbank.permission.data.Token;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.permission.service.IUserService;
 
@@ -53,4 +59,39 @@ public class UserServiceImple implements IUserService {
 		return userDao.getUser(username);
 	}
 
+	@Override
+	public Token createToken(String username) {
+		JedisPool jedisPool = JedisPoolUtils.getPool();
+		Jedis jedis = jedisPool.getResource();
+		
+		
+		String code = JWTUtils.createToken(username);
+		//默认token保存3个小时
+		jedis.setex(username, 3*60*60, code);
+		Token token = new Token();
+		token.setSub(username);
+		token.setToken(code);
+		
+		//归还连接池
+		JedisPoolUtils.returnResource(jedisPool, jedis);
+		return token;
+	}
+
+	@Override
+	public boolean validateToken(String token, String username) {
+		JedisPool jedisPool = JedisPoolUtils.getPool();
+		Jedis jedis = jedisPool.getResource();
+		
+		if ( !JWTUtils.validateToken(token, username) ) {
+			JedisPoolUtils.returnResource(jedisPool, jedis);
+			throw new ServiceException(ErrorCode.TOKEN_INVALID);
+		}
+		
+		//归还连接池
+		JedisPoolUtils.returnResource(jedisPool, jedis);
+		
+		return true;
+	}
+	
+	
 }
