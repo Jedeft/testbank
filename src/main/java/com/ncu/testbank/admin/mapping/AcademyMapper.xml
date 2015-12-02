@@ -37,9 +37,9 @@
 	</select>
 	
 	<!-- loadCsv文件入库 -->
-	<select id="loadCsv" parameterType="java.lang.String" >
+	<insert id="loadCsv" parameterType="java.lang.String" >
 		LOAD DATA LOCAL INFILE #{file} INTO TABLE academy CHARACTER SET utf8 FIELDS TERMINATED BY ',' ENCLOSED BY '\"'
-	</select>
+	</insert>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Academy">
 		INSERT INTO 
