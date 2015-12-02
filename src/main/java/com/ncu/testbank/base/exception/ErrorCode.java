@@ -10,6 +10,8 @@ public class ErrorCode {
 	
 	public static final ErrorCode TOKEN_INVALID = new ErrorCode(20001, "用户登录失效，请重新登录！");
 
+	public static final ErrorCode FILE_TYPE_ERROR = new ErrorCode(30001, "请上传csv格式的文件！");
+	public static final ErrorCode FILE_IO_ERROR = new ErrorCode(30002, "文件IO出错，请检查文件后重试或联系管理人员！");
 	
 	public static final ErrorCode CALL_SUCCESS = new ErrorCode(0, "操作成功");
 	public static final ErrorCode ERROR_HTTP_REQUEST_IS_NOT_AVAILABLE = new ErrorCode(90001,"HTTP请求错误"); 

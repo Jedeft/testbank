@@ -1,6 +1,10 @@
 package com.ncu.testbank.admin.controller;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -190,13 +194,21 @@ public class AcademyController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
-	public ResponseQueryMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file){
+	public ResponseQueryMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
 		ResponseQueryMsg msg = new ResponseQueryMsg();
         try {
         	
+        	String fileName = new Date().getTime() + "_" + file.getOriginalFilename();
+        	String path = request.getSession().getServletContext().getRealPath("upload");
+        	
+        	if ( !fileName.endsWith(".csv") ) {
+        		msg.errorCode = ErrorCode.FILE_TYPE_ERROR.code;
+        		msg.msg = ErrorCode.FILE_TYPE_ERROR.name;
+        		return msg;
+        	}
+        	academyService.loadCsv(fileName, path, file);
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -209,6 +221,12 @@ public class AcademyController {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
         	msg.msg = error.name;
+        } catch (IOException e) {
+        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
+        } catch (IllegalStateException e) {
+        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
         }
         return msg;
 	}

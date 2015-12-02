@@ -1,9 +1,14 @@
 package com.ncu.testbank.admin.service.imple;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ncu.testbank.admin.dao.IAcademyDao;
 import com.ncu.testbank.admin.data.Academy;
@@ -11,6 +16,7 @@ import com.ncu.testbank.admin.service.IAcademyService;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
+import com.ncu.testbank.base.utils.CsvReader;
 
 @Service("academyService")
 public class AcademyServiceImple implements IAcademyService {
@@ -53,6 +59,22 @@ public class AcademyServiceImple implements IAcademyService {
 	@Override
 	public Academy getAcademy(String academy_id) {
 		return academyDao.getAcademy(academy_id);
+	}
+
+	@Override
+	public void loadCsv(String fileName, String path, MultipartFile file) throws IllegalStateException, IOException {
+		File target = new File(path, fileName);
+		if (!target.exists()) {
+			if ( !target.mkdirs() ) {
+				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+			}
+		}
+		
+		file.transferTo(target);
+		academyDao.loadCsv(target.getPath());
+		if (target.exists()) {
+			target.delete();
+		}
 	}
 
 }

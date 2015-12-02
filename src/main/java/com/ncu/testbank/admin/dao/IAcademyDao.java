@@ -21,4 +21,6 @@ public interface IAcademyDao {
 	public int deleteOne(String academy_id);
 	
 	public int updateOne(Academy academy);
+	
+	public void loadCsv(String file);
 }
