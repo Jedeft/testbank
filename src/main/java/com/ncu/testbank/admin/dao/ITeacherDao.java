@@ -1,0 +1,25 @@
+package com.ncu.testbank.admin.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.ncu.testbank.admin.data.Teacher;
+
+@Repository
+public interface ITeacherDao {
+	public int getCount();
+	
+	public List<Teacher> searchData(Map<String, Object> params);
+
+	public Teacher getTeacher(String teacher_id);
+	
+	public int insertOne(Teacher teacher);
+	
+	public int deleteOne(String teacher_id);
+	
+	public int updateOne(Teacher academy);
+	
+	public void loadCsv(String file);
+}
