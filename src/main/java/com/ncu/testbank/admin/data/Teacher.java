@@ -1,18 +1,19 @@
 package com.ncu.testbank.admin.data;
 
+import com.ncu.testbank.base.response.PageInfo;
+
 /**
  * 基础数据模块
  * @author Jedeft
  *
  */
-public class Teacher {
+public class Teacher{
 	private String teacher_id;
 	private String academy_id;
 	private String name;
 	private String email;
 	private String phone;
-	private String QQ;
-	
+	private String qq;
 	public String getTeacher_id() {
 		return teacher_id;
 	}
@@ -43,11 +44,11 @@ public class Teacher {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getQQ() {
-		return QQ;
+	public String getQq() {
+		return qq;
 	}
-	public void setQQ(String qQ) {
-		QQ = qQ;
+	public void setQq(String qq) {
+		this.qq = qq;
 	}
 	
 }

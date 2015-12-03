@@ -1,11 +1,13 @@
 package com.ncu.testbank.admin.data;
 
+import com.ncu.testbank.base.response.PageInfo;
+
 /**
  * 基础数据模块
  * @author Jedeft
  *
  */
-public class Student {
+public class Student{
 	private String student_id;
 	private String class_id;
 	private String name;

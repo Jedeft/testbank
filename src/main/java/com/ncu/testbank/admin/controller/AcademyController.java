@@ -1,13 +1,17 @@
 package com.ncu.testbank.admin.controller;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +28,11 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 
-@Controller
+@Controller()
 @RequestMapping("/admin")
 public class AcademyController {
+	
+	private Logger log = Logger.getLogger("testbankLog");
 	
 	@Autowired
 	private IAcademyService academyService;
@@ -156,16 +162,17 @@ public class AcademyController {
 	}
 	
 	/**
-	 * 根据id获取指定academy
+	 * 分页获取academy信息
 	 * @param academy
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/academys", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page){
+	public ResponseQueryMsg searchData(PageInfo page, Academy academy){
 		ResponseQueryMsg msg = new ResponseQueryMsg();
         try {
-        	List<Academy> academyList = academyService.searchData(page);
+        	List<Academy> academyList;
+			academyList = academyService.searchData(page, academy);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -187,11 +194,21 @@ public class AcademyController {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
         	msg.msg = error.name;
-        }
+        } catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
+        	msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
+			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
+			log.error(e.getMessage());
+		}
         return msg;
 	}
 	
-	
+	/**
+	 * csv文件批量录入academy信息
+	 * @param file
+	 * @param request
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
 	public ResponseQueryMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
@@ -224,9 +241,11 @@ public class AcademyController {
         } catch (IOException e) {
         	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
         	msg.msg = ErrorCode.FILE_IO_ERROR.name;
+        	log.error(e.getMessage());
         } catch (IllegalStateException e) {
         	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
         	msg.msg = ErrorCode.FILE_IO_ERROR.name;
+        	log.error(e.getMessage());
         }
         return msg;
 	}

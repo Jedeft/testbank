@@ -2,12 +2,14 @@ package com.ncu.testbank.admin.data;
 
 import java.sql.Timestamp;
 
+import com.ncu.testbank.base.response.PageInfo;
+
 /**
  * 基础数据模块
  * @author Jedeft
  *
  */
-public class Syllabus {
+public class Syllabus{
 	private String syllabus_id;
 	private String teacher_id;
 	private String course_id;

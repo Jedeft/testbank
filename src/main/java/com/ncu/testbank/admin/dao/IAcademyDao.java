@@ -1,18 +1,18 @@
 package com.ncu.testbank.admin.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.admin.data.Academy;
-import com.ncu.testbank.base.response.PageInfo;
 
 @Repository
 public interface IAcademyDao {
 	
 	public int getCount();
 	
-	public List<Academy> searchData(PageInfo page);
+	public List<Academy> searchData(Map<String, Object> params);
 
 	public Academy getAcademy(String academy_id);
 	

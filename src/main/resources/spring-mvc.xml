@@ -12,7 +12,9 @@
 
 	<mvc:annotation-driven/> 
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
-	<context:component-scan base-package="com.ncu.testbank" />
+	<context:component-scan base-package="com.ncu.testbank" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
 
 	<context:annotation-config />
 	<!-- Required for security annotations to work in this servlet -->

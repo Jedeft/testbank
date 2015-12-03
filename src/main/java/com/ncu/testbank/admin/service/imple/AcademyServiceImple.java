@@ -1,10 +1,13 @@
 package com.ncu.testbank.admin.service.imple;
 
+import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import com.ncu.testbank.admin.service.IAcademyService;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
+import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.CsvReader;
 
 @Service("academyService")
@@ -25,14 +29,21 @@ public class AcademyServiceImple implements IAcademyService {
 	private IAcademyDao academyDao;
 	
 	@Override
-	public List<Academy> searchData(PageInfo page) {
+	public List<Academy> searchData(PageInfo page, Academy academy) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
 		int count = academyDao.getCount();
 		page.setTotal(count);
+		if (page.getRows() == 0) {
+			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
+		} 
 		page.setTotalPage(count/page.getRows());
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的学院！"));
 		}
-		return academyDao.searchData(page);
+		Map<String, Object> params = BeanToMapUtils.convertBean(academy);
+		//数据库分页从0开始，前台分页从1开始
+		params.put("page", page.getPage() - 1);
+		params.put("rows", page.getRows());
+		return academyDao.searchData(params);
 	}
 
 	@Override

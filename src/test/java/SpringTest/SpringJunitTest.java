@@ -1,38 +1,50 @@
 package SpringTest;
 
-import java.util.List;
-
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.ncu.testbank.admin.data.Academy;
-import com.ncu.testbank.admin.service.IAcademyService;
-import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.JWTUtils;
-import com.ncu.testbank.permission.service.IUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
+@WebAppConfiguration(value = "src/main/webapp")  
+@ContextHierarchy({  
+        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
+        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
+})  
 public class SpringJunitTest {
 	
-	@Autowired
-	private IAcademyService dataService;
-	
-	@Autowired
-	private IUserService userService;
-	
+	@Autowired  
+    private WebApplicationContext wac;  
+    private MockMvc mockMvc;
+    
+    @Before  
+    public void setUp() {  
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
+    } 
 	
 	@Test
-	public void test() {
-		PageInfo page = new PageInfo();
-		page.setRows(3);
-		page.setPage(0);
-		List<Academy> list = dataService.searchData(page);
-		System.out.println(page.getTotal());
-		System.out.println(list);
+	public void test() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/1"))  
+	            .andExpect(MockMvcResultMatchers.view().name("user/view"))  
+	            .andExpect(MockMvcResultMatchers.model().attributeExists("user"))  
+	            .andDo(MockMvcResultHandlers.print())  
+	            .andReturn();  
+	      
+	    Assert.assertNotNull(result.getModelAndView().getModel().get("user"));  
 	}
 	
 	
@@ -62,7 +74,7 @@ public class SpringJunitTest {
 //		
 //		//归还连接池
 //		JedisPoolUtils.returnResource(jedisPool, jedis);
-		userService.createToken("admin");
+//		userService.createToken("admin");
 	}
 	     
 }

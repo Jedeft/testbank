@@ -1,8 +1,8 @@
 package com.ncu.testbank.base.response;
 
 public class PageInfo {
-	private int page;  //当前页数
-	private int rows;  //每页显示条数
+	private int page = 1;  //当前页数
+	private int rows = 15;  //每页显示条数
 	private int total; //总数据量
 	private int totalPage; //总页数
 	public PageInfo(){
