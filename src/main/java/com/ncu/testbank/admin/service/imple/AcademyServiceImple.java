@@ -30,16 +30,16 @@ public class AcademyServiceImple implements IAcademyService {
 	
 	@Override
 	public List<Academy> searchData(PageInfo page, Academy academy) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
-		int count = academyDao.getCount();
+		Map<String, Object> params = BeanToMapUtils.convertBean(academy);
+		int count = academyDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
 		} 
-		page.setTotalPage(count/page.getRows());
+		page.setTotalPage(count/page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的学院！"));
 		}
-		Map<String, Object> params = BeanToMapUtils.convertBean(academy);
 		//数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
@@ -75,10 +75,13 @@ public class AcademyServiceImple implements IAcademyService {
 	@Override
 	public void loadCsv(String fileName, String path, MultipartFile file) throws IllegalStateException, IOException {
 		File target = new File(path, fileName);
-		if (!target.exists()) {
-			if ( !target.mkdirs() ) {
+		if (!target.getParentFile().exists()) {
+			if ( !target.getParentFile().mkdirs() ) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
+		}
+		if ( !target.createNewFile() ) {
+			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
 		
 		file.transferTo(target);

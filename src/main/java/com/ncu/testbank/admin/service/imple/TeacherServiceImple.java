@@ -33,7 +33,7 @@ public class TeacherServiceImple implements ITeacherService{
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
 		} 
-		page.setTotalPage(count/page.getRows());
+		page.setTotalPage(count/page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的教师！"));
 		}

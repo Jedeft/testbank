@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,14 +45,14 @@ public class AcademyController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
-	public ResponseMsg insertAcademy(Academy academy){
+	public ResponseMsg insertAcademy(@RequestBody Academy academy){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	academyService.insertOne(academy);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
+            msg.data = academy;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -74,15 +75,15 @@ public class AcademyController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/academys", method = RequestMethod.PUT)
-	public ResponseMsg updateAcademy(Academy academy){
+	@RequestMapping(value = "/academys", method = RequestMethod.PATCH)
+	public ResponseMsg updateAcademy(@RequestBody Academy academy){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	
         	academyService.updateOne(academy);
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
+            msg.data = academyService.getAcademy(academy.getAcademy_id());
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -105,12 +106,11 @@ public class AcademyController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/academys", method = RequestMethod.DELETE)
-	public ResponseMsg deleteAcademy(Academy academy){
+	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
+	public ResponseMsg deleteAcademy(@PathVariable String academy_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
-        	academyService.deleteOne(academy.getAcademy_id());
-        	
+        	academyService.deleteOne(academy_id);
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
             
@@ -136,11 +136,11 @@ public class AcademyController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/academys/ID", method = RequestMethod.GET)
-	public ResponseMsg getAcademy(Academy academy){
+	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
+	public ResponseMsg getAcademy(@PathVariable String academy_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
-        	Academy data = academyService.getAcademy(academy.getAcademy_id());
+        	Academy data = academyService.getAcademy(academy_id);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -211,8 +211,8 @@ public class AcademyController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
-	public ResponseQueryMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
-		ResponseQueryMsg msg = new ResponseQueryMsg();
+	public ResponseMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
+		ResponseMsg msg = new ResponseMsg();
         try {
         	
         	String fileName = new Date().getTime() + "_" + file.getOriginalFilename();

@@ -10,7 +10,7 @@ import com.ncu.testbank.admin.data.Academy;
 @Repository
 public interface IAcademyDao {
 	
-	public int getCount();
+	public int getCount(Map<String, Object> params);
 	
 	public List<Academy> searchData(Map<String, Object> params);
 
