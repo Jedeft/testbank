@@ -4,4 +4,5 @@ encoding//src/main/resources/log4j.properties=UTF-8
 encoding//src/main/resources/redis.properties=UTF-8
 encoding//src/main/webapp/view/index.jsp=UTF-8
 encoding//src/test/java/admin/AcademyTest.java=UTF-8
+encoding//src/test/java/admin/TeacherTest.java=UTF-8
 encoding/<project>=UTF-8

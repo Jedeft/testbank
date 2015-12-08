@@ -54,7 +54,8 @@
 	
 	<!-- loadCsv文件入库 -->
 	<insert id="loadCsv" parameterType="java.lang.String" >
-		LOAD DATA LOCAL INFILE #{file} INTO TABLE academy CHARACTER SET utf8 FIELDS TERMINATED BY ',' ENCLOSED BY '\"'
+		LOAD DATA LOCAL INFILE #{file} INTO TABLE academy 
+		CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n'
 	</insert>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Academy">

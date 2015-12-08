@@ -9,7 +9,8 @@ import com.ncu.testbank.admin.data.Teacher;
 
 @Repository
 public interface ITeacherDao {
-	public int getCount();
+	
+	public int getCount(Map<String, Object> params);
 	
 	public List<Teacher> searchData(Map<String, Object> params);
 

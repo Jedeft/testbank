@@ -30,15 +30,6 @@
 			<if test="name != null and name != ''">
 				AND name = #{name}
 			</if>
-			<if test="email != null and email != ''">
-				AND email = #{email}
-			</if>
-			<if test="phone != null and phone != ''">
-				AND phone = #{phone}
-			</if>
-			<if test="qq != null and qq != ''">
-				AND qq = #{qq}
-			</if>
 		</where>
 	</select>
 	
@@ -52,19 +43,10 @@
 				teacher_id = #{teacher_id}
 			</if>
 			<if test="academy_id != null and academy_id != ''">
-				academy_id = #{academy_id}
+				AND academy_id = #{academy_id}
 			</if>
 			<if test="name != null and name != ''">
 				AND name = #{name}
-			</if>
-			<if test="email != null and email != ''">
-				AND email = #{email}
-			</if>
-			<if test="phone != null and phone != ''">
-				AND phone = #{phone}
-			</if>
-			<if test="qq != null and qq != ''">
-				AND qq = #{qq}
 			</if>
 		</where>
 		LIMIT ${page * rows}, #{rows}
@@ -82,7 +64,8 @@
 	
 	<!-- loadCsv文件入库 -->
 	<insert id="loadCsv" parameterType="java.lang.String" >
-		LOAD DATA LOCAL INFILE #{file} INTO TABLE teacher CHARACTER SET utf8 FIELDS TERMINATED BY ',' ENCLOSED BY '\"'
+		LOAD DATA LOCAL INFILE #{file} INTO TABLE teacher 
+		CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n'
 	</insert>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Teacher">

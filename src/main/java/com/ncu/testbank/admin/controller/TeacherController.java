@@ -10,12 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ncu.testbank.admin.data.Teacher;
@@ -28,7 +29,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class TeacherController {
 	
@@ -42,16 +43,15 @@ public class TeacherController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/teachers", method = RequestMethod.POST)
-	public ResponseMsg insertteacher(@RequestBody Teacher teacher){
+	public ResponseMsg insertTeacher(@RequestBody Teacher teacher){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	teacherService.insertOne(teacher);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
+            msg.data = teacher;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -73,16 +73,15 @@ public class TeacherController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/teachers", method = RequestMethod.PUT)
-	public ResponseMsg updateteacher(@RequestBody Teacher teacher){
+	@RequestMapping(value = "/teachers", method = RequestMethod.PATCH)
+	public ResponseMsg updateTeacher(@RequestBody Teacher teacher){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	
         	teacherService.updateOne(teacher);
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
+            msg.data = teacherService.getteacher(teacher.getTeacher_id());
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -104,12 +103,11 @@ public class TeacherController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/teachers", method = RequestMethod.DELETE)
-	public ResponseMsg deleteteacher(@RequestBody Teacher teacher){
+	@RequestMapping(value = "/teachers/{teacher_id}", method = RequestMethod.DELETE)
+	public ResponseMsg deleteTeacher(@PathVariable String teacher_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
-        	teacherService.deleteOne(teacher.getTeacher_id());
+        	teacherService.deleteOne(teacher_id);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -135,12 +133,11 @@ public class TeacherController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/teachers/ID", method = RequestMethod.GET)
-	public ResponseMsg getteacher(@RequestBody Teacher teacher){
+	@RequestMapping(value = "/teachers/{teacher_id}", method = RequestMethod.GET)
+	public ResponseMsg getTeacher(@PathVariable String teacher_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
-        	Teacher data = teacherService.getteacher(teacher.getTeacher_id());
+        	Teacher data = teacherService.getteacher(teacher_id);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -166,9 +163,8 @@ public class TeacherController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/teachers", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(@RequestBody PageInfo page,@RequestBody Teacher teacher){
+	public ResponseQueryMsg searchData(PageInfo page, Teacher teacher){
 		ResponseQueryMsg msg = new ResponseQueryMsg();
         try {
         	List<Teacher> teacherList;
@@ -209,10 +205,9 @@ public class TeacherController {
 	 * @param request
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/teachers/csv", method = RequestMethod.POST)
-	public ResponseQueryMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
-		ResponseQueryMsg msg = new ResponseQueryMsg();
+	public ResponseMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
+		ResponseMsg msg = new ResponseMsg();
         try {
         	
         	String fileName = new Date().getTime() + "_" + file.getOriginalFilename();

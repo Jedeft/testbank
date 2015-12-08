@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ncu.testbank.admin.data.Academy;
@@ -29,7 +30,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 
-@Controller()
+@RestController
 @RequestMapping("/admin")
 public class AcademyController {
 	
@@ -43,7 +44,6 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
 	public ResponseMsg insertAcademy(@RequestBody Academy academy){
 		ResponseMsg msg = new ResponseMsg();
@@ -74,7 +74,6 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys", method = RequestMethod.PATCH)
 	public ResponseMsg updateAcademy(@RequestBody Academy academy){
 		ResponseMsg msg = new ResponseMsg();
@@ -105,7 +104,6 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
 	public ResponseMsg deleteAcademy(@PathVariable String academy_id){
 		ResponseMsg msg = new ResponseMsg();
@@ -135,7 +133,6 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
 	public ResponseMsg getAcademy(@PathVariable String academy_id){
 		ResponseMsg msg = new ResponseMsg();
@@ -166,7 +163,6 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys", method = RequestMethod.GET)
 	public ResponseQueryMsg searchData(PageInfo page, Academy academy){
 		ResponseQueryMsg msg = new ResponseQueryMsg();
@@ -209,7 +205,6 @@ public class AcademyController {
 	 * @param request
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
 	public ResponseMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
 		ResponseMsg msg = new ResponseMsg();

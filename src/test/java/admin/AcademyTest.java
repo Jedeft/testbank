@@ -128,7 +128,7 @@ public class AcademyTest {
 	 */
 	@Test
 	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/?page=1&rows=15").contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(get("/admin/academys/?page=1&rows=15&academy_id=1").contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
