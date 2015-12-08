@@ -81,7 +81,7 @@ public class TeacherController {
         	teacherService.updateOne(teacher);
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = teacherService.getteacher(teacher.getTeacher_id());
+            msg.data = teacherService.getTeacher(teacher.getTeacher_id());
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;
@@ -137,7 +137,7 @@ public class TeacherController {
 	public ResponseMsg getTeacher(@PathVariable String teacher_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
-        	Teacher data = teacherService.getteacher(teacher_id);
+        	Teacher data = teacherService.getTeacher(teacher_id);
         	
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;

@@ -89,22 +89,6 @@ public class AcademyTest {
 	
 	/**
 	 * url : /admin/academys/{academy_id}
-	 * method : DELETE
-	 * @throws Exception
-	 */
-	@Test
-	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/academys/{academy_id}", 6).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
-	
-	
-	/**
-	 * url : /admin/academys/{academy_id}
 	 * method : GET
 	 * @throws Exception
 	 */
@@ -118,17 +102,14 @@ public class AcademyTest {
 										  .andDo(print());
 	}
 	
-	
 	/**
-	 * url : /admin/academys/
-	 * params : page=1 , rows=15
-	 * 		  : academy_id, name
-	 * method : GET
+	 * url : /admin/academys/{academy_id}
+	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
-	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/?page=1&rows=15&academy_id=1").contentType(MediaType.TEXT_HTML)
+	public void deleteTest() throws Exception{
+		mockMvc.perform(delete("/admin/academys/{academy_id}", 6).contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
@@ -151,4 +132,20 @@ public class AcademyTest {
 												    .andDo(print());
 	}
 	
+	/**
+	 * url : /admin/academys
+	 * params : page=1 , rows=15
+	 * 		  : academy_id, name
+	 * method : GET
+	 * @throws Exception
+	 */
+	@Test
+	public void searchTest() throws Exception{
+		mockMvc.perform(get("/admin/academys/?page=1&rows=15&academy_id=1").contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
 }

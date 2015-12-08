@@ -66,7 +66,7 @@ public class TeacherServiceImple implements ITeacherService{
 	}
 
 	@Override
-	public Teacher getteacher(String teacher_id) {
+	public Teacher getTeacher(String teacher_id) {
 		return teacherDao.getTeacher(teacher_id);
 	}
 

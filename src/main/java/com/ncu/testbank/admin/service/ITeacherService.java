@@ -13,38 +13,47 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface ITeacherService {
 	/**
 	 * 检索teacher信息
+	 * 
 	 * @param teacher
 	 * @return
 	 */
-	public List<Teacher> searchData(PageInfo page, Teacher teacher) throws IllegalAccessException, InstantiationException, InvocationTargetException, IntrospectionException;
-	
+	public List<Teacher> searchData(PageInfo page, Teacher teacher)
+			throws IllegalAccessException, InstantiationException,
+			InvocationTargetException, IntrospectionException;
+
 	/**
 	 * 插入一条teacher信息
+	 * 
 	 * @param teacher
 	 */
 	public void insertOne(Teacher teacher);
-	
+
 	/**
 	 * 删除一条teacher信息
+	 * 
 	 * @param teacher_id
 	 */
 	public void deleteOne(String teacher_id);
-	
+
 	/**
 	 * 更新一条teacher信息
+	 * 
 	 * @param teacher
 	 */
 	public void updateOne(Teacher teacher);
-	
+
 	/**
 	 * 获取一条teacher信息
+	 * 
 	 * @param teacher_id
 	 */
-	public Teacher getteacher(String teacher_id);
-	
+	public Teacher getTeacher(String teacher_id);
+
 	/**
 	 * 录入csv文件数据到库中
+	 * 
 	 * @param in
 	 */
-	public void loadCsv(String fileName, String path, MultipartFile file) throws IllegalStateException, IOException;
+	public void loadCsv(String fileName, String path, MultipartFile file)
+			throws IllegalStateException, IOException;
 }
