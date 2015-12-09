@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.admin.dao.IMajorDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.admin.data.Major" >
+	  <id column="major_id" property="major_id"/>
+	  <id column="academy_id" property="academy_id"/>
+	  <result column="name" property="name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		major_id, academy_id, name
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			major
+		<where>
+			<if test="major_id != null and major_id != ''">
+				major_id = #{major_id}
+			</if>
+			<if test="academy_id != null and academy_id != ''">
+				AND academy_id = #{academy_id}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchData" resultMap="BaseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM 
+			major
+		<where>
+			<if test="major_id != null and major_id != ''">
+				major_id = #{major_id}
+			</if>
+			<if test="academy_id != null and academy_id != ''">
+				AND academy_id = #{academy_id}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<select id="getMajor" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM 
+			major
+		WHERE 
+			major_id = #{major_id}
+		LIMIT 1
+	</select>
+	
+	<!-- loadCsv文件入库 -->
+	<insert id="loadCsv" parameterType="java.lang.String" >
+		LOAD DATA LOCAL INFILE #{file} INTO TABLE major 
+		CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n'
+	</insert>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Academy">
+		INSERT INTO 
+			major
+		VALUES
+			(#{major_id},#{academy_id},#{name})
+	</insert>
+	
+	<delete id="deleteOne" parameterType="java.lang.String">
+		DELETE FROM
+			major
+		WHERE
+			major_id = #{major_id}
+	</delete>
+	
+	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Major">
+		UPDATE
+			major
+		<set>
+			<if test="academy_id != null and academy_id != ''">
+				academy_id = #{academy_id},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name}
+			</if>
+		</set>
+		WHERE
+			major_id = #{major_id}
+	</update>
+  
+  
+  
+</mapper>
