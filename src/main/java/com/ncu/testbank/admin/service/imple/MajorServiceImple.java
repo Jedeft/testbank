@@ -37,7 +37,7 @@ public class MajorServiceImple implements IMajorService {
 		} 
 		page.setTotalPage(count/page.getRows() + 1);
 		if (count <= 0) {
-			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的课程！"));
+			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的专业！"));
 		}
 		//数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
@@ -48,21 +48,21 @@ public class MajorServiceImple implements IMajorService {
 	@Override
 	public void insertOne(Major major) {
 		if ( majorDao.insertOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加专业信息失败，请重试！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String major_id) {
 		if ( majorDao.deleteOne(major_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除专业信息失败，请重试！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Major major) {
 		if ( majorDao.updateOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新专业信息失败，请重试！"));
 		}
 	}
 
