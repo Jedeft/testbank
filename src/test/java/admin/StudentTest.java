@@ -34,7 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
         @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
         @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
 })  
-public class AcademyTest {
+public class StudentTest {
 	
 	@Autowired  
     private WebApplicationContext wac;  
@@ -45,18 +45,17 @@ public class AcademyTest {
     public void setUp() {  
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
     } 
-	
     
     /**
-     * url : /admin/academys
+     * url : /admin/students
      * method : POST
      * @throws Exception
      */
 	@Test
 	public void insertTest() throws Exception{
-		String requestBody = "{\"academy_id\":\"123\", \"name\":\"hi!moke\"}";
+		String requestBody = "{\"student_id\":\"1\", \"class_id\":\"2\", \"name\":\"Jedeft\"}";
 		
-		mockMvc.perform(post("/admin/academys").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/admin/students").contentType(MediaType.APPLICATION_JSON)
 											   .content(requestBody)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
@@ -66,15 +65,15 @@ public class AcademyTest {
 	}
 	
 	/**
-	 * url : /admin/academys
+	 * url : /admin/students
 	 * method : PATCH
 	 * @throws Exception
 	 */
 	@Test
 	public void updateTest() throws Exception{
-		String requestBody = "{\"academy_id\":\"2\", \"name\":\"update!moke\"}";
+		String requestBody = "{\"student_id\":\"1\", \"name\":\"update!Jedeft\"}";
 		
-		mockMvc.perform(patch("/admin/academys").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(patch("/admin/students").contentType(MediaType.APPLICATION_JSON)
 											   .content(requestBody)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
@@ -84,13 +83,13 @@ public class AcademyTest {
 	}
 	
 	/**
-	 * url : /admin/academys/{academy_id}
+	 * url : /admin/students/{student_id}
 	 * method : GET
 	 * @throws Exception
 	 */
 	@Test
 	public void selectOneTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/{academy_id}", 1).contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(get("/admin/students/{student_id}", 1).contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
@@ -99,13 +98,13 @@ public class AcademyTest {
 	}
 	
 	/**
-	 * url : /admin/academys/{academy_id}
+	 * url : /admin/students/{student_id}
 	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
 	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/academys/{academy_id}", 6).contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(delete("/admin/students/{student_id}", 1).contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
@@ -114,30 +113,30 @@ public class AcademyTest {
 	}
 	
 	/**
-	 * url : /admin/academys/csv
+	 * url : /admin/students/csv
 	 * params : file
 	 * method : POST
 	 * @throws Exception
 	 */
 	@Test
 	public void loadCsvTest() throws Exception {
-		File file = new File("E:/CSV/academy.csv");
+		File file = new File("E:/CSV/students.csv");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file", "academy.csv", null, in);
-		mockMvc.perform(fileUpload("/admin/academys/csv").file(mokeFile))
+		MockMultipartFile mokeFile = new MockMultipartFile("file", "students.csv", null, in);
+		mockMvc.perform(fileUpload("/admin/students/csv").file(mokeFile))
 												    .andDo(print());
 	}
 	
 	/**
 	 * url : /admin/academys
 	 * params : page=1 , rows=15
-	 * 		  : academy_id, name
+	 * 		  : students_id, class_id, name
 	 * method : GET
 	 * @throws Exception
 	 */
 	@Test
 	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/?page=1&rows=15&academy_id=1").contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(get("/admin/students/?page=1&rows=15").contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
