@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.admin.dao.IClazzDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.admin.data.Clazz" >
+	  <id column="class_id" property="class_id"/>
+	  <result column="major_id" property="major_id"/>
+	  <result column="name" property="name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		class_id, major_id, name
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			class
+		<where>
+			<if test="class_id != null and class_id != ''">
+				class_id = #{class_id}
+			</if>
+			<if test="major_id != null and major_id != ''">
+				major_id = #{major_id}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchData" resultMap="BaseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM 
+			class
+		<where>
+			<if test="class_id != null and class_id != ''">
+				class_id = #{class_id}
+			</if>
+			<if test="major_id != null and major_id != ''">
+				AND major_id = #{major_id}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<select id="getClazz" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM 
+			class
+		WHERE 
+			class_id = #{class_id}
+		LIMIT 1
+	</select>
+	
+	<!-- loadCsv文件入库 -->
+	<insert id="loadCsv" parameterType="java.lang.String" >
+		LOAD DATA LOCAL INFILE #{file} INTO TABLE class 
+		CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n'
+	</insert>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Clazz">
+		INSERT INTO 
+			class
+		VALUES
+			(#{class_id},#{major_id},#{name})
+	</insert>
+	
+	<delete id="deleteOne" parameterType="java.lang.String">
+		DELETE FROM
+			class_id
+		WHERE
+			class_id = #{class_id}
+	</delete>
+	
+	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Clazz">
+		UPDATE
+			class
+		<set>
+			<if test="major_id != null and major_id != ''">
+				major_id = #{major_id},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+		</set>
+		WHERE
+			class_id = #{class_id}
+	</update>
+  
+</mapper>

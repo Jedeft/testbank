@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -28,9 +27,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import com.ncu.testbank.base.utils.JWTUtils;
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")  
@@ -76,7 +72,7 @@ public class AcademyTest {
 	 */
 	@Test
 	public void updateTest() throws Exception{
-		String requestBody = "{\"academy_id\":\"3\", \"name\":\"update!moke\"}";
+		String requestBody = "{\"academy_id\":\"2\", \"name\":\"update!moke\"}";
 		
 		mockMvc.perform(patch("/admin/academys").contentType(MediaType.APPLICATION_JSON)
 											   .content(requestBody)
