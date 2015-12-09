@@ -43,7 +43,7 @@ public class MajorController {
 	 * @return
 	 */
 	@RequestMapping(value = "/majors", method = RequestMethod.POST)
-	public ResponseMsg insertmajor(@RequestBody Major major){
+	public ResponseMsg insertMajor(@RequestBody Major major){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	majorService.insertOne(major);
@@ -73,7 +73,7 @@ public class MajorController {
 	 * @return
 	 */
 	@RequestMapping(value = "/majors", method = RequestMethod.PATCH)
-	public ResponseMsg updatemajor(@RequestBody Major major){
+	public ResponseMsg updateMajor(@RequestBody Major major){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	
@@ -103,7 +103,7 @@ public class MajorController {
 	 * @return
 	 */
 	@RequestMapping(value = "/majors/{major_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deletemajor(@PathVariable String major_id){
+	public ResponseMsg deleteMajor(@PathVariable String major_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	majorService.deleteOne(major_id);
@@ -133,7 +133,7 @@ public class MajorController {
 	 * @return
 	 */
 	@RequestMapping(value = "/majors/{major_id}", method = RequestMethod.GET)
-	public ResponseMsg getmajor(@PathVariable String major_id){
+	public ResponseMsg getMajor(@PathVariable String major_id){
 		ResponseMsg msg = new ResponseMsg();
         try {
         	Major data = majorService.getMajor(major_id);

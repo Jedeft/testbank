@@ -74,7 +74,7 @@
 	
 	<delete id="deleteOne" parameterType="java.lang.String">
 		DELETE FROM
-			class_id
+			class
 		WHERE
 			class_id = #{class_id}
 	</delete>
