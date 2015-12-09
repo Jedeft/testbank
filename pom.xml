@@ -149,7 +149,6 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
-
 		<!-- 格式化对象，方便输出日志 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>

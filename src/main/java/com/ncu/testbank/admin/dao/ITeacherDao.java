@@ -20,7 +20,7 @@ public interface ITeacherDao {
 	
 	public int deleteOne(String teacher_id);
 	
-	public int updateOne(Teacher academy);
+	public int updateOne(Teacher teacher);
 	
 	public void loadCsv(String file);
 }
