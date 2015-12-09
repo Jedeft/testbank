@@ -13,9 +13,13 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface IStudentService {
 	/**
 	 * 检索student信息
-	 * 
+	 * @param page
 	 * @param student
 	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws InvocationTargetException
+	 * @throws IntrospectionException
 	 */
 	public List<Student> searchData(PageInfo page, Student student)
 			throws IllegalAccessException, InstantiationException,
@@ -50,9 +54,12 @@ public interface IStudentService {
 	public Student getStudent(String student_id);
 
 	/**
-	 * 录入csv文件数据到库中
-	 * 
-	 * @param in
+	 * 录入csv入库
+	 * @param fileName 文件名
+	 * @param path 文件路径
+	 * @param file multipartFile文件
+	 * @throws IllegalStateException
+	 * @throws IOException
 	 */
 	public void loadCsv(String fileName, String path, MultipartFile file)
 			throws IllegalStateException, IOException;

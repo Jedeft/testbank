@@ -15,9 +15,13 @@ public interface IAcademyService {
 
 	/**
 	 * 检索academy信息
-	 * 
+	 * @param page
 	 * @param academy
 	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws InvocationTargetException
+	 * @throws IntrospectionException
 	 */
 	public List<Academy> searchData(PageInfo page, Academy academy)
 			throws IllegalAccessException, InvocationTargetException,
@@ -52,9 +56,12 @@ public interface IAcademyService {
 	public Academy getAcademy(String academy_id);
 
 	/**
-	 * 录入csv文件数据到库中
-	 * 
-	 * @param in
+	 * 录入csv入库
+	 * @param fileName 文件名
+	 * @param path 文件路径
+	 * @param file multipartFile文件
+	 * @throws IllegalStateException
+	 * @throws IOException
 	 */
 	public void loadCsv(String fileName, String path, MultipartFile file)
 			throws IllegalStateException, IOException;

@@ -1,5 +1,6 @@
 package com.ncu.testbank.admin.data;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.ncu.testbank.base.response.PageInfo;
@@ -13,8 +14,8 @@ public class Syllabus{
 	private String syllabus_id;
 	private String teacher_id;
 	private String course_id;
-	private Timestamp start;
-	private Timestamp end;
+	private Date start;
+	private Date end;
 	
 	public String getSyllabus_id() {
 		return syllabus_id;
@@ -34,16 +35,17 @@ public class Syllabus{
 	public void setCourse_id(String course_id) {
 		this.course_id = course_id;
 	}
-	public Timestamp getStart() {
+	public Date getStart() {
 		return start;
 	}
-	public void setStart(Timestamp start) {
+	public void setStart(Date start) {
 		this.start = start;
 	}
-	public Timestamp getEnd() {
+	public Date getEnd() {
 		return end;
 	}
-	public void setEnd(Timestamp end) {
+	public void setEnd(Date end) {
 		this.end = end;
 	}
+	
 }

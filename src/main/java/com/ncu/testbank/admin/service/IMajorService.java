@@ -13,9 +13,13 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface IMajorService {
 	/**
 	 * 检索major信息
-	 * 
+	 * @param page
 	 * @param major
 	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws InvocationTargetException
+	 * @throws IntrospectionException
 	 */
 	public List<Major> searchData(PageInfo page, Major major)
 			throws IllegalAccessException, InstantiationException,
@@ -50,9 +54,12 @@ public interface IMajorService {
 	public Major getMajor(String major_id);
 
 	/**
-	 * 录入csv文件数据到库中
-	 * 
-	 * @param in
+	 * 录入csv入库
+	 * @param fileName 文件名
+	 * @param path 文件路径
+	 * @param file multipartFile文件
+	 * @throws IllegalStateException
+	 * @throws IOException
 	 */
 	public void loadCsv(String fileName, String path, MultipartFile file)
 			throws IllegalStateException, IOException;

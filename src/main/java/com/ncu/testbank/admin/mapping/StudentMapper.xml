@@ -22,7 +22,7 @@
 				student_id = #{student_id}
 			</if>
 			<if test="class_id != null and class_id != ''">
-				class_id = #{class_id}
+				AND class_id = #{class_id}
 			</if>
 			<if test="name != null and name != ''">
 				AND name = #{name}

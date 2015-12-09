@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.admin.dao.ISyllabusDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.admin.data.Syllabus" >
+	  <id column="syllabus_id" property="syllabus_id"/>
+	  <result column="teacher_id" property="teacher_id"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="start" property="start"/>
+	  <result column="end" property="end"/>
+	</resultMap>
+	
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.admin.data.view.SyllabusView" >
+	  <id column="syllabus_id" property="syllabus_id"/>
+	  <result column="teacher_id" property="teacher_id"/>
+	  <result column="teacher_name" property="teacher_name"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="course_name" property="course_name"/>
+	  <result column="start" property="start"/>
+	  <result column="end" property="end"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		syllabus_id, teacher_id, course_id, start, end
+	</sql>
+	
+	<sql id="View_Column_List">
+		syllabus_id, teacher_id, teacher_name, course_id, course_name, start, end
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			syllabus_v
+		<where>
+			<if test="start != null and start != ''">
+				start >= #{start}
+			</if>
+			<if test="end != null and end != ''">
+				AND #{end} >= end
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchData" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"></include>
+		FROM 
+			syllabus_v
+		<where>
+			<if test="start != null and start != ''">
+				start >= #{start}
+			</if>
+			<if test="end != null and end != ''">
+				AND #{end} >= end
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<select id="getSyllabus" parameterType="java.lang.String" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"/>
+		FROM
+			syllabus_v
+		WHERE
+			syllabus_id = #{syllabus_id}
+	</select>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Syllabus">
+		INSERT INTO 
+			syllabus
+		VALUES
+			(#{syllabus_id},#{teacher_id},#{course_id},#{start},#{end})
+	</insert>
+  
+  
+  	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Syllabus">
+		UPDATE
+			syllabus
+		<set>
+			<if test="teacher_id != null and teacher_id != ''">
+				teacher_id = #{teacher_id},
+			</if>
+			<if test="course_id != null and course_id != ''">
+				course_id = #{course_id},
+			</if>
+			<if test="start != null and start != ''">
+				start = #{start},
+			</if>
+			<if test="end != null and end != ''">
+				end = #{end},
+			</if>
+		</set>
+		WHERE
+			syllabus_id = #{syllabus_id}
+	</update>
+	
+	<delete id="deleteOne" parameterType="java.lang.String">
+		DELETE FROM
+			syllabus
+		WHERE
+			syllabus_id = #{syllabus_id}
+	</delete>
+	
+	<!-- loadCsv文件入库 -->
+	<insert id="loadCsv" parameterType="java.lang.String" >
+		LOAD DATA LOCAL INFILE #{file} INTO TABLE syllabus 
+		CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n'
+	</insert>
+</mapper>
