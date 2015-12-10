@@ -20,6 +20,19 @@
   		R.role_id = U.role_id
   	WHERE 
   		username = #{username}
+  	AND
+  		level = 0;
+  </select>
+  
+  <select id="searchAllRole" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT 
+  		R.role_id role_id, role_name
+  	FROM 
+  		role R INNER JOIN user_role U
+  	ON
+  		R.role_id = U.role_id
+  	WHERE 
+  		username = #{username}
   </select>
   
 </mapper>

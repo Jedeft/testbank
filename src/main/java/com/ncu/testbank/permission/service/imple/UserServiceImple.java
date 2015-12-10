@@ -1,6 +1,5 @@
 package com.ncu.testbank.permission.service.imple;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,14 @@ import redis.clients.jedis.JedisPool;
 
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
+import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
 import com.ncu.testbank.base.utils.JedisPoolUtils;
+import com.ncu.testbank.permission.dao.IRoleDao;
 import com.ncu.testbank.permission.dao.IUserDao;
+import com.ncu.testbank.permission.data.Authen;
 import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
-import com.ncu.testbank.permission.data.Token;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.permission.service.IUserService;
 
@@ -25,6 +26,8 @@ public class UserServiceImple implements IUserService {
 	
 	@Autowired
 	private IUserDao userDao;
+	@Autowired
+	private IRoleDao roleDao;
 
 	@Override
 	public boolean login(User user) {
@@ -33,20 +36,12 @@ public class UserServiceImple implements IUserService {
 	
 	@Override
 	public List<Role> searchRole(String username) {
-		List<Role> roleList = new ArrayList<>();
-		Role role = new Role();
-		if (username.equals(1)) {
-			role.setRole_id(1);
-			role.setRole_name("admin");
-		} else if (username.equals(1)) {
-			role.setRole_id(2);
-			role.setRole_name("teacher");
-		} else {
-			role.setRole_id(3);
-			role.setRole_name("student");
-		} 
-		roleList.add(role);
-		return roleList;
+		return roleDao.searchRole(username);
+	}
+	
+	@Override
+	public List<Role> searchAllRole(String username) {
+		return roleDao.searchAllRole(username);
 	}
 
 	@Override
@@ -60,38 +55,41 @@ public class UserServiceImple implements IUserService {
 	}
 
 	@Override
-	public Token createToken(String username) {
+	public Authen createToken(String username) {
 		JedisPool jedisPool = JedisPoolUtils.getPool();
 		Jedis jedis = jedisPool.getResource();
 		
 		
 		String code = JWTUtils.createToken(username);
+		Authen authen = new Authen();
+		authen.setToken(code);
+		authen.setReAuth(false);
+		String json = JSONUtils.convertObject2Json(authen);
 		//默认token保存3个小时
-		jedis.setex(username, 3*60*60, code);
-		Token token = new Token();
-		token.setSub(username);
-		token.setToken(code);
-		
+		jedis.setex(username, 3*60*60, json);
 		//归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
-		return token;
+		
+		return authen;
 	}
 
 	@Override
-	public boolean validateToken(String token, String username) {
+	public void reAuth(User user) {
+		User DBUser = userDao.getUser(user.getUsername());
+		if (!DBUser.getSecond_pwd().equals(user.getSecond_pwd())) {
+			throw new ServiceException(ErrorCode.REAUTHEN_FAIL);
+		}
 		JedisPool jedisPool = JedisPoolUtils.getPool();
 		Jedis jedis = jedisPool.getResource();
-		
-		if ( !JWTUtils.validateToken(token, username) ) {
-			JedisPoolUtils.returnResource(jedisPool, jedis);
-			throw new ServiceException(ErrorCode.TOKEN_INVALID);
-		}
-		
+		//缓存中设置二级认证通过
+		String json = jedis.get(user.getUsername());
+		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
+		authen.setReAuth(true);
+		json = JSONUtils.convertObject2Json(authen);
+		//默认token保存3个小时
+		jedis.setex(user.getUsername(), 3*60*60, json);
 		//归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
-		
-		return true;
 	}
-	
 	
 }

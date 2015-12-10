@@ -8,7 +8,7 @@ package com.ncu.testbank.permission.data;
 public class User {
 	private String username;
 	private String password;
-	private Integer role_id;
+	private String second_pwd;
 	private String name;
 	
 	public String getUsername() {
@@ -16,12 +16,6 @@ public class User {
 	}
 	public void setUsername(String username) {
 		this.username = username;
-	}
-	public Integer getRole_id() {
-		return role_id;
-	}
-	public void setRole_id(Integer role_id) {
-		this.role_id = role_id;
 	}
 	public String getPassword() {
 		return password;
@@ -34,5 +28,11 @@ public class User {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getSecond_pwd() {
+		return second_pwd;
+	}
+	public void setSecond_pwd(String second_pwd) {
+		this.second_pwd = second_pwd;
 	}
 }

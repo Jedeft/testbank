@@ -8,9 +8,8 @@ package com.ncu.testbank.permission.data;
 public class Permission {
 	private long permission_id;
 	private String name;
-	private String url;
-	private String icon;
 	private long pid;
+	private int level;
 	
 	public long getPermission_id() {
 		return permission_id;
@@ -24,22 +23,17 @@ public class Permission {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	public String getIcon() {
-		return icon;
-	}
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
 	public long getPid() {
 		return pid;
 	}
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
 }

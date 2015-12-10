@@ -8,6 +8,7 @@ package com.ncu.testbank.permission.data;
 public class Role {
 	private long role_id;
 	private String role_name;
+	private int level;
 	
 	public long getRole_id() {
 		return role_id;
@@ -20,5 +21,11 @@ public class Role {
 	}
 	public void setRole_name(String role_name) {
 		this.role_name = role_name;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

@@ -6,12 +6,15 @@ public class ErrorCode {
 	public static final ErrorCode LOGOUT_SUCCESS = new ErrorCode(10010, "登出成功");
 	public static final ErrorCode LOGOUT_FAIL = new ErrorCode(10011,"登出系统失败");
 	public static final ErrorCode USER_ROLE_IS_NULL = new ErrorCode(10023,"登录失败，用户角色未授权");
-	
+	public static final ErrorCode USERNAME_MISSING = new ErrorCode(10043,"用户名不存在，请重试！");
+	public static final ErrorCode USERINFO_MISSING = new ErrorCode(10050, "用户信息丢失，请重新登录！");
 	
 	public static final ErrorCode TOKEN_INVALID = new ErrorCode(20001, "用户登录失效，请重新登录！");
-
-	public static final ErrorCode FILE_TYPE_ERROR = new ErrorCode(30001, "请上传csv格式的文件！");
-	public static final ErrorCode FILE_IO_ERROR = new ErrorCode(30002, "文件IO出错，请检查文件后重试或联系管理人员！");
+	public static final ErrorCode REAUTHEN_FAIL = new ErrorCode(20002, "二级认证密码错误，请重新认证！");
+	
+	
+	public static final ErrorCode FILE_TYPE_ERROR = new ErrorCode(50001, "请上传csv格式的文件！");
+	public static final ErrorCode FILE_IO_ERROR = new ErrorCode(50002, "文件IO出错，请检查文件后重试或联系管理人员！");
 	
 	public static final ErrorCode MAP_CONVERT_ERROR = new ErrorCode(40001, "数据转换Map出错，联系管理人员！");
 	

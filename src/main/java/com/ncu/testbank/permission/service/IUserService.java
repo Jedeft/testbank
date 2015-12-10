@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
-import com.ncu.testbank.permission.data.Token;
+import com.ncu.testbank.permission.data.Authen;
 import com.ncu.testbank.permission.data.User;
 
 public interface IUserService {
@@ -17,11 +17,18 @@ public interface IUserService {
 	public boolean login(User user);
 	
 	/**
-	 * 获取用户角色
+	 * 获取用户角色（未做二级认证）
 	 * @param username
 	 * @return
 	 */
 	public List<Role> searchRole(String username);
+	
+	/**
+	 * 获取用户角色（已做二级认证）
+	 * @param username
+	 * @return
+	 */
+	public List<Role> searchAllRole(String username);
 	
 	/**
 	 * 获取角色权限
@@ -43,13 +50,11 @@ public interface IUserService {
 	 * @param username
 	 * @return
 	 */
-	public Token createToken(String username);
+	public Authen createToken(String username);
 	
 	/**
-	 * 验证Token
-	 * @param username
-	 * @param token
-	 * @return
+	 * 二级密码认证
+	 * @param user
 	 */
-	public boolean validateToken(String token, String username);
+	public void reAuth(User user);
 }
