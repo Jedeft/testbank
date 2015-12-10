@@ -20,6 +20,8 @@ public interface IStudentDao {
 	
 	public int deleteOne(String student_id);
 	
+	public void deleteData(List<String> student_id);
+	
 	public int updateOne(Student student);
 	
 	public void loadCsv(String file);

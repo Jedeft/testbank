@@ -22,6 +22,8 @@ public interface ISyllabusDao {
 	public SyllabusView getSyllabus(String syllabus_id);
 	
 	public int deleteOne(String syllabus_id);
+
+	public void deleteData(List<String> syllabus_id);
 	
 	public void loadCsv(String file);
 }

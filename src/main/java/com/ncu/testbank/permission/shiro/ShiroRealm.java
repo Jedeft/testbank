@@ -111,7 +111,7 @@ public class ShiroRealm extends AuthorizingRealm{
     	String password = new String(c);
     	if ( user.getPassword().equals(password) ) {
     		AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), user.getName());  
-//        	this.setSession("currentUser", user);
+        	this.setSession("currentUser", user);
         	return authcInfo;
     	} else {
     		throw new ShiroException(ErrorCode.PASSWORD_ERROR);

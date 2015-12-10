@@ -19,6 +19,8 @@ public int getCount(Map<String, Object> params);
 	
 	public int deleteOne(String major_id);
 	
+	public void deleteData(List<String> major_id);
+	
 	public int updateOne(Major major);
 	
 	public void loadCsv(String file);

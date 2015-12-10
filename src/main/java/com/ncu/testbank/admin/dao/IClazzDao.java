@@ -20,6 +20,8 @@ public interface IClazzDao {
 	
 	public int deleteOne(String clazz_id);
 	
+	public void deleteData(List<String> clazz_id);
+	
 	public int updateOne(Clazz clazz);
 	
 	public void loadCsv(String file);

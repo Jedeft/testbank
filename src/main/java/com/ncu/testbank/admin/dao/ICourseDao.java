@@ -20,6 +20,8 @@ public interface ICourseDao {
 	
 	public int deleteOne(String course_id);
 	
+	public void deleteData(List<String> course_id);
+	
 	public int updateOne(Course course);
 	
 	public void loadCsv(String file);
