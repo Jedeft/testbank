@@ -47,6 +47,13 @@ public interface IAcademyService {
 	 * @param academy
 	 */
 	public void updateOne(Academy academy);
+	
+	/**
+	 * 批量删除academy信息
+	 * 
+	 * @param academy_id
+	 */
+	public void deleteData(List<String> academy_id);
 
 	/**
 	 * 获取一条academy信息

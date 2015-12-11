@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
@@ -27,6 +29,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.ncu.testbank.base.utils.JSONUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")  
@@ -105,7 +109,37 @@ public class AcademyTest {
 	 */
 	@Test
 	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/academys/{academy_id}", 6).contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(delete("/admin/academys/{academy_id}", 123).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
+	
+	/**
+	 * url : /admin/batch/academys
+	 * method : DELETE
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteListTest() throws Exception{
+		StringBuilder requestBody = new StringBuilder().append("{");
+//		requestBody.append("\" \":");
+//		requestBody.append("\" \",");
+//		requestBody.append("\" \":");
+//		requestBody.append("\" \"}");
+//		requestBody.append("\"academy_id\":");
+//		requestBody.append("[\"1\",");
+//		requestBody.append("\"2\"]}");
+//		String temp = "{\"academy_id\":[1,2,3]}";
+//		List<String> list = new ArrayList<String>();
+//		list.add("1");
+//		list.add("2");
+//		String json = JSONUtils.convertObject2Json(list);
+		String temp = "{\"academy_id\":[\"1\",\"2\"]}";
+		mockMvc.perform(delete("/admin/batch/academys").contentType(MediaType.APPLICATION_JSON)
+											   .content(temp)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))

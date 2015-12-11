@@ -88,4 +88,9 @@ public class AcademyServiceImple implements IAcademyService {
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> academy_id) {
+		academyDao.deleteData(academy_id);
+	}
+
 }

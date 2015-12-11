@@ -72,6 +72,16 @@
 			academy_id = #{academy_id}
 	</delete>
 	
+	<delete id="deleteData" parameterType="java.lang.String">
+		DELETE FROM
+			academy
+		WHERE
+			academy_id in
+			<foreach item="academy_id" index="index" collection="list" open="(" separator="," close=")">
+				#{academy_id}
+			</foreach>
+	</delete>
+	
 	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Academy">
 		UPDATE
 			academy
