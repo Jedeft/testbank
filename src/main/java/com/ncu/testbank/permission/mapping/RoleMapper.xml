@@ -8,12 +8,12 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-  	role_id, role_name
+  	role_id, role_name, level
   </sql>
   
   <select id="searchRole" resultMap="BaseResultMap" parameterType="java.lang.String">
   	SELECT 
-  		R.role_id role_id, role_name
+  		R.role_id role_id, role_name, level
   	FROM 
   		role R INNER JOIN user_role U
   	ON
@@ -26,7 +26,7 @@
   
   <select id="searchAllRole" resultMap="BaseResultMap" parameterType="java.lang.String">
   	SELECT 
-  		R.role_id role_id, role_name
+  		R.role_id role_id, role_name, level
   	FROM 
   		role R INNER JOIN user_role U
   	ON

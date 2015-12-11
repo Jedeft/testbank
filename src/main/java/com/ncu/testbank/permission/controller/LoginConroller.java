@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.proxy.Factory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,8 +39,9 @@ public class LoginConroller {
 		ResponseToken msg = new ResponseToken();
         try {
         	Subject currUser = SecurityUtils.getSubject();
+        	Session session = currUser.getSession();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(),user.getPassword());
-            token.setRememberMe(false);
+            token.setRememberMe(true);
         	currUser.login(token);
         	//赋token值
         	Authen authen = userService.createToken(user.getUsername());

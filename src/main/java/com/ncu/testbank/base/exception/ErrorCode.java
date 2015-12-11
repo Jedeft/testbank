@@ -8,6 +8,7 @@ public class ErrorCode {
 	public static final ErrorCode USER_ROLE_IS_NULL = new ErrorCode(10023,"登录失败，用户角色未授权");
 	public static final ErrorCode USERNAME_MISSING = new ErrorCode(10043,"用户名不存在，请重试！");
 	public static final ErrorCode USERINFO_MISSING = new ErrorCode(10050, "用户信息丢失，请重新登录！");
+	public static final ErrorCode USER_UNLOGIN = new ErrorCode(10088, "用户未登录！");
 	
 	public static final ErrorCode TOKEN_INVALID = new ErrorCode(20001, "用户登录失效，请重新登录！");
 	public static final ErrorCode REAUTHEN_FAIL = new ErrorCode(20002, "二级认证密码错误，请重新认证！");

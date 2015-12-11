@@ -83,6 +83,9 @@ public class UserServiceImple implements IUserService {
 		Jedis jedis = jedisPool.getResource();
 		//缓存中设置二级认证通过
 		String json = jedis.get(user.getUsername());
+		if (json == null) {
+			throw new ServiceException(ErrorCode.USER_UNLOGIN);
+		}
 		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
 		authen.setReAuth(true);
 		json = JSONUtils.convertObject2Json(authen);

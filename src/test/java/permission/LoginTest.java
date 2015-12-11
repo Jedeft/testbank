@@ -58,7 +58,7 @@ public class LoginTest {
     public void setUp() {  
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
         
-        mockSession = new MockHttpSession();
+//        mockSession = new MockHttpSession();
     } 
 	
     
@@ -82,7 +82,7 @@ public class LoginTest {
 		
 		mockMvc.perform(post("/permission/json_web_token").contentType(MediaType.APPLICATION_JSON)
 											   .content(requestBody.toString())
-//											   .session(mockSession)
+											   .session(mockSession)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
