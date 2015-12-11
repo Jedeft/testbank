@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
@@ -118,28 +120,20 @@ public class AcademyTest {
 	}
 	
 	/**
-	 * url : /admin/batch/academys
+	 * url : /admin/academys/batch
 	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
 	public void deleteListTest() throws Exception{
-		StringBuilder requestBody = new StringBuilder().append("{");
-//		requestBody.append("\" \":");
-//		requestBody.append("\" \",");
-//		requestBody.append("\" \":");
-//		requestBody.append("\" \"}");
-//		requestBody.append("\"academy_id\":");
-//		requestBody.append("[\"1\",");
-//		requestBody.append("\"2\"]}");
-//		String temp = "{\"academy_id\":[1,2,3]}";
-//		List<String> list = new ArrayList<String>();
-//		list.add("1");
-//		list.add("2");
-//		String json = JSONUtils.convertObject2Json(list);
 		String temp = "{\"academy_id\":[\"1\",\"2\"]}";
-		mockMvc.perform(delete("/admin/batch/academys").contentType(MediaType.APPLICATION_JSON)
-											   .content(temp)
+		Map<String, List<String>> map = new HashMap<>();
+		List<String> list = new ArrayList<>();
+		list.add("1");
+		list.add("2");
+		map.put("academy_id", list);
+		mockMvc.perform(delete("/admin/academys/batch").contentType(MediaType.APPLICATION_JSON)
+											   .content(JSONUtils.convertObject2Json(map))
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))

@@ -132,7 +132,7 @@ public class AcademyController {
 	 * @param academy
 	 * @return
 	 */
-	@RequestMapping(value = "/batch/academys", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/academys/batch", method = RequestMethod.DELETE)
 	public ResponseMsg deleteAcademys(@RequestBody Map<String, List<String>> map){
 		ResponseMsg msg = new ResponseMsg();
         try {
