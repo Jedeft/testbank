@@ -104,4 +104,9 @@ public class SyllabusServiceImple implements ISyllabusService {
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> syllabus_id) {
+		syllabusDao.deleteData(syllabus_id);
+	}
+
 }

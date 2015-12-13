@@ -40,6 +40,13 @@ public interface IMajorService {
 	public void deleteOne(String major_id);
 
 	/**
+	 * 批量删除major信息
+	 * 
+	 * @param major_id
+	 */
+	public void deleteData(List<String> major_id);
+	
+	/**
 	 * 更新一条major信息
 	 * 
 	 * @param major

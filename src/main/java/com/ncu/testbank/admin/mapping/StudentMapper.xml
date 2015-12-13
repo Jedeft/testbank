@@ -79,6 +79,16 @@
 			student_id = #{student_id}
 	</delete>
 	
+	<delete id="deleteData" parameterType="java.lang.String">
+		DELETE FROM
+			student
+		WHERE
+			student_id in
+			<foreach item="student_id" index="index" collection="list" open="(" separator="," close=")">
+				#{student_id}
+			</foreach>
+	</delete>
+	
 	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Student">
 		UPDATE
 			student

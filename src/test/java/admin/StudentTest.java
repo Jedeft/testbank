@@ -12,6 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
@@ -27,6 +31,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.ncu.testbank.base.utils.JSONUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")  
@@ -105,6 +111,27 @@ public class StudentTest {
 	@Test
 	public void deleteTest() throws Exception{
 		mockMvc.perform(delete("/admin/students/{student_id}", 1).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
+	
+	/**
+	 * url : /admin/students/batch
+	 * method : DELETE
+	 * @throws Exception
+	 */
+	@Test
+	public void batchDeleteTest() throws Exception{
+		Map<String, List<String>> map = new HashMap<>();
+		List<String> list = new ArrayList<>();
+		list.add("1");
+		list.add("2");
+		map.put("student_id", list);
+		mockMvc.perform(delete("/admin/students/batch").contentType(MediaType.APPLICATION_JSON)
+											   .content(JSONUtils.convertObject2Json(map))
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))

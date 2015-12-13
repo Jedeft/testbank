@@ -90,4 +90,9 @@ public class MajorServiceImple implements IMajorService {
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> major_id) {
+		majorDao.deleteData(major_id);
+	}
+
 }

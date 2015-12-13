@@ -40,6 +40,13 @@ public interface ISyllabusService {
 	public void deleteOne(String syllabus_id);
 	
 	/**
+	 * 批量删除syllabus信息
+	 * 
+	 * @param syllabus_id
+	 */
+	public void deleteData(List<String> syllabus_id);
+	
+	/**
 	 * 更新一条syllabus信息
 	 * @param syllabus
 	 */

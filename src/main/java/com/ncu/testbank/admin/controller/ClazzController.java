@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -111,6 +112,36 @@ public class ClazzController {
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
             
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
+	}
+	
+	/**
+	 * 删除class
+	 * @param class
+	 * @return
+	 */
+	@RequestMapping(value = "/classes/batch", method = RequestMethod.DELETE)
+	public ResponseMsg deleteClazzes(@RequestBody Map<String, List<String>> map){
+		ResponseMsg msg = new ResponseMsg();
+        try {
+        	if (map.get("class_id")!= null) {
+        		clazzService.deleteData(map.get("class_id"));
+        	}
+        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+            msg.msg = ErrorCode.CALL_SUCCESS.name;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;

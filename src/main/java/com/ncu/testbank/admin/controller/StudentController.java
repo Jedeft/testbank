@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -111,6 +112,36 @@ public class StudentController {
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
             
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
+	}
+	
+	/**
+	 * 删除student
+	 * @param student
+	 * @return
+	 */
+	@RequestMapping(value = "/students/batch", method = RequestMethod.DELETE)
+	public ResponseMsg deleteStudents(@RequestBody Map<String, List<String>> map){
+		ResponseMsg msg = new ResponseMsg();
+        try {
+        	if (map.get("student_id")!= null) {
+        		studentService.deleteData(map.get("student_id"));
+        	}
+        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+            msg.msg = ErrorCode.CALL_SUCCESS.name;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;

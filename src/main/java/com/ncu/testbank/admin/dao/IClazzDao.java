@@ -20,7 +20,7 @@ public interface IClazzDao {
 	
 	public int deleteOne(String clazz_id);
 	
-	public void deleteData(List<String> clazz_id);
+	public void deleteData(List<String> class_id);
 	
 	public int updateOne(Clazz clazz);
 	

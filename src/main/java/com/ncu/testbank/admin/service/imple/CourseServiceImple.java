@@ -90,4 +90,9 @@ public class CourseServiceImple implements ICourseService {
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> course_id) {
+		courseDao.deleteData(course_id);
+	}
+
 }

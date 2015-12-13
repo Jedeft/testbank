@@ -38,6 +38,13 @@ public interface ICourseService {
 	 * @param course_id
 	 */
 	public void deleteOne(String course_id);
+	
+	/**
+	 * 批量删除course信息
+	 * 
+	 * @param course_id
+	 */
+	public void deleteData(List<String> course_id);
 
 	/**
 	 * 更新一条course信息

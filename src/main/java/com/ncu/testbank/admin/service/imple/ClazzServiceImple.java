@@ -91,4 +91,9 @@ public class ClazzServiceImple implements IClazzService {
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> class_id) {
+		clazzDao.deleteData(class_id);
+	}
+
 }

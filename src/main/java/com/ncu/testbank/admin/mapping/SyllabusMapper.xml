@@ -104,6 +104,16 @@
 			syllabus_id = #{syllabus_id}
 	</delete>
 	
+	<delete id="deleteData" parameterType="java.lang.String">
+		DELETE FROM
+			syllabus
+		WHERE
+			syllabus_id in
+			<foreach item="syllabus_id" index="index" collection="list" open="(" separator="," close=")">
+				#{syllabus_id}
+			</foreach>
+	</delete>
+	
 	<!-- loadCsv文件入库 -->
 	<insert id="loadCsv" parameterType="java.lang.String" >
 		LOAD DATA LOCAL INFILE #{file} INTO TABLE syllabus 

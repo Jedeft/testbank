@@ -40,6 +40,13 @@ public interface IStudentService {
 	public void deleteOne(String student_id);
 
 	/**
+	 * 批量删除student信息
+	 * 
+	 * @param student_id
+	 */
+	public void deleteData(List<String> student_id);
+	
+	/**
 	 * 更新一条student信息
 	 * 
 	 * @param student

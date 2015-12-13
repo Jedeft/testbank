@@ -79,6 +79,16 @@
 			major_id = #{major_id}
 	</delete>
 	
+	<delete id="deleteData" parameterType="java.lang.String">
+		DELETE FROM
+			major
+		WHERE
+			major_id in
+			<foreach item="major_id" index="index" collection="list" open="(" separator="," close=")">
+				#{major_id}
+			</foreach>
+	</delete>
+	
 	<update id="updateOne" parameterType="com.ncu.testbank.admin.data.Major">
 		UPDATE
 			major

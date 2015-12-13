@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -142,6 +143,36 @@ private Logger log = Logger.getLogger("testbankLog");
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
             
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
+	}
+	
+	/**
+	 * 删除syllabus
+	 * @param syllabus
+	 * @return
+	 */
+	@RequestMapping(value = "/syllabuses/batch", method = RequestMethod.DELETE)
+	public ResponseMsg deleteSyllabuses(@RequestBody Map<String, List<String>> map){
+		ResponseMsg msg = new ResponseMsg();
+        try {
+        	if (map.get("syllabus_id")!= null) {
+        		syllabusService.deleteData(map.get("syllabus_id"));
+        	}
+        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+            msg.msg = ErrorCode.CALL_SUCCESS.name;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;

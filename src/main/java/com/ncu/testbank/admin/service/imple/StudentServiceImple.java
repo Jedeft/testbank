@@ -87,4 +87,9 @@ public class StudentServiceImple implements IStudentService{
 			target.delete();
 		}
 	}
+
+	@Override
+	public void deleteData(List<String> student_id) {
+		studentDao.deleteData(student_id);
+	}
 }

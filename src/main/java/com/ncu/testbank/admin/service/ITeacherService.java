@@ -36,6 +36,13 @@ public interface ITeacherService {
 	public void deleteOne(String teacher_id);
 
 	/**
+	 * 批量删除teacher信息
+	 * 
+	 * @param teacher_id
+	 */
+	public void deleteData(List<String> teacher_id);
+	
+	/**
 	 * 更新一条teacher信息
 	 * 
 	 * @param teacher

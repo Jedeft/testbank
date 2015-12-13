@@ -125,7 +125,7 @@ public class AcademyTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteListTest() throws Exception{
+	public void batchDeleteTest() throws Exception{
 		String temp = "{\"academy_id\":[\"1\",\"2\"]}";
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> list = new ArrayList<>();

@@ -13,6 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
@@ -29,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
@@ -142,6 +147,27 @@ public class TeacherTest {
 	@Test
 	public void deleteTest() throws Exception{
 		mockMvc.perform(delete("/admin/teachers/{teacher_id}", "test").contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
+	
+	/**
+	 * url : /admin/teachers/batch
+	 * method : DELETE
+	 * @throws Exception
+	 */
+	@Test
+	public void batchDeleteTest() throws Exception{
+		Map<String, List<String>> map = new HashMap<>();
+		List<String> list = new ArrayList<>();
+		list.add("TEST001");
+		list.add("TEST002");
+		map.put("teacher_id", list);
+		mockMvc.perform(delete("/admin/teachers/batch").contentType(MediaType.APPLICATION_JSON)
+											   .content(JSONUtils.convertObject2Json(map))
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))

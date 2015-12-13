@@ -38,6 +38,13 @@ public interface IClazzService {
 	 * @param class_id
 	 */
 	public void deleteOne(String class_id);
+	
+	/**
+	 * 批量删除class信息
+	 * 
+	 * @param class_id
+	 */
+	public void deleteData(List<String> class_id);
 
 	/**
 	 * 更新一条class信息

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -111,6 +112,36 @@ public class CourseController {
         	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
             msg.msg = ErrorCode.CALL_SUCCESS.name;
             
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
+	}
+	
+	/**
+	 * 删除course
+	 * @param course
+	 * @return
+	 */
+	@RequestMapping(value = "/courses/batch", method = RequestMethod.DELETE)
+	public ResponseMsg deleteCourses(@RequestBody Map<String, List<String>> map){
+		ResponseMsg msg = new ResponseMsg();
+        try {
+        	if (map.get("course_id")!= null) {
+        		courseService.deleteData(map.get("course_id"));
+        	}
+        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+            msg.msg = ErrorCode.CALL_SUCCESS.name;
         } catch (ShiroException e) {
         	ErrorCode error = e.getErrorCode();
         	msg.errorCode = error.code;

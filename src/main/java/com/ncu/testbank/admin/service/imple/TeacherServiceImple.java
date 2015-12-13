@@ -90,4 +90,9 @@ public class TeacherServiceImple implements ITeacherService{
 		}
 	}
 
+	@Override
+	public void deleteData(List<String> teacher_id) {
+		teacherDao.deleteData(teacher_id);
+	}
+
 }
