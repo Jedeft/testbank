@@ -129,7 +129,7 @@ public class StudentController {
 	}
 	
 	/**
-	 * 删除student
+	 * 批量删除student
 	 * @param student
 	 * @return
 	 */

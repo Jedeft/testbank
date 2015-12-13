@@ -129,7 +129,7 @@ public class CourseController {
 	}
 	
 	/**
-	 * 删除course
+	 * 批量删除course
 	 * @param course
 	 * @return
 	 */

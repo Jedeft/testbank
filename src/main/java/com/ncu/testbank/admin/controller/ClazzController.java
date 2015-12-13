@@ -129,7 +129,7 @@ public class ClazzController {
 	}
 	
 	/**
-	 * 删除class
+	 * 批量删除class
 	 * @param class
 	 * @return
 	 */

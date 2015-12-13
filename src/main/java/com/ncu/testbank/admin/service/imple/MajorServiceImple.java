@@ -48,21 +48,21 @@ public class MajorServiceImple implements IMajorService {
 	@Override
 	public void insertOne(Major major) {
 		if ( majorDao.insertOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加专业信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加专业信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String major_id) {
 		if ( majorDao.deleteOne(major_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除专业信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除专业信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Major major) {
 		if ( majorDao.updateOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新专业信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新专业信息失败，请联系管理人员！"));
 		}
 	}
 

@@ -4,6 +4,7 @@ encoding//src/main/resources/log4j.properties=UTF-8
 encoding//src/main/resources/redis.properties=UTF-8
 encoding//src/main/webapp/view/index.jsp=UTF-8
 encoding//src/test/java/admin/AcademyTest.java=UTF-8
+encoding//src/test/java/admin/BankBuilderTest.java=UTF-8
 encoding//src/test/java/admin/ClazzTest.java=UTF-8
 encoding//src/test/java/admin/CourseTest.java=UTF-8
 encoding//src/test/java/admin/MajorTest.java=UTF-8

@@ -48,21 +48,21 @@ public class ClazzServiceImple implements IClazzService {
 	@Override
 	public void insertOne(Clazz clazz) {
 		if ( clazzDao.insertOne(clazz) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加班级信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加班级信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String class_id) {
 		if ( clazzDao.deleteOne(class_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除班级信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除班级信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Clazz clazz) {
 		if ( clazzDao.updateOne(clazz) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新班级信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新班级信息失败，请联系管理人员！"));
 		}
 	}
 

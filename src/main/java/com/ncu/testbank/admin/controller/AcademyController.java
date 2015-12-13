@@ -128,7 +128,7 @@ public class AcademyController {
 	}
 	
 	/**
-	 * 删除academy
+	 * 批量删除academy
 	 * @param academy
 	 * @return
 	 */

@@ -46,21 +46,21 @@ public class AcademyServiceImple implements IAcademyService {
 	@Override
 	public void insertOne(Academy academy) {
 		if ( academyDao.insertOne(academy) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加学院信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加学院信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String academy_id) {
 		if ( academyDao.deleteOne(academy_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除学院信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除学院信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Academy academy) {
 		if ( academyDao.updateOne(academy) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新学院信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新学院信息失败，请联系管理人员！"));
 		}
 	}
 

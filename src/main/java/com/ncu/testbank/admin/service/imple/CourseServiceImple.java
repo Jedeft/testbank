@@ -48,21 +48,21 @@ public class CourseServiceImple implements ICourseService {
 	@Override
 	public void insertOne(Course course) {
 		if ( courseDao.insertOne(course) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加课程信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String course_id) {
 		if ( courseDao.deleteOne(course_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除课程信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Course course) {
 		if ( courseDao.updateOne(course) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新课程信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新课程信息失败，请联系管理人员！"));
 		}
 	}
 

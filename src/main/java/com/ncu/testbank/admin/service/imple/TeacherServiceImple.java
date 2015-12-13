@@ -47,21 +47,21 @@ public class TeacherServiceImple implements ITeacherService{
 	@Override
 	public void insertOne(Teacher teacher) {
 		if ( teacherDao.insertOne(teacher) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加教师信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加教师信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String teacher_id) {
 		if ( teacherDao.deleteOne(teacher_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除教师信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除教师信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Teacher teacher) {
 		if ( teacherDao.updateOne(teacher) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新教师信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新教师信息失败，请联系管理人员！"));
 		}
 	}
 

@@ -160,7 +160,7 @@ private Logger log = Logger.getLogger("testbankLog");
 	}
 	
 	/**
-	 * 删除syllabus
+	 * 批量删除syllabus
 	 * @param syllabus
 	 * @return
 	 */

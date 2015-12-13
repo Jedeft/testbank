@@ -130,7 +130,7 @@ public class TeacherController {
 	}
 	
 	/**
-	 * 删除teacher
+	 * 批量删除teacher
 	 * @param teacher
 	 * @return
 	 */

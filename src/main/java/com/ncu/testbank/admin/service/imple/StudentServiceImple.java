@@ -45,21 +45,21 @@ public class StudentServiceImple implements IStudentService{
 	@Override
 	public void insertOne(Student student) {
 		if ( studentDao.insertOne(student) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加学生信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加学生信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String student_id) {
 		if ( studentDao.deleteOne(student_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除学生信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除学生信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Student student) {
 		if ( studentDao.updateOne(student) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新学生信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新学生信息失败，请联系管理人员！"));
 		}
 	}
 

@@ -129,7 +129,7 @@ public class MajorController {
 	}
 	
 	/**
-	 * 删除major
+	 * 批量删除major
 	 * @param major
 	 * @return
 	 */

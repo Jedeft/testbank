@@ -54,21 +54,21 @@ public class SyllabusServiceImple implements ISyllabusService {
 	public void insertOne(Syllabus syllabus) {
 		syllabus.setSyllabus_id(RandomID.getID() + "");
 		if (syllabusDao.insertOne(syllabus) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "添加课表信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "添加课表信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String syllabus_id) {
 		if (syllabusDao.deleteOne(syllabus_id) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "删除课表信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "删除课表信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Syllabus syllabus) {
 		if (syllabusDao.updateOne(syllabus) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "更新课表信息失败，请重试！"));
+			throw new ServiceException(new ErrorCode(30001, "更新课表信息失败，请联系管理人员！"));
 		}
 	}
 	
