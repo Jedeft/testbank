@@ -13,7 +13,6 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface IClazzService {
 	/**
 	 * 检索clazz信息
-	 * 
 	 * @param page
 	 * @param clazz
 	 * @return
@@ -39,7 +38,7 @@ public interface IClazzService {
 	 * @param class_id
 	 */
 	public void deleteOne(String class_id);
-
+	
 	/**
 	 * 批量删除class信息
 	 * 
@@ -63,13 +62,9 @@ public interface IClazzService {
 
 	/**
 	 * 录入csv入库
-	 * 
-	 * @param fileName
-	 *            文件名
-	 * @param path
-	 *            文件路径
-	 * @param file
-	 *            multipartFile文件
+	 * @param fileName 文件名
+	 * @param path 文件路径
+	 * @param file multipartFile文件
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */

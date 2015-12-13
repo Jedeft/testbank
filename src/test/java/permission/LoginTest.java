@@ -14,6 +14,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.apache.commons.codec.CharEncoding;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,151 +31,150 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-// @WebAppConfiguration(value = "src/main/webapp")
-// @ContextHierarchy({
-// @ContextConfiguration(name = "parent", locations =
-// "classpath:spring-mybatis.xml"),
-// @ContextConfiguration(name = "child", locations =
-// "classpath:spring-mvc.xml"),
-// @ContextConfiguration(locations =
-// "file:webapp/WEB-INF/springMVCForm-servlet.xml")
-// })
+//@WebAppConfiguration(value = "src/main/webapp")  
+//@ContextHierarchy({  
+//        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
+//        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml"),
+//        @ContextConfiguration(locations = "file:webapp/WEB-INF/springMVCForm-servlet.xml")
+//})  
 @WebAppConfiguration
+
 @ContextConfiguration({
-// "file:src/main/webapp/WEB-INF/web.xml",
-		"classpath:springTest.xml", "classpath:spring-mvc.xml" })
+//"file:src/main/webapp/WEB-INF/web.xml",
+"classpath:springTest.xml",
+"classpath:spring-mvc.xml"
+})
 public class LoginTest {
+	
+	@Autowired  
+    private WebApplicationContext wac;  
+	
+    private MockMvc mockMvc;
+    
+    protected MockHttpSession mockSession;
 
-	@Autowired
-	private WebApplicationContext wac;
-
-	private MockMvc mockMvc;
-
-	protected MockHttpSession mockSession;
-
-	@Before
-	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-		// mockSession = new MockHttpSession();
-	}
-
-	/**
-	 * url : /permission/json_web_token method : POST
-	 * 
-	 * @throws Exception
-	 */
+    
+    @Before  
+    public void setUp() {  
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
+        
+//        mockSession = new MockHttpSession();
+    } 
+	
+    
+    /**
+     * url : /permission/json_web_token
+     * method : POST
+     * @throws Exception
+     */
 	@Test
-	public void loginTest() throws Exception {
-		// shiro无法运行
-		// Factory<SecurityManager> factory = new
-		// IniSecurityManagerFactory("classpath:shiro.ini");
-		// // 创建SecurityManager (根据配置创建SecurityManager实例)
-		// SecurityManager security = factory.getInstance();
-		// SecurityUtils.setSecurityManager(security);
+	public void loginTest() throws Exception{
+		//shiro无法运行
+//		Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");  
+//		// 创建SecurityManager (根据配置创建SecurityManager实例)  
+//		SecurityManager security = factory.getInstance();  
+//		SecurityUtils.setSecurityManager(security);  
 		StringBuilder requestBody = new StringBuilder().append("{");
 		requestBody.append("\"username\":");
 		requestBody.append("\"Jedeft\",");
 		requestBody.append("\"password\":");
 		requestBody.append("\"admin\"}");
-
-		mockMvc.perform(
-				post("/permission/json_web_token")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(requestBody.toString()).session(mockSession)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-		// .andExpect(jsonPath("$.errorCode").value(0))
-				.andDo(print());
+		
+		mockMvc.perform(post("/permission/json_web_token").contentType(MediaType.APPLICATION_JSON)
+											   .content(requestBody.toString())
+											   .session(mockSession)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+//										  .andExpect(jsonPath("$.errorCode").value(0))
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/majors method : PATCH
-	 * 
+	 * url : /admin/majors
+	 * method : PATCH
 	 * @throws Exception
 	 */
 	@Test
-	public void updateTest() throws Exception {
+	public void updateTest() throws Exception{
 		StringBuilder requestBody = new StringBuilder().append("{");
 		requestBody.append("\"major_id\":");
 		requestBody.append("\"1\",");
-		// requestBody.append("\"academy_id\":");
-		// requestBody.append("\"123\",");
+//		requestBody.append("\"academy_id\":");
+//		requestBody.append("\"123\",");
 		requestBody.append("\"name\":");
 		requestBody.append("\"计算机软件\"}");
-
-		mockMvc.perform(
-				patch("/admin/majors").contentType(MediaType.APPLICATION_JSON)
-						.content(requestBody.toString())
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
+		
+		mockMvc.perform(patch("/admin/majors").contentType(MediaType.APPLICATION_JSON)
+											   .content(requestBody.toString())
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(jsonPath("$.errorCode").value(0))
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/majors/{major_id} method : GET
-	 * 
+	 * url : /admin/majors/{major_id}
+	 * method : GET
 	 * @throws Exception
 	 */
 	@Test
-	public void selectOneTest() throws Exception {
-		mockMvc.perform(
-				get("/admin/majors/{major_id}", 1)
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void selectOneTest() throws Exception{
+		mockMvc.perform(get("/admin/majors/{major_id}", 1).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/majors/{major_id} method : DELETE
-	 * 
+	 * url : /admin/majors/{major_id}
+	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteTest() throws Exception {
-		mockMvc.perform(
-				delete("/admin/majors/{major_id}", 1)
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void deleteTest() throws Exception{
+		mockMvc.perform(delete("/admin/majors/{major_id}", 1).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/majors/csv params : file method : POST
-	 * 
+	 * url : /admin/majors/csv
+	 * params : file
+	 * method : POST
 	 * @throws Exception
 	 */
 	@Test
 	public void loadCsvTest() throws Exception {
 		File file = new File("E:/CSV/major.csv");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file", "major.csv",
-				null, in);
-		mockMvc.perform(fileUpload("/admin/majors/csv").file(mokeFile)).andDo(
-				print());
+		MockMultipartFile mokeFile = new MockMultipartFile("file", "major.csv", null, in);
+		mockMvc.perform(fileUpload("/admin/majors/csv").file(mokeFile))
+												    .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/majors params : page=1 , rows=15 : major_id, academy_id,
-	 * name method : GET
-	 * 
+	 * url : /admin/majors
+	 * params : page=1 , rows=15
+	 * 		  : major_id, academy_id, name
+	 * method : GET
 	 * @throws Exception
 	 */
 	@Test
-	public void searchTest() throws Exception {
-		mockMvc.perform(
-				get("/admin/majors/?page=1&rows=15&name=软件工程")
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void searchTest() throws Exception{
+		mockMvc.perform(get("/admin/majors/?page=1&rows=15&name=软件工程").contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 }
+

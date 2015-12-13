@@ -75,13 +75,11 @@ public class CsvWriter {
 	 */
 	public CsvWriter(String fileName, char delimiter, Charset charset) {
 		if (fileName == null) {
-			throw new IllegalArgumentException(
-					"Parameter fileName can not be null.");
+			throw new IllegalArgumentException("Parameter fileName can not be null.");
 		}
 
 		if (charset == null) {
-			throw new IllegalArgumentException(
-					"Parameter charset can not be null.");
+			throw new IllegalArgumentException("Parameter charset can not be null.");
 		}
 
 		this.fileName = fileName;
@@ -112,8 +110,7 @@ public class CsvWriter {
 	 */
 	public CsvWriter(Writer outputStream, char delimiter) {
 		if (outputStream == null) {
-			throw new IllegalArgumentException(
-					"Parameter outputStream can not be null.");
+			throw new IllegalArgumentException("Parameter outputStream can not be null.");
 		}
 
 		this.outputStream = new PrintWriter(outputStream);
@@ -518,7 +515,7 @@ public class CsvWriter {
 	private void checkClosed() throws IOException {
 		if (closed) {
 			throw new IOException(
-					"This instance of the CsvWriter class has already been closed.");
+			"This instance of the CsvWriter class has already been closed.");
 		}
 	}
 

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -33,158 +34,159 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.ncu.testbank.base.utils.JSONUtils;
+import com.ncu.testbank.base.utils.JWTUtils;
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration(value = "src/main/webapp")
-@ContextHierarchy({
-		@ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),
-		@ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml") })
+@WebAppConfiguration(value = "src/main/webapp")  
+@ContextHierarchy({  
+        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
+        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
+})  
 public class ClazzTest {
-
-	@Autowired
-	private WebApplicationContext wac;
-
-	private MockMvc mockMvc;
-
-	@Before
-	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-	}
-
-	/**
-	 * url : /admin/classes method : POST
-	 * 
-	 * @throws Exception
-	 */
+	
+	@Autowired  
+    private WebApplicationContext wac;  
+	
+    private MockMvc mockMvc;
+    
+    @Before  
+    public void setUp() {  
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
+    } 
+	
+    
+    /**
+     * url : /admin/classes
+     * method : POST
+     * @throws Exception
+     */
 	@Test
-	public void insertTest() throws Exception {
+	public void insertTest() throws Exception{
 		StringBuilder requestBody = new StringBuilder().append("{");
-		// requestBody.append("\" \":");
-		// requestBody.append("\" \",");pp
-		// requestBody.append("\" \":");
-		// requestBody.append("\" \"}");
+//		requestBody.append("\" \":");
+//		requestBody.append("\" \",");pp
+//		requestBody.append("\" \":");
+//		requestBody.append("\" \"}");
 		requestBody.append("\"class_id\":");
 		requestBody.append("\"1\",");
 		requestBody.append("\"major_id\":");
 		requestBody.append("\"123\",");
 		requestBody.append("\"name\":");
 		requestBody.append("\"软件工程121班\"}");
-
-		mockMvc.perform(
-				post("/admin/classes").contentType(MediaType.APPLICATION_JSON)
-						.content(requestBody.toString())
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
+		
+		mockMvc.perform(post("/admin/classes").contentType(MediaType.APPLICATION_JSON)
+											   .content(requestBody.toString())
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(jsonPath("$.errorCode").value(0))
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes method : PATCH
-	 * 
+	 * url : /admin/classes
+	 * method : PATCH
 	 * @throws Exception
 	 */
 	@Test
-	public void updateTest() throws Exception {
+	public void updateTest() throws Exception{
 		StringBuilder requestBody = new StringBuilder().append("{");
 		requestBody.append("\"class_id\":");
 		requestBody.append("\"1\",");
 		requestBody.append("\"name\":");
 		requestBody.append("\"计算机软件121班\"}");
-
-		mockMvc.perform(
-				patch("/admin/classes").contentType(MediaType.APPLICATION_JSON)
-						.content(requestBody.toString())
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
+		
+		mockMvc.perform(patch("/admin/classes").contentType(MediaType.APPLICATION_JSON)
+											   .content(requestBody.toString())
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(jsonPath("$.errorCode").value(0))
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes/{class_id} method : GET
-	 * 
+	 * url : /admin/classes/{class_id}
+	 * method : GET
 	 * @throws Exception
 	 */
 	@Test
-	public void selectOneTest() throws Exception {
-		mockMvc.perform(
-				get("/admin/classes/{class_id}", 1)
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void selectOneTest() throws Exception{
+		mockMvc.perform(get("/admin/classes/{class_id}", 1).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes/{class_id} method : DELETE
-	 * 
+	 * url : /admin/classes/{class_id}
+	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteTest() throws Exception {
-		mockMvc.perform(
-				delete("/admin/classes/{class_id}", 1)
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void deleteTest() throws Exception{
+		mockMvc.perform(delete("/admin/classes/{class_id}", 1).contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes/batch method : DELETE
-	 * 
+	 * url : /admin/classes/batch
+	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
-	public void batchDeleteTest() throws Exception {
+	public void batchDeleteTest() throws Exception{
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> list = new ArrayList<>();
 		list.add("1");
 		list.add("2");
 		map.put("class_id", list);
-		mockMvc.perform(
-				delete("/admin/classes/batch")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(JSONUtils.convertObject2Json(map))
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+		mockMvc.perform(delete("/admin/classes/batch").contentType(MediaType.APPLICATION_JSON)
+											   .content(JSONUtils.convertObject2Json(map))
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes/csv params : file method : POST
-	 * 
+	 * url : /admin/classes/csv
+	 * params : file
+	 * method : POST
 	 * @throws Exception
 	 */
 	@Test
 	public void loadCsvTest() throws Exception {
 		File file = new File("E:/CSV/classes.csv");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file",
-				"classes.csv", null, in);
-		mockMvc.perform(fileUpload("/admin/classes/csv").file(mokeFile)).andDo(
-				print());
+		MockMultipartFile mokeFile = new MockMultipartFile("file", "classes.csv", null, in);
+		mockMvc.perform(fileUpload("/admin/classes/csv").file(mokeFile))
+												    .andDo(print());
 	}
-
+	
 	/**
-	 * url : /admin/classes params : page=1 , rows=15 : class_id, major_id, name
+	 * url : /admin/classes
+	 * params : page=1 , rows=15
+	 * 		  : class_id, major_id, name
 	 * method : GET
-	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void searchTest() throws Exception {
-		mockMvc.perform(
-				get("/admin/classes/?page=1&rows=15&name=软件工程121班")
-						.contentType(MediaType.TEXT_HTML)
-						.characterEncoding(CharEncoding.UTF_8)
-						.accept(MediaType.APPLICATION_JSON)
-						.characterEncoding(CharEncoding.UTF_8))
-				.andExpect(status().isOk()).andDo(print());
+	public void searchTest() throws Exception{
+		mockMvc.perform(get("/admin/classes/?page=1&rows=15&name=软件工程121班").contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
 	}
-
+	
 }

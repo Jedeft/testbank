@@ -1,6 +1,6 @@
 package com.ncu.testbank.base.exception;
 
-public class ShiroException extends RuntimeException {
+public class ShiroException extends RuntimeException{
 
 	/**
 	 * 
@@ -11,18 +11,19 @@ public class ShiroException extends RuntimeException {
 		super(msg.name);
 		this.errorCode = msg;
 	}
-
+	
 	public ShiroException(Throwable cause) {
 		super(cause);
 	}
-
+	
 	public ShiroException(ErrorCode msg, Throwable cause) {
 		super(msg.name, cause);
 		this.errorCode = msg;
 	}
-
+	
 	private ErrorCode errorCode;
-
+	
+	
 	public ErrorCode getErrorCode() {
 		return errorCode;
 	}
@@ -32,11 +33,10 @@ public class ShiroException extends RuntimeException {
 	}
 
 	public String getMessage() {
-		if (super.getCause() == null) {
+		if(super.getCause()==null) {
 			return super.getMessage();
-		} else {
-			return super.getMessage() + ", nested exception is "
-					+ super.getCause().toString();
+		}else {
+			return super.getMessage() + ", nested exception is " + super.getCause().toString();
 		}
 	}
 }

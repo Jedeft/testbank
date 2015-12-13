@@ -26,78 +26,74 @@ import com.ncu.testbank.permission.service.IUserService;
 @RestController
 @RequestMapping("/permission")
 public class LoginConroller {
-
+	
 	@Autowired
 	private IUserService userService;
-
 	/**
 	 * 登录
-	 * 
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/json_web_token", method = RequestMethod.POST)
+	@RequestMapping(value = "/json_web_token", method=RequestMethod.POST)
 	public ResponseToken login(@RequestBody User user) {
 		ResponseToken msg = new ResponseToken();
-		try {
-			Subject currUser = SecurityUtils.getSubject();
-			Session session = currUser.getSession();
-			UsernamePasswordToken token = new UsernamePasswordToken(
-					user.getUsername(), user.getPassword());
-			token.setRememberMe(true);
-			currUser.login(token);
-			// 赋token值
-			Authen authen = userService.createToken(user.getUsername());
-			List<Role> roleList = userService.searchRole(user.getUsername());
-			msg.errorCode = ErrorCode.LOGIN_SUCCESS.code;
-			msg.msg = ErrorCode.LOGIN_SUCCESS.name;
-			msg.token = authen.getToken();
-			msg.role = roleList;
-		} catch (ShiroException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (ServiceException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (DaoException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		}
-		return msg;
+        try {
+        	Subject currUser = SecurityUtils.getSubject();
+        	Session session = currUser.getSession();
+            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(),user.getPassword());
+            token.setRememberMe(true);
+        	currUser.login(token);
+        	//赋token值
+        	Authen authen = userService.createToken(user.getUsername());
+        	List<Role> roleList = userService.searchRole(user.getUsername());
+        	msg.errorCode = ErrorCode.LOGIN_SUCCESS.code;
+            msg.msg = ErrorCode.LOGIN_SUCCESS.name;
+            msg.token = authen.getToken();
+            msg.role = roleList;
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
 	}
-
+	
 	/**
 	 * 二次认证
-	 * 
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/twiceAuth", method = RequestMethod.POST)
+	@RequestMapping(value = "/twiceAuth", method=RequestMethod.POST)
 	public ResponsePermissionMsg reAuth(@RequestBody User user) {
 		ResponsePermissionMsg msg = new ResponsePermissionMsg();
-		try {
-			userService.reAuth(user);
-			List<Role> roleList = userService.searchAllRole(user.getUsername());
-			msg.errorCode = ErrorCode.LOGIN_SUCCESS.code;
-			msg.msg = ErrorCode.LOGIN_SUCCESS.name;
-			msg.role = roleList;
-		} catch (ShiroException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (ServiceException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (DaoException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		}
-		return msg;
+        try {
+        	userService.reAuth(user);
+        	List<Role> roleList = userService.searchAllRole(user.getUsername());
+        	msg.errorCode = ErrorCode.LOGIN_SUCCESS.code;
+            msg.msg = ErrorCode.LOGIN_SUCCESS.name;
+            msg.role = roleList;
+        } catch (ShiroException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (ServiceException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        } catch (DaoException e) {
+        	ErrorCode error = e.getErrorCode();
+        	msg.errorCode = error.code;
+        	msg.msg = error.name;
+        }
+        return msg;
 	}
-
+	
 }

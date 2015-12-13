@@ -2,7 +2,6 @@ package permission;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -18,13 +17,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.apache.shiro.mgt.SecurityManager;
+
+import sun.text.normalizer.ICUBinary.Authenticate;
 
 @ContextConfiguration({
-// "classpath:beans.xml",
-		"classpath:springTest.xml", "classpath:spring-mvc.xml" })
+		// "classpath:beans.xml",
+		"classpath:springTest.xml",
+		"classpath:spring-mvc.xml"
+		})
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ShiroUnitTest extends AbstractShiroTest {
+
 
 	@Autowired
 	private WebApplicationContext ctx;
@@ -38,7 +43,7 @@ public class ShiroUnitTest extends AbstractShiroTest {
 	@Before
 	public void setUp() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-		// final Authenticate bean = (Authenticate) ctx.getBean("authenticate");
+//		final Authenticate bean = (Authenticate) ctx.getBean("authenticate");
 		// 1. Create a mock authenticated Subject instance for the test to run:
 		subjectUnderTest = new Subject.Builder(getSecurityManager())
 				.buildSubject();// Mockito.mock(Subject.class);
@@ -47,8 +52,8 @@ public class ShiroUnitTest extends AbstractShiroTest {
 		mockSession = new MockHttpSession(ctx.getServletContext(),
 				subjectUnderTest.getSession().getId().toString());
 		SecurityManager securityManger = getSecurityManager();
-		ThreadContext.bind(securityManger);
-
+	    ThreadContext.bind(securityManger);
+		
 		// 2. Bind the subject to the current thread:
 		setSubject(subjectUnderTest);
 		// bean.logon("User01", "User01", mockSession.getId());
@@ -63,9 +68,8 @@ public class ShiroUnitTest extends AbstractShiroTest {
 
 	@Test
 	public void testShowHome() throws Exception {
-		mockMvc.perform(
-				MockMvcRequestBuilders.post("/permission/json_web_token")
-						.session(mockSession)).andExpect(status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.post("/permission/json_web_token").session(mockSession))
+				.andExpect(status().isOk());
 	}
 
 	@After
