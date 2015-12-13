@@ -35,139 +35,142 @@ import org.springframework.web.context.WebApplicationContext;
 import com.ncu.testbank.base.utils.JSONUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration(value = "src/main/webapp")  
-@ContextHierarchy({  
-        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
-        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
-})  
+@WebAppConfiguration(value = "src/main/webapp")
+@ContextHierarchy({
+		@ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),
+		@ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml") })
 public class StudentTest {
-	
-	@Autowired  
-    private WebApplicationContext wac;  
-	
-    private MockMvc mockMvc;
-    
-    @Before  
-    public void setUp() {  
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
-    } 
-    
-    /**
-     * url : /admin/students
-     * method : POST
-     * @throws Exception
-     */
+
+	@Autowired
+	private WebApplicationContext wac;
+
+	private MockMvc mockMvc;
+
+	@Before
+	public void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+	}
+
+	/**
+	 * url : /admin/students method : POST
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void insertTest() throws Exception{
+	public void insertTest() throws Exception {
 		String requestBody = "{\"student_id\":\"1\", \"class_id\":\"2\", \"name\":\"Jedeft\"}";
-		
-		mockMvc.perform(post("/admin/students").contentType(MediaType.APPLICATION_JSON)
-											   .content(requestBody)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+
+		mockMvc.perform(
+				post("/admin/students").contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/students
-	 * method : PATCH
+	 * url : /admin/students method : PATCH
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void updateTest() throws Exception{
+	public void updateTest() throws Exception {
 		String requestBody = "{\"student_id\":\"1\", \"name\":\"update!Jedeft\"}";
-		
-		mockMvc.perform(patch("/admin/students").contentType(MediaType.APPLICATION_JSON)
-											   .content(requestBody)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+
+		mockMvc.perform(
+				patch("/admin/students")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/students/{student_id}
-	 * method : GET
+	 * url : /admin/students/{student_id} method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void selectOneTest() throws Exception{
-		mockMvc.perform(get("/admin/students/{student_id}", 1).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void selectOneTest() throws Exception {
+		mockMvc.perform(
+				get("/admin/students/{student_id}", 1)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/students/{student_id}
-	 * method : DELETE
+	 * url : /admin/students/{student_id} method : DELETE
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/students/{student_id}", 1).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void deleteTest() throws Exception {
+		mockMvc.perform(
+				delete("/admin/students/{student_id}", 1)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/students/batch
-	 * method : DELETE
+	 * url : /admin/students/batch method : DELETE
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void batchDeleteTest() throws Exception{
+	public void batchDeleteTest() throws Exception {
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> list = new ArrayList<>();
 		list.add("1");
 		list.add("2");
 		map.put("student_id", list);
-		mockMvc.perform(delete("/admin/students/batch").contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(map))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+		mockMvc.perform(
+				delete("/admin/students/batch")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(JSONUtils.convertObject2Json(map))
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/students/csv
-	 * params : file
-	 * method : POST
+	 * url : /admin/students/csv params : file method : POST
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void loadCsvTest() throws Exception {
 		File file = new File("E:/CSV/students.csv");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file", "students.csv", null, in);
+		MockMultipartFile mokeFile = new MockMultipartFile("file",
+				"students.csv", null, in);
 		mockMvc.perform(fileUpload("/admin/students/csv").file(mokeFile))
-												    .andDo(print());
+				.andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/academys
-	 * params : page=1 , rows=15
-	 * 		  : students_id, class_id, name
-	 * method : GET
+	 * url : /admin/academys params : page=1 , rows=15 : students_id, class_id,
+	 * name method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/students/?page=1&rows=15").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void searchTest() throws Exception {
+		mockMvc.perform(
+				get("/admin/students/?page=1&rows=15")
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
 }

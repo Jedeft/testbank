@@ -13,6 +13,7 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface IStudentService {
 	/**
 	 * 检索student信息
+	 * 
 	 * @param page
 	 * @param student
 	 * @return
@@ -45,7 +46,7 @@ public interface IStudentService {
 	 * @param student_id
 	 */
 	public void deleteData(List<String> student_id);
-	
+
 	/**
 	 * 更新一条student信息
 	 * 
@@ -62,9 +63,13 @@ public interface IStudentService {
 
 	/**
 	 * 录入csv入库
-	 * @param fileName 文件名
-	 * @param path 文件路径
-	 * @param file multipartFile文件
+	 * 
+	 * @param fileName
+	 *            文件名
+	 * @param path
+	 *            文件路径
+	 * @param file
+	 *            multipartFile文件
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */

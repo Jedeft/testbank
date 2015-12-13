@@ -21,7 +21,7 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 
 @Service("majorService")
 public class MajorServiceImple implements IMajorService {
-	
+
 	@Autowired
 	private IMajorDao majorDao;
 
@@ -34,12 +34,12 @@ public class MajorServiceImple implements IMajorService {
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
-		} 
-		page.setTotalPage(count/page.getRows() + 1);
+		}
+		page.setTotalPage(count / page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的专业！"));
 		}
-		//数据库分页从0开始，前台分页从1开始
+		// 数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
 		return majorDao.searchData(params);
@@ -47,22 +47,25 @@ public class MajorServiceImple implements IMajorService {
 
 	@Override
 	public void insertOne(Major major) {
-		if ( majorDao.insertOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加专业信息失败，请联系管理人员！"));
+		if (majorDao.insertOne(major) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "添加专业信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String major_id) {
-		if ( majorDao.deleteOne(major_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除专业信息失败，请联系管理人员！"));
+		if (majorDao.deleteOne(major_id) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "删除专业信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Major major) {
-		if ( majorDao.updateOne(major) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新专业信息失败，请联系管理人员！"));
+		if (majorDao.updateOne(major) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "更新专业信息失败，请联系管理人员！"));
 		}
 	}
 
@@ -76,11 +79,11 @@ public class MajorServiceImple implements IMajorService {
 			throws IllegalStateException, IOException {
 		File target = new File(path, fileName);
 		if (!target.getParentFile().exists()) {
-			if ( !target.getParentFile().mkdirs() ) {
+			if (!target.getParentFile().mkdirs()) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 		}
-		if ( !target.createNewFile() ) {
+		if (!target.createNewFile()) {
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
 		file.transferTo(target);

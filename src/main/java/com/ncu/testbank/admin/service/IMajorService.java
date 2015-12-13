@@ -13,6 +13,7 @@ import com.ncu.testbank.base.response.PageInfo;
 public interface IMajorService {
 	/**
 	 * 检索major信息
+	 * 
 	 * @param page
 	 * @param major
 	 * @return
@@ -45,7 +46,7 @@ public interface IMajorService {
 	 * @param major_id
 	 */
 	public void deleteData(List<String> major_id);
-	
+
 	/**
 	 * 更新一条major信息
 	 * 
@@ -62,9 +63,13 @@ public interface IMajorService {
 
 	/**
 	 * 录入csv入库
-	 * @param fileName 文件名
-	 * @param path 文件路径
-	 * @param file multipartFile文件
+	 * 
+	 * @param fileName
+	 *            文件名
+	 * @param path
+	 *            文件路径
+	 * @param file
+	 *            multipartFile文件
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */

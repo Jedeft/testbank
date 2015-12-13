@@ -21,7 +21,7 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 
 @Service("clazzService")
 public class ClazzServiceImple implements IClazzService {
-	
+
 	@Autowired
 	private IClazzDao clazzDao;
 
@@ -34,12 +34,12 @@ public class ClazzServiceImple implements IClazzService {
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
-		} 
-		page.setTotalPage(count/page.getRows() + 1);
+		}
+		page.setTotalPage(count / page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的班级！"));
 		}
-		//数据库分页从0开始，前台分页从1开始
+		// 数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
 		return clazzDao.searchData(params);
@@ -47,22 +47,25 @@ public class ClazzServiceImple implements IClazzService {
 
 	@Override
 	public void insertOne(Clazz clazz) {
-		if ( clazzDao.insertOne(clazz) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加班级信息失败，请联系管理人员！"));
+		if (clazzDao.insertOne(clazz) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "添加班级信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String class_id) {
-		if ( clazzDao.deleteOne(class_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除班级信息失败，请联系管理人员！"));
+		if (clazzDao.deleteOne(class_id) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "删除班级信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Clazz clazz) {
-		if ( clazzDao.updateOne(clazz) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新班级信息失败，请联系管理人员！"));
+		if (clazzDao.updateOne(clazz) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "更新班级信息失败，请联系管理人员！"));
 		}
 	}
 
@@ -76,14 +79,14 @@ public class ClazzServiceImple implements IClazzService {
 			throws IllegalStateException, IOException {
 		File target = new File(path, fileName);
 		if (!target.getParentFile().exists()) {
-			if ( !target.getParentFile().mkdirs() ) {
+			if (!target.getParentFile().mkdirs()) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 		}
-		if ( !target.createNewFile() ) {
+		if (!target.createNewFile()) {
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
-		
+
 		file.transferTo(target);
 		clazzDao.loadCsv(target.getPath());
 		if (target.exists()) {

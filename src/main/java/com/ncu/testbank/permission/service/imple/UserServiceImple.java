@@ -38,7 +38,7 @@ public class UserServiceImple implements IUserService {
 	public List<Role> searchRole(String username) {
 		return roleDao.searchRole(username);
 	}
-	
+
 	@Override
 	public List<Role> searchAllRole(String username) {
 		return roleDao.searchAllRole(username);

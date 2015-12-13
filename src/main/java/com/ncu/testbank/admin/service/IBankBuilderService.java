@@ -1,19 +1,16 @@
 package com.ncu.testbank.admin.service;
 
 import java.beans.IntrospectionException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.ncu.testbank.admin.data.Academy;
 import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.base.response.PageInfo;
 
 public interface IBankBuilderService {
 	/**
 	 * 检索题库建设者信息
+	 * 
 	 * @param page
 	 * @param teacher
 	 * @return

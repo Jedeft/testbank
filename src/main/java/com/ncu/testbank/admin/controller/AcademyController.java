@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,247 +33,260 @@ import com.ncu.testbank.base.response.ResponseQueryMsg;
 @RestController
 @RequestMapping("/admin")
 public class AcademyController {
-	
+
 	private Logger log = Logger.getLogger("testbankLog");
-	
+
 	@Autowired
 	private IAcademyService academyService;
-	
+
 	/**
 	 * 新增academy
+	 * 
 	 * @param academy
 	 * @return
 	 */
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
-	public ResponseMsg insertAcademy(@RequestBody Academy academy){
+	public ResponseMsg insertAcademy(@RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	academyService.insertOne(academy);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = academy;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			academyService.insertOne(academy);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = academy;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 更新academy
+	 * 
 	 * @param academy
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.PATCH)
-	public ResponseMsg updateAcademy(@RequestBody Academy academy){
+	public ResponseMsg updateAcademy(@RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	
-        	academyService.updateOne(academy);
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = academyService.getAcademy(academy.getAcademy_id());
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+
+			academyService.updateOne(academy);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = academyService.getAcademy(academy.getAcademy_id());
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 删除academy
+	 * 
 	 * @param academy
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteAcademy(@PathVariable String academy_id){
+	public ResponseMsg deleteAcademy(@PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	academyService.deleteOne(academy_id);
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			academyService.deleteOne(academy_id);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 批量删除academy
+	 * 
 	 * @param academy
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/batch", method = RequestMethod.DELETE)
-	public ResponseMsg deleteAcademys(@RequestBody Map<String, List<String>> map){
+	public ResponseMsg deleteAcademys(@RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	if (map.get("academy_id")!= null) {
-        		academyService.deleteData(map.get("academy_id"));
-        	}
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			if (map.get("academy_id") != null) {
+				academyService.deleteData(map.get("academy_id"));
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
-	
-	
+
 	/**
 	 * 根据id获取指定academy
+	 * 
 	 * @param academy
 	 * @return
 	 */
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
-	public ResponseMsg getAcademy(@PathVariable String academy_id){
+	public ResponseMsg getAcademy(@PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	Academy data = academyService.getAcademy(academy_id);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = data;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			Academy data = academyService.getAcademy(academy_id);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = data;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 分页获取academy信息
+	 * 
 	 * @param academy
 	 * @return
 	 */
 	@RequestMapping(value = "/academys", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Academy academy){
+	public ResponseQueryMsg searchData(PageInfo page, Academy academy) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
-        try {
-        	List<Academy> academyList;
+		try {
+			List<Academy> academyList;
 			academyList = academyService.searchData(page, academy);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = academyList;
-            
-            msg.total = page.getTotal();
-            msg.totalPage = page.getTotalPage();
-            msg.currentPage = page.getPage();
-            msg.pageCount = academyList.size();
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (IllegalAccessException | InvocationTargetException
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = academyList;
+
+			msg.total = page.getTotal();
+			msg.totalPage = page.getTotalPage();
+			msg.currentPage = page.getPage();
+			msg.pageCount = academyList.size();
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (IllegalAccessException | InvocationTargetException
 				| IntrospectionException e) {
-        	msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
+			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
 			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
 			log.error(e.getMessage());
 		}
-        return msg;
+		return msg;
 	}
-	
+
 	/**
 	 * csv文件批量录入academy信息
+	 * 
 	 * @param file
 	 * @param request
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
-	public ResponseMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
+	public ResponseMsg loadCsv(
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	
-        	String fileName = new Date().getTime() + "_" + file.getOriginalFilename();
-        	String path = request.getSession().getServletContext().getRealPath("upload");
-        	
-        	if ( !fileName.endsWith(".csv") ) {
-        		msg.errorCode = ErrorCode.FILE_TYPE_ERROR.code;
-        		msg.msg = ErrorCode.FILE_TYPE_ERROR.name;
-        		return msg;
-        	}
-        	academyService.loadCsv(fileName, path, file);
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (IOException e) {
-        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
-        	log.error(e.getMessage());
-        } catch (IllegalStateException e) {
-        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
-        	log.error(e.getMessage());
-        }
-        return msg;
+		try {
+
+			String fileName = new Date().getTime() + "_"
+					+ file.getOriginalFilename();
+			String path = request.getSession().getServletContext()
+					.getRealPath("upload");
+
+			if (!fileName.endsWith(".csv")) {
+				msg.errorCode = ErrorCode.FILE_TYPE_ERROR.code;
+				msg.msg = ErrorCode.FILE_TYPE_ERROR.name;
+				return msg;
+			}
+			academyService.loadCsv(fileName, path, file);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (IOException e) {
+			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+			msg.msg = ErrorCode.FILE_IO_ERROR.name;
+			log.error(e.getMessage());
+		} catch (IllegalStateException e) {
+			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+			msg.msg = ErrorCode.FILE_IO_ERROR.name;
+			log.error(e.getMessage());
+		}
+		return msg;
 	}
 }
