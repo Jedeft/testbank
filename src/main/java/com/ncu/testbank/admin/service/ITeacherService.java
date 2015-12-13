@@ -41,7 +41,7 @@ public interface ITeacherService {
 	 * @param teacher_id
 	 */
 	public void deleteData(List<String> teacher_id);
-	
+
 	/**
 	 * 更新一条teacher信息
 	 * 

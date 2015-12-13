@@ -28,7 +28,6 @@ import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
 import com.ncu.testbank.base.utils.JedisPoolUtils;
 import com.ncu.testbank.permission.data.Authen;
-import com.ncu.testbank.permission.data.Permission;
 import com.ncu.testbank.permission.data.Role;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.permission.service.IUserService;

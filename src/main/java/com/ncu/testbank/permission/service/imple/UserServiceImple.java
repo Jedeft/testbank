@@ -23,7 +23,7 @@ import com.ncu.testbank.permission.service.IUserService;
 
 @Service("userService")
 public class UserServiceImple implements IUserService {
-	
+
 	@Autowired
 	private IUserDao userDao;
 	@Autowired
@@ -33,12 +33,12 @@ public class UserServiceImple implements IUserService {
 	public boolean login(User user) {
 		return false;
 	}
-	
+
 	@Override
 	public List<Role> searchRole(String username) {
 		return roleDao.searchRole(username);
 	}
-	
+
 	@Override
 	public List<Role> searchAllRole(String username) {
 		return roleDao.searchAllRole(username);
@@ -58,18 +58,17 @@ public class UserServiceImple implements IUserService {
 	public Authen createToken(String username) {
 		JedisPool jedisPool = JedisPoolUtils.getPool();
 		Jedis jedis = jedisPool.getResource();
-		
-		
+
 		String code = JWTUtils.createToken(username);
 		Authen authen = new Authen();
 		authen.setToken(code);
 		authen.setReAuth(false);
 		String json = JSONUtils.convertObject2Json(authen);
-		//默认token保存3个小时
-		jedis.setex(username, 3*60*60, json);
-		//归还连接池
+		// 默认token保存3个小时
+		jedis.setex(username, 3 * 60 * 60, json);
+		// 归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
-		
+
 		return authen;
 	}
 
@@ -81,7 +80,7 @@ public class UserServiceImple implements IUserService {
 		}
 		JedisPool jedisPool = JedisPoolUtils.getPool();
 		Jedis jedis = jedisPool.getResource();
-		//缓存中设置二级认证通过
+		// 缓存中设置二级认证通过
 		String json = jedis.get(user.getUsername());
 		if (json == null) {
 			throw new ServiceException(ErrorCode.USER_UNLOGIN);
@@ -89,10 +88,10 @@ public class UserServiceImple implements IUserService {
 		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
 		authen.setReAuth(true);
 		json = JSONUtils.convertObject2Json(authen);
-		//默认token保存3个小时
-		jedis.setex(user.getUsername(), 3*60*60, json);
-		//归还连接池
+		// 默认token保存3个小时
+		jedis.setex(user.getUsername(), 3 * 60 * 60, json);
+		// 归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
 	}
-	
+
 }

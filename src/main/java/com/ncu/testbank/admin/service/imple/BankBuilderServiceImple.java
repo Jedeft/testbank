@@ -21,7 +21,7 @@ public class BankBuilderServiceImple implements IBankBuilderService {
 
 	@Autowired
 	private IBankBuilderDao bankBuilderDao;
-	
+
 	@Override
 	public List<Teacher> searchData(PageInfo page, Teacher teacher)
 			throws IllegalAccessException, InvocationTargetException,
@@ -31,12 +31,12 @@ public class BankBuilderServiceImple implements IBankBuilderService {
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
-		} 
-		page.setTotalPage(count/page.getRows() + 1);
+		}
+		page.setTotalPage(count / page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的题库建设人员！"));
 		}
-		//数据库分页从0开始，前台分页从1开始
+		// 数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
 		return bankBuilderDao.searchData(params);
@@ -44,15 +44,17 @@ public class BankBuilderServiceImple implements IBankBuilderService {
 
 	@Override
 	public void insertOne(String teacher_id) {
-		if ( bankBuilderDao.insertOne(teacher_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加题库建设人员失败，请联系管理人员！"));
+		if (bankBuilderDao.insertOne(teacher_id) < 1) {
+			throw new ServiceException(new ErrorCode(30001,
+					"添加题库建设人员失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String teacher_id) {
-		if ( bankBuilderDao.deleteOne(teacher_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除题库建设人员失败，请联系管理人员！"));
+		if (bankBuilderDao.deleteOne(teacher_id) < 1) {
+			throw new ServiceException(new ErrorCode(30001,
+					"删除题库建设人员失败，请联系管理人员！"));
 		}
 	}
 

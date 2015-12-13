@@ -36,109 +36,111 @@ import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.base.utils.JSONUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration(value = "src/main/webapp")  
-@ContextHierarchy({  
-        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
-        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
-})  
+@WebAppConfiguration(value = "src/main/webapp")
+@ContextHierarchy({
+		@ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),
+		@ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml") })
 public class BankBuilderTest {
-	
-	@Autowired  
-    private WebApplicationContext wac;  
-	
-    private MockMvc mockMvc;
-    
-    @Before  
-    public void setUp() {  
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
-    } 
-	
-    
-    /**
-     * url : /admin/bankBuilders
-     * method : POST
-     * @throws Exception
-     */
+
+	@Autowired
+	private WebApplicationContext wac;
+
+	private MockMvc mockMvc;
+
+	@Before
+	public void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+	}
+
+	/**
+	 * url : /admin/bankBuilders method : POST
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void insertTest() throws Exception{
+	public void insertTest() throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("teacher_id", "1");
-		
-		mockMvc.perform(post("/admin/bankBuilders").contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(map))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+
+		mockMvc.perform(
+				post("/admin/bankBuilders")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(JSONUtils.convertObject2Json(map))
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/bankBuilders/{teacher_id}
-	 * method : GET
+	 * url : /admin/bankBuilders/{teacher_id} method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void selectOneTest() throws Exception{
-		mockMvc.perform(get("/admin/bankBuilders/{teacher_id}", 1).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void selectOneTest() throws Exception {
+		mockMvc.perform(
+				get("/admin/bankBuilders/{teacher_id}", 1)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/bankBuilders/{teacher_id}
-	 * method : DELETE
+	 * url : /admin/bankBuilders/{teacher_id} method : DELETE
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/bankBuilders/{teacher_id}", "1").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void deleteTest() throws Exception {
+		mockMvc.perform(
+				delete("/admin/bankBuilders/{teacher_id}", "1")
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/bankBuilders/batch
-	 * method : DELETE
+	 * url : /admin/bankBuilders/batch method : DELETE
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void batchDeleteTest() throws Exception{
+	public void batchDeleteTest() throws Exception {
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> list = new ArrayList<>();
 		list.add("TEST0010");
 		list.add("TEST003");
 		map.put("teacher_id", list);
-		mockMvc.perform(delete("/admin/bankBuilders/batch").contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(map))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+		mockMvc.perform(
+				delete("/admin/bankBuilders/batch")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(JSONUtils.convertObject2Json(map))
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /admin/bankBuilders
-	 * params : page=1 , rows=15
-	 * 		  : teacher_id, academy_id, name
-	 * method : GET
+	 * url : /admin/bankBuilders params : page=1 , rows=15 : teacher_id,
+	 * academy_id, name method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/bankBuilders/?page=1&rows=15&teacher_id=TEST003").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void searchTest() throws Exception {
+		mockMvc.perform(
+				get("/admin/bankBuilders/?page=1&rows=15&teacher_id=TEST003")
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,246 +33,262 @@ import com.ncu.testbank.base.response.ResponseQueryMsg;
 @RestController
 @RequestMapping("/admin")
 public class StudentController {
-	
+
 	private Logger log = Logger.getLogger("testbankLog");
-	
+
 	@Autowired
 	private IStudentService studentService;
-	
+
 	/**
 	 * 新增student
+	 * 
 	 * @param student
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/students", method = RequestMethod.POST)
-	public ResponseMsg insertStudent(@RequestBody Student student){
+	public ResponseMsg insertStudent(@RequestBody Student student) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	studentService.insertOne(student);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = student;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			studentService.insertOne(student);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = student;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 更新student
+	 * 
 	 * @param student
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/students", method = RequestMethod.PATCH)
-	public ResponseMsg updateStudent(@RequestBody Student student){
+	public ResponseMsg updateStudent(@RequestBody Student student) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	
-        	studentService.updateOne(student);
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = studentService.getStudent(student.getStudent_id());
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+
+			studentService.updateOne(student);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = studentService.getStudent(student.getStudent_id());
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 删除student
+	 * 
 	 * @param student
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/students/{student_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteStudent(@PathVariable String student_id){
+	public ResponseMsg deleteStudent(@PathVariable String student_id) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	studentService.deleteOne(student_id);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			studentService.deleteOne(student_id);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 批量删除student
+	 * 
 	 * @param student
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/students/batch", method = RequestMethod.DELETE)
-	public ResponseMsg deleteStudents(@RequestBody Map<String, List<String>> map){
+	public ResponseMsg deleteStudents(@RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	if (map.get("student_id")!= null) {
-        		studentService.deleteData(map.get("student_id"));
-        	}
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			if (map.get("student_id") != null) {
+				studentService.deleteData(map.get("student_id"));
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 根据id获取指定student
+	 * 
 	 * @param student
 	 * @return
 	 */
 	@RequestMapping(value = "/students/{student_id}", method = RequestMethod.GET)
-	public ResponseMsg getStudent(@PathVariable String student_id){
+	public ResponseMsg getStudent(@PathVariable String student_id) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	Student data = studentService.getStudent(student_id);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = data;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        }
-        return msg;
+		try {
+			Student data = studentService.getStudent(student_id);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = data;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
 	}
-	
+
 	/**
 	 * 分页获取student信息
+	 * 
 	 * @param student
 	 * @return
 	 */
 	@RequestMapping(value = "/students", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Student student){
+	public ResponseQueryMsg searchData(PageInfo page, Student student) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
-        try {
-        	List<Student> studentList;
+		try {
+			List<Student> studentList;
 			studentList = studentService.searchData(page, student);
-        	
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-            msg.data = studentList;
-            
-            msg.total = page.getTotal();
-            msg.totalPage = page.getTotalPage();
-            msg.currentPage = page.getPage();
-            msg.pageCount = studentList.size();
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (IllegalAccessException | InstantiationException
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = studentList;
+
+			msg.total = page.getTotal();
+			msg.totalPage = page.getTotalPage();
+			msg.currentPage = page.getPage();
+			msg.pageCount = studentList.size();
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (IllegalAccessException | InstantiationException
 				| InvocationTargetException | IntrospectionException e) {
 			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
 			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
 			log.error(e.getMessage());
 		}
-        return msg;
+		return msg;
 	}
-	
+
 	/**
 	 * csv文件批量录入student信息
+	 * 
 	 * @param file
 	 * @param request
 	 * @return
 	 */
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/students/csv", method = RequestMethod.POST)
-	public ResponseMsg loadCsv(@RequestParam(value = "file", required = false)MultipartFile file, HttpServletRequest request){
+	public ResponseMsg loadCsv(
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
-        try {
-        	
-        	String fileName = new Date().getTime() + "_" + file.getOriginalFilename();
-        	String path = request.getSession().getServletContext().getRealPath("upload");
-        	
-        	if ( !fileName.endsWith(".csv") ) {
-        		msg.errorCode = ErrorCode.FILE_TYPE_ERROR.code;
-        		msg.msg = ErrorCode.FILE_TYPE_ERROR.name;
-        		return msg;
-        	}
-        	studentService.loadCsv(fileName, path, file);
-        	msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-            msg.msg = ErrorCode.CALL_SUCCESS.name;
-        } catch (ShiroException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (ServiceException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (DaoException e) {
-        	ErrorCode error = e.getErrorCode();
-        	msg.errorCode = error.code;
-        	msg.msg = error.name;
-        } catch (IOException e) {
-        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
-        	log.error(e.getMessage());
-        } catch (IllegalStateException e) {
-        	msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-        	msg.msg = ErrorCode.FILE_IO_ERROR.name;
-        	log.error(e.getMessage());
-        }
-        return msg;
+		try {
+
+			String fileName = new Date().getTime() + "_"
+					+ file.getOriginalFilename();
+			String path = request.getSession().getServletContext()
+					.getRealPath("upload");
+
+			if (!fileName.endsWith(".csv")) {
+				msg.errorCode = ErrorCode.FILE_TYPE_ERROR.code;
+				msg.msg = ErrorCode.FILE_TYPE_ERROR.name;
+				return msg;
+			}
+			studentService.loadCsv(fileName, path, file);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (IOException e) {
+			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+			msg.msg = ErrorCode.FILE_IO_ERROR.name;
+			log.error(e.getMessage());
+		} catch (IllegalStateException e) {
+			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
+			msg.msg = ErrorCode.FILE_IO_ERROR.name;
+			log.error(e.getMessage());
+		}
+		return msg;
 	}
 }

@@ -6,12 +6,14 @@ import com.ncu.testbank.permission.data.User;
 
 @Repository
 public interface IUserDao {
-	
+
 	/**
 	 * 获取用户信息
-	 * @param username ： 用户名
+	 * 
+	 * @param username
+	 *            ： 用户名
 	 * @return
 	 */
 	public User getUser(String username);
-	
+
 }

@@ -842,13 +842,11 @@ public class CsvReader {
 												"Maximum column length of 100,000 exceeded in column "
 														+ NumberFormat
 																.getIntegerInstance()
-																.format(
-																		columnsCount)
+																.format(columnsCount)
 														+ " in record "
 														+ NumberFormat
 																.getIntegerInstance()
-																.format(
-																		currentRecord)
+																.format(currentRecord)
 														+ ". Set the SafetySwitch property to false"
 														+ " if you're expecting column lengths greater than 100,000 characters to"
 														+ " avoid this error.");
@@ -1095,13 +1093,11 @@ public class CsvReader {
 												"Maximum column length of 100,000 exceeded in column "
 														+ NumberFormat
 																.getIntegerInstance()
-																.format(
-																		columnsCount)
+																.format(columnsCount)
 														+ " in record "
 														+ NumberFormat
 																.getIntegerInstance()
-																.format(
-																		currentRecord)
+																.format(currentRecord)
 														+ ". Set the SafetySwitch property to false"
 														+ " if you're expecting column lengths greater than 100,000 characters to"
 														+ " avoid this error.");
@@ -1457,8 +1453,8 @@ public class CsvReader {
 
 	/**
 	 * Skips the next record of data by parsing each column.&nbsp;Does not
-	 * increment
-	 * {@link com.csvreader.CsvReader#getCurrentRecord getCurrentRecord()}.
+	 * increment {@link com.csvreader.CsvReader#getCurrentRecord
+	 * getCurrentRecord()}.
 	 * 
 	 * @return Whether another record was successfully skipped or not.
 	 * @exception IOException

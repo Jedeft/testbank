@@ -21,7 +21,7 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 
 @Service("courseService")
 public class CourseServiceImple implements ICourseService {
-	
+
 	@Autowired
 	private ICourseDao courseDao;
 
@@ -34,12 +34,12 @@ public class CourseServiceImple implements ICourseService {
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
-		} 
-		page.setTotalPage(count/page.getRows() + 1);
+		}
+		page.setTotalPage(count / page.getRows() + 1);
 		if (count <= 0) {
 			throw new ServiceException(new ErrorCode(30001, "没有符合查询条件的课程！"));
 		}
-		//数据库分页从0开始，前台分页从1开始
+		// 数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
 		return courseDao.searchData(params);
@@ -47,22 +47,25 @@ public class CourseServiceImple implements ICourseService {
 
 	@Override
 	public void insertOne(Course course) {
-		if ( courseDao.insertOne(course) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "添加课程信息失败，请联系管理人员！"));
+		if (courseDao.insertOne(course) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "添加课程信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void deleteOne(String course_id) {
-		if ( courseDao.deleteOne(course_id) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "删除课程信息失败，请联系管理人员！"));
+		if (courseDao.deleteOne(course_id) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "删除课程信息失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
 	public void updateOne(Course course) {
-		if ( courseDao.updateOne(course) < 1 ) {
-			throw new ServiceException(new ErrorCode(30001, "更新课程信息失败，请联系管理人员！"));
+		if (courseDao.updateOne(course) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "更新课程信息失败，请联系管理人员！"));
 		}
 	}
 
@@ -76,11 +79,11 @@ public class CourseServiceImple implements ICourseService {
 			throws IllegalStateException, IOException {
 		File target = new File(path, fileName);
 		if (!target.getParentFile().exists()) {
-			if ( !target.getParentFile().mkdirs() ) {
+			if (!target.getParentFile().mkdirs()) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 		}
-		if ( !target.createNewFile() ) {
+		if (!target.createNewFile()) {
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
 		file.transferTo(target);
