@@ -11,6 +11,7 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<mvc:annotation-driven />
+	
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="com.ncu.testbank">
 		<context:include-filter type="annotation"
@@ -18,6 +19,11 @@
 	</context:component-scan>
 	<context:annotation-config />
 	
+	<!--  
+	<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
+	-->
+	<bean class="com.ncu.testbank.base.config.SwaggerConfig"></bean>
+	  
 	<!-- Required for security annotations to work in this servlet -->
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />

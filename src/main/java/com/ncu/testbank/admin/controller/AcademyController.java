@@ -29,6 +29,8 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/admin")
@@ -47,7 +49,9 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
-	public ResponseMsg insertAcademy(@RequestBody Academy academy) {
+	@ApiOperation(value = "添加学院", httpMethod = "POST", response = ResponseMsg.class, notes = "add academy")
+	public ResponseMsg insertAcademy(
+			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			academyService.insertOne(academy);

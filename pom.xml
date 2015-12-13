@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ncu</groupId>
-  <artifactId>testbank</artifactId>
-  <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>testbank Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  <properties>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ncu</groupId>
+	<artifactId>testbank</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>testbank Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<properties>
 		<!-- spring版本号 -->
 		<spring.version>4.0.2.RELEASE</spring.version>
 		<!-- mybatis版本号 -->
@@ -17,8 +17,10 @@
 		<log4j.version>1.2.17</log4j.version>
 		<hamcrest.core.version>1.3</hamcrest.core.version>
 		<mockito.core.version>1.9.5</mockito.core.version>
+		<version.spring>3.2.9.RELEASE</version.spring>
+		<version.jackson>2.4.4</version.jackson>
 	</properties>
-	
+
 	<dependencies>
 		<!-- spring核心包 -->
 		<dependency>
@@ -60,31 +62,38 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!-- swagger -->
+		<dependency>
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-springmvc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
-		<dependency>  
-		    <groupId>org.springframework</groupId>  
-		    <artifactId>spring-context</artifactId>  
-		    <version>${spring.version}</version>  
-		</dependency>  
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
 		<!-- 测试相关依赖begin -->
-		<dependency>  
-		    <groupId>org.hamcrest</groupId>  
-		    <artifactId>hamcrest-core</artifactId>  
-		    <version>${hamcrest.core.version}</version>
-		    <!-- 表示开发的时候引入，发布的时候不会加载此包 -->  
-		    <scope>test</scope>  
-		</dependency>  
-		<dependency>  
-		    <groupId>org.mockito</groupId>  
-		    <artifactId>mockito-core</artifactId>  
-		    <version>${mockito.core.version}</version>  
-		    <scope>test</scope>  
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>${hamcrest.core.version}</version>
+			<!-- 表示开发的时候引入，发布的时候不会加载此包 -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.core.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -98,11 +107,11 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>  
-		    <groupId>com.jayway.jsonpath</groupId>  
-		    <artifactId>json-path</artifactId>  
-		    <version>0.9.0</version>  
-		    <scope>test</scope>  
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>0.9.0</version>
+			<scope>test</scope>
 		</dependency>
 		<!-- jsonpath依赖包 -->
 		<dependency>
@@ -111,7 +120,7 @@
 			<version>1.3.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- 测试相关依赖 end-->
+		<!-- 测试相关依赖 end -->
 		<!-- mybatis核心包 -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -124,11 +133,11 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.2</version>
 		</dependency>
-		<!-- 导入tomcat servlet 包 ，在spring moke测试环境下，必须要3.0以上版本的servlet才可正常运行-->
+		<!-- 导入tomcat servlet 包 ，在spring moke测试环境下，必须要3.0以上版本的servlet才可正常运行 -->
 		<dependency>
-		  <groupId>javax.servlet</groupId>
-		  <artifactId>javax.servlet-api</artifactId>
-		  <version>3.1.0</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 		<!-- 导入Mysql数据库链接jar包 -->
 		<dependency>
@@ -182,22 +191,22 @@
 			<artifactId>jackson-core</artifactId>
 			<version>2.6.3</version>
 		</dependency>
-		<dependency>	
-            <groupId>com.fasterxml.jackson.core</groupId>  
-            <artifactId>jackson-annotations</artifactId>  
-            <version>2.6.3</version>  
-        </dependency>
-        <dependency>	
-            <groupId>com.fasterxml.jackson.core</groupId>  
-            <artifactId>jackson-databind</artifactId>  
-            <version>2.6.3</version>  
-        </dependency>
-        <dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-        
+
 		<!-- 上传组件包 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -226,18 +235,18 @@
 		</dependency>
 		<!-- jsonwebtoken使用包 -->
 		<dependency>
-		    <groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt</artifactId>
-		    <version>0.6.0</version>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.6.0</version>
 		</dependency>
-		
+
 		<!-- jedis -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>2.8.0</version>
 		</dependency>
-		
+
 		<!-- fastJson -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -245,14 +254,9 @@
 			<version>1.2.7</version>
 		</dependency>
 
-		
-		<!--  
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-			<version>1.6</version>
-		</dependency>
-		-->
+
+		<!-- <dependency> <groupId>commons-pool</groupId> <artifactId>commons-pool</artifactId> 
+			<version>1.6</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
