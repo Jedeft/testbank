@@ -11,6 +11,16 @@ import com.ncu.testbank.base.response.PageInfo;
 public class Academy {
 	private String academy_id;
 	private String name;
+	
+	public Academy() {
+		super();
+	}
+
+	public Academy(String academy_id, String name) {
+		super();
+		this.academy_id = academy_id;
+		this.name = name;
+	}
 
 	public String getAcademy_id() {
 		return academy_id;

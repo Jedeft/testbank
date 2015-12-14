@@ -24,7 +24,9 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.Api;
 
+@Api(value = "bankBuilder-api", description = "有关于题库建设者的CURD操作", position=1)
 @RestController
 @RequestMapping("/admin")
 public class BankBuilderController {

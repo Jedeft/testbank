@@ -19,9 +19,6 @@
 	</context:component-scan>
 	<context:annotation-config />
 	
-	<!--  
-	<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
-	-->
 	<bean class="com.ncu.testbank.base.config.SwaggerConfig"></bean>
 	  
 	<!-- Required for security annotations to work in this servlet -->
@@ -47,6 +44,7 @@
 			</list>
 		</property>
 	</bean>
+	
 
 	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<bean

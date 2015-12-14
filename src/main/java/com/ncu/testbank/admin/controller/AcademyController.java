@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,9 +30,11 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
+@Api(value = "academy-api", description = "有关于学院的CURD操作", position = 1)
 @RestController
 @RequestMapping("/admin")
 public class AcademyController {
@@ -49,7 +52,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
-	@ApiOperation(value = "添加学院", httpMethod = "POST", response = ResponseMsg.class, notes = "add academy")
+	@ApiOperation(value = "添加学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
 	public ResponseMsg insertAcademy(
 			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
@@ -83,7 +86,9 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.PATCH)
-	public ResponseMsg updateAcademy(@RequestBody Academy academy) {
+	@ApiOperation(value = "更新学院", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	public ResponseMsg updateAcademy(
+			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 
@@ -115,7 +120,9 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteAcademy(@PathVariable String academy_id) {
+	@ApiOperation(value = "删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	public ResponseMsg deleteAcademy(
+			@ApiParam(required = true, name = "academy_id", value = "学院IDjson数据") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			academyService.deleteOne(academy_id);
@@ -146,7 +153,9 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/batch", method = RequestMethod.DELETE)
-	public ResponseMsg deleteAcademys(@RequestBody Map<String, List<String>> map) {
+	@ApiOperation(value = "批量删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	public ResponseMsg deleteAcademys(
+			@ApiParam(required = true, name = "academy_id", value = "学院ID数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("academy_id") != null) {
@@ -177,7 +186,9 @@ public class AcademyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
-	public ResponseMsg getAcademy(@PathVariable String academy_id) {
+	@ApiOperation(value = "获取指定学院", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限")
+	public ResponseMsg getAcademy(
+			@ApiParam(required = true, name = "academy_id", value = "学院ID数据") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Academy data = academyService.getAcademy(academy_id);
@@ -208,19 +219,26 @@ public class AcademyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/academys", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Academy academy) {
+	@ApiOperation(value = "检索学院", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限")
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = false, name = "academy_id", value = "学院ID信息检索") @RequestParam(value = "academy_id", required = false) String academy_id,
+			@ApiParam(required = false, name = "name", value = "学院名称信息检索") @RequestParam(value = "name", required = false) String name) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<Academy> academyList;
-			academyList = academyService.searchData(page, academy);
+			PageInfo pageInfo = new PageInfo(page, rows);
+			Academy academy = new Academy(academy_id, name);
+			academyList = academyService.searchData(pageInfo, academy);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = academyList;
 
-			msg.total = page.getTotal();
-			msg.totalPage = page.getTotalPage();
-			msg.currentPage = page.getPage();
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = academyList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
@@ -252,8 +270,9 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
+	@ApiOperation(value = "批量导入学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
 	public ResponseMsg loadCsv(
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			@ApiParam(required = true, name = "file", value = "csv文件") @RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
