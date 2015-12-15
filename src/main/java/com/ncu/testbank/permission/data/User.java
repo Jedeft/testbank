@@ -1,15 +1,26 @@
 package com.ncu.testbank.permission.data;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+
 /**
  * 登录，权限控制模块
  * 
  * @author Jedeft
  * 
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@ApiModel(value="Account")
 public class User {
+	
 	private String username;
 	private String password;
+	@ApiModelProperty(hidden=true)
 	private String second_pwd;
+	@ApiModelProperty(hidden=true)
 	private String name;
 
 	public String getUsername() {

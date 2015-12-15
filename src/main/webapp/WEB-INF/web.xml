@@ -37,6 +37,19 @@
 			<url-pattern>*.css</url-pattern> <url-pattern>*.jsp</url-pattern> -->
 	</servlet-mapping>
 
+	<filter>
+		<filter-name>tokenFilter</filter-name>
+		<filter-class>com.ncu.testbank.base.filter.TokenFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>tokenFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+		<url-pattern>/teacher/*</url-pattern>
+		<url-pattern>/student/*</url-pattern>
+		<url-pattern>/permission/twiceAuth</url-pattern>
+		<!-- 后续还有修改用户密码过滤 -->
+	</filter-mapping>
+
 	<!-- 编码过滤器 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>

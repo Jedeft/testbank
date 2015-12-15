@@ -34,7 +34,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "academy-api", description = "有关于学院的CURD操作", position = 1)
+@Api(value = "academy-api", description = "有关于学院的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class AcademyController {
@@ -122,7 +122,7 @@ public class AcademyController {
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
 	public ResponseMsg deleteAcademy(
-			@ApiParam(required = true, name = "academy_id", value = "学院IDjson数据") @PathVariable String academy_id) {
+			@ApiParam(required = true, name = "academy_id", value = "学院ID") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			academyService.deleteOne(academy_id);
@@ -155,7 +155,7 @@ public class AcademyController {
 	@RequestMapping(value = "/academys/batch", method = RequestMethod.DELETE)
 	@ApiOperation(value = "批量删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
 	public ResponseMsg deleteAcademys(
-			@ApiParam(required = true, name = "academy_id", value = "学院ID数组json数据") @RequestBody Map<String, List<String>> map) {
+			@ApiParam(required = true, name = "academy_id", value = "academy_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("academy_id") != null) {
@@ -188,7 +188,7 @@ public class AcademyController {
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取指定学院", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限")
 	public ResponseMsg getAcademy(
-			@ApiParam(required = true, name = "academy_id", value = "学院ID数据") @PathVariable String academy_id) {
+			@ApiParam(required = true, name = "academy_id", value = "学院ID") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Academy data = academyService.getAcademy(academy_id);
@@ -276,7 +276,6 @@ public class AcademyController {
 			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-
 			String fileName = new Date().getTime() + "_"
 					+ file.getOriginalFilename();
 			String path = request.getSession().getServletContext()

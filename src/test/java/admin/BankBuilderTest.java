@@ -128,7 +128,7 @@ public class BankBuilderTest {
 
 	/**
 	 * url : /admin/bankBuilders params : page=1 , rows=15 : teacher_id,
-	 * academy_id, name method : GET
+	 * teacher_id, academy_id, name method : GET
 	 * 
 	 * @throws Exception
 	 */

@@ -16,6 +16,18 @@ public class Teacher {
 	private String phone;
 	private String qq;
 
+	public Teacher() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Teacher(String teacher_id, String academy_id, String name) {
+		super();
+		this.teacher_id = teacher_id;
+		this.academy_id = academy_id;
+		this.name = name;
+	}
+
 	public String getTeacher_id() {
 		return teacher_id;
 	}

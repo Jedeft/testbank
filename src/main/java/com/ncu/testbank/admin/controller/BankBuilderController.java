@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ncu.testbank.admin.data.BankBuilder;
 import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.admin.service.IBankBuilderService;
 import com.ncu.testbank.admin.service.ITeacherService;
@@ -25,8 +27,10 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "bankBuilder-api", description = "有关于题库建设者的CURD操作", position=1)
+@Api(value = "bankBuilder-api", description = "有关于题库建设者的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class BankBuilderController {
@@ -45,14 +49,16 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.POST)
-	public ResponseMsg insertBankBuilder(@RequestBody Teacher teacher) {
+	@ApiOperation(value = "添加题库建设人员", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	public ResponseMsg insertBankBuilder(
+			@ApiParam(required = true, name = "teacher_id", value = "教师IDjson数据") @RequestBody BankBuilder bankBuilder) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			bankBuilderService.insertOne(teacher.getTeacher_id());
+			bankBuilderService.insertOne(bankBuilder.getTeacher_id());
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = teacherService.getTeacher(teacher.getTeacher_id());
+			msg.data = teacherService.getTeacher(bankBuilder.getTeacher_id());
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -77,7 +83,9 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders/{teacher_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteBankBuilder(@PathVariable String teacher_id) {
+	@ApiOperation(value = "删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	public ResponseMsg deleteBankBuilder(
+			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			bankBuilderService.deleteOne(teacher_id);
@@ -108,8 +116,9 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders/batch", method = RequestMethod.DELETE)
+	@ApiOperation(value = "批量删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
 	public ResponseMsg deleteBankBuilders(
-			@RequestBody Map<String, List<String>> map) {
+			@ApiParam(required = true, name = "teacher_id", value = "teacher_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("teacher_id") != null) {
@@ -140,7 +149,9 @@ public class BankBuilderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bankBuilders/{teacher_id}", method = RequestMethod.GET)
-	public ResponseMsg getBankBuilder(@PathVariable String teacher_id) {
+	@ApiOperation(value = "批量删除题库建设人员", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限")
+	public ResponseMsg getBankBuilder(
+			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Teacher data = bankBuilderService.getBankBuilder(teacher_id);
@@ -171,19 +182,27 @@ public class BankBuilderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Teacher teacher) {
+	@ApiOperation(value = "检索题库建设人员", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限")
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = false, name = "teacher_id", value = "教师ID信息检索") @RequestParam(value = "teacher_id", required = false) String teacher_id,
+			@ApiParam(required = false, name = "academy_id", value = "学院ID信息检索") @RequestParam(value = "academy_id", required = false) String academy_id,
+			@ApiParam(required = false, name = "name", value = "教师名信息检索") @RequestParam(value = "name", required = false) String name) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<Teacher> teacherList;
-			teacherList = bankBuilderService.searchData(page, teacher);
+			Teacher teacher = new Teacher(teacher_id, academy_id, name);
+			PageInfo pageInfo = new PageInfo(page, rows);
+			teacherList = bankBuilderService.searchData(pageInfo, teacher);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = teacherList;
 
-			msg.total = page.getTotal();
-			msg.totalPage = page.getTotalPage();
-			msg.currentPage = page.getPage();
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = teacherList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();

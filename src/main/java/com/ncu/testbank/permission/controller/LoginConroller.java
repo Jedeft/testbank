@@ -16,13 +16,18 @@ import com.ncu.testbank.base.exception.DaoException;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
+import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponsePermissionMsg;
 import com.ncu.testbank.base.response.ResponseToken;
 import com.ncu.testbank.permission.data.Authen;
 import com.ncu.testbank.permission.data.Role;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.permission.service.IUserService;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
+@Api(value = "permission-api", description = "登录、二级认证", position = 1)
 @RestController
 @RequestMapping("/permission")
 public class LoginConroller {
@@ -37,7 +42,8 @@ public class LoginConroller {
 	 * @return
 	 */
 	@RequestMapping(value = "/json_web_token", method = RequestMethod.POST)
-	public ResponseToken login(@RequestBody User user) {
+	@ApiOperation(value = "登录", httpMethod = "POST", response = ResponseToken.class, notes = "游客权限")
+	public ResponseToken login(@ApiParam(required = true, name = "user", value = "用户名密码json数据") @RequestBody User user) {
 		ResponseToken msg = new ResponseToken();
 		try {
 			Subject currUser = SecurityUtils.getSubject();
