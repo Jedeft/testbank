@@ -13,6 +13,17 @@ public class Clazz {
 	private String major_id;
 	private String name;
 
+	public Clazz() {
+		super();
+	}
+
+	public Clazz(String class_id, String major_id, String name) {
+		super();
+		this.class_id = class_id;
+		this.major_id = major_id;
+		this.name = name;
+	}
+
 	public String getClass_id() {
 		return class_id;
 	}
@@ -36,4 +47,5 @@ public class Clazz {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

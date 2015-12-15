@@ -29,7 +29,11 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
+@Api(value = "class-api", description = "有关于班级的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class ClazzController {
@@ -47,7 +51,9 @@ public class ClazzController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/classes", method = RequestMethod.POST)
-	public ResponseMsg insertClazz(@RequestBody Clazz clazz) {
+	@ApiOperation(value = "添加班级", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg insertClazz(
+			@ApiParam(required = true, name = "class", value = "班级信息json数据") @RequestBody Clazz clazz) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			clazzService.insertOne(clazz);
@@ -79,7 +85,9 @@ public class ClazzController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/classes", method = RequestMethod.PATCH)
-	public ResponseMsg updateClazz(@RequestBody Clazz clazz) {
+	@ApiOperation(value = "更新班级", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg updateClazz(
+			@ApiParam(required = true, name = "class", value = "班级信息json数据") @RequestBody Clazz clazz) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 
@@ -111,7 +119,9 @@ public class ClazzController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/classes/{class_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteClazz(@PathVariable String class_id) {
+	@ApiOperation(value = "删除班级", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg deleteClazz(
+			@ApiParam(required = true, name = "class_id", value = "班级ID") @PathVariable String class_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			clazzService.deleteOne(class_id);
@@ -143,7 +153,9 @@ public class ClazzController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/classes/batch", method = RequestMethod.DELETE)
-	public ResponseMsg deleteClazzes(@RequestBody Map<String, List<String>> map) {
+	@ApiOperation(value = "批量删除班级", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg deleteClazzes(
+			@ApiParam(required = true, name = "class_id", value = "class_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("class_id") != null) {
@@ -174,7 +186,9 @@ public class ClazzController {
 	 * @return
 	 */
 	@RequestMapping(value = "/classes/{class_id}", method = RequestMethod.GET)
-	public ResponseMsg getClazz(@PathVariable String class_id) {
+	@ApiOperation(value = "获取指定班级", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponseMsg getClazz(
+			@ApiParam(required = true, name = "class_id", value = "班级ID") @PathVariable String class_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Clazz data = clazzService.getClazz(class_id);
@@ -205,19 +219,28 @@ public class ClazzController {
 	 * @return
 	 */
 	@RequestMapping(value = "/classes", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Clazz clazz) {
+	@ApiOperation(value = "检索班级", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = false, name = "class_id", value = "班级ID信息检索") @RequestParam(value = "class_id", required = false) String class_id,
+			@ApiParam(required = false, name = "major_id", value = "专业ID信息检索") @RequestParam(value = "major_id", required = false) String major_id,
+			@ApiParam(required = false, name = "name", value = "班级名称信息检索") @RequestParam(value = "name", required = false) String name) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<Clazz> clazzList;
-			clazzList = clazzService.searchData(page, clazz);
+			PageInfo pageInfo = new PageInfo(page, rows);
+			Clazz clazz = new Clazz(class_id, major_id, name);
+
+			clazzList = clazzService.searchData(pageInfo, clazz);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = clazzList;
 
-			msg.total = page.getTotal();
-			msg.totalPage = page.getTotalPage();
-			msg.currentPage = page.getPage();
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = clazzList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
@@ -249,8 +272,9 @@ public class ClazzController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/classes/csv", method = RequestMethod.POST)
+	@ApiOperation(value = "批量导入班级", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg loadCsv(
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			@ApiParam(required = true, name = "file", value = "csv文件") @RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
