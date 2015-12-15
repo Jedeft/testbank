@@ -3,9 +3,12 @@ package com.ncu.testbank.admin.service.imple;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,19 @@ import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.BeanToMapUtils;
+import com.ncu.testbank.base.utils.CsvReader;
+import com.ncu.testbank.base.utils.CsvWriter;
+import com.ncu.testbank.permission.dao.IUserDao;
+import com.ncu.testbank.permission.data.User;
 
 @Service("teacherService")
 public class TeacherServiceImple implements ITeacherService {
 
 	@Autowired
 	private ITeacherDao teacherDao;
+
+	@Autowired
+	private IUserDao userDao;
 
 	@Override
 	public List<Teacher> searchData(PageInfo page, Teacher teacher)
@@ -50,6 +60,26 @@ public class TeacherServiceImple implements ITeacherService {
 		if (teacherDao.insertOne(teacher) < 1) {
 			throw new ServiceException(
 					new ErrorCode(30001, "添加教师信息失败，请联系管理人员！"));
+		}
+		Properties config = new Properties();
+		InputStream in = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("accountInfo.properties");
+		try {
+			config.load(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
+		}
+
+		User user = new User();
+		user.setUsername(teacher.getTeacher_id());
+		user.setPassword(config.getProperty("defaultPassword"));
+		user.setSecond_pwd(config.getProperty("defaultSecond_pwd"));
+		user.setName(teacher.getName());
+
+		if (userDao.insertOne(user) < 1) {
+			throw new ServiceException(new ErrorCode(30002,
+					"添加教师用户失败，请删除掉该教师后重试！"));
 		}
 	}
 
@@ -89,8 +119,52 @@ public class TeacherServiceImple implements ITeacherService {
 
 		file.transferTo(target);
 		teacherDao.loadCsv(target.getPath());
+
+		// 录入教师信息到用户表中
+		Properties config = new Properties();
+		InputStream in = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("accountInfo.properties");
+		try {
+			config.load(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
+		}
+		String defaultPassword = config.getProperty("defaultPassword");
+		String defaultSecond_pwd = config.getProperty("defaultSecond_pwd");
+		CsvReader cr = new CsvReader(target.getPath());
+		List<User> userList = new ArrayList<>();
+		while (cr.readRecord()) {
+			String values[] = cr.getValues();
+			User user = new User();
+			user.setUsername(values[0]);
+			user.setName(values[2]);
+			user.setPassword(defaultPassword);
+			user.setSecond_pwd(defaultSecond_pwd);
+
+			userList.add(user);
+		}
+		cr.close();
+
+		String outFileName = path + "\\account_" + fileName;
+		CsvWriter cw = new CsvWriter(outFileName);
+		for (User user : userList) {
+			String[] values = new String[4];
+			values[0] = user.getUsername();
+			values[1] = user.getPassword();
+			values[2] = user.getName();
+			values[3] = user.getSecond_pwd();
+			cw.writeRecord(values);
+		}
+		cw.close();
+		userDao.loadCsv(outFileName);
+
+		File outCsv = new File(outFileName);
 		if (target.exists()) {
 			target.delete();
+		}
+		if (outCsv.exists()) {
+			outCsv.delete();
 		}
 	}
 
