@@ -23,4 +23,15 @@
   	LIMIT 1
   </select>
   
+  <insert id="insertOne" parameterType="com.ncu.testbank.permission.data.User">
+  	INSERT INTO 
+  		user
+  	VALUES(#{username},#{password},#{second_pwd},#{name})
+  </insert>
+  
+  <insert id="loadCsv" parameterType="java.lang.String">
+  	LOAD DATA LOCAL INFILE #{file} INTO TABLE user 
+	CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n'
+  </insert>
+  
 </mapper>

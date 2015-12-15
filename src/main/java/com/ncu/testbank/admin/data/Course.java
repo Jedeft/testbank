@@ -13,6 +13,17 @@ public class Course {
 	private String major_id;
 	private String name;
 
+	public Course() {
+		super();
+	}
+
+	public Course(String course_id, String major_id, String name) {
+		super();
+		this.course_id = course_id;
+		this.major_id = major_id;
+		this.name = name;
+	}
+
 	public String getCourse_id() {
 		return course_id;
 	}

@@ -16,6 +16,7 @@ public class ErrorCode {
 	
 	public static final ErrorCode FILE_TYPE_ERROR = new ErrorCode(50001, "请上传csv格式的文件！");
 	public static final ErrorCode FILE_IO_ERROR = new ErrorCode(50002, "文件IO出错，请检查文件后重试或联系管理人员！");
+	public static final ErrorCode FILE_PROPERTIES_ERROR = new ErrorCode(50003, "配置文件出错，请联系管理人员！");
 	
 	public static final ErrorCode MAP_CONVERT_ERROR = new ErrorCode(40001, "数据转换Map出错，联系管理人员！");
 	

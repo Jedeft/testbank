@@ -59,7 +59,7 @@ public class StudentTest {
      */
 	@Test
 	public void insertTest() throws Exception{
-		String requestBody = "{\"student_id\":\"1\", \"class_id\":\"2\", \"name\":\"Jedeft\"}";
+		String requestBody = "{\"student_id\":\"666\", \"class_id\":\"2\", \"name\":\"Jedeft\"}";
 		
 		mockMvc.perform(post("/admin/students").contentType(MediaType.APPLICATION_JSON)
 											   .content(requestBody)

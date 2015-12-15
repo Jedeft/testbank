@@ -83,7 +83,7 @@ public class LoginConroller {
 	 * @return
 	 */
 	@RequestMapping(value = "/twiceAuth", method = RequestMethod.POST)
-	@ApiOperation(value = "二级认证", httpMethod = "POST", response = ResponseToken.class, notes = "需要baseAdmin权限，请header中携带Token")
+	@ApiOperation(value = "二级认证", httpMethod = "POST", response = ResponsePermissionMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
 	public ResponsePermissionMsg reAuth(
 			@ApiParam(required = true, name = "user", value = "用户名二级密码json数据") @RequestBody TwiceAuthUser twiceAuthUser) {
 		ResponsePermissionMsg msg = new ResponsePermissionMsg();
