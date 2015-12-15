@@ -49,7 +49,7 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.POST)
-	@ApiOperation(value = "添加题库建设人员", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "添加题库建设人员", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg insertBankBuilder(
 			@ApiParam(required = true, name = "teacher_id", value = "教师IDjson数据") @RequestBody BankBuilder bankBuilder) {
 		ResponseMsg msg = new ResponseMsg();
@@ -83,7 +83,7 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders/{teacher_id}", method = RequestMethod.DELETE)
-	@ApiOperation(value = "删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteBankBuilder(
 			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
@@ -116,7 +116,7 @@ public class BankBuilderController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders/batch", method = RequestMethod.DELETE)
-	@ApiOperation(value = "批量删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "批量删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteBankBuilders(
 			@ApiParam(required = true, name = "teacher_id", value = "teacher_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
@@ -149,7 +149,7 @@ public class BankBuilderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bankBuilders/{teacher_id}", method = RequestMethod.GET)
-	@ApiOperation(value = "批量删除题库建设人员", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限")
+	@ApiOperation(value = "获取题库建设人员", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
 	public ResponseMsg getBankBuilder(
 			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
@@ -182,7 +182,7 @@ public class BankBuilderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.GET)
-	@ApiOperation(value = "检索题库建设人员", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限")
+	@ApiOperation(value = "检索题库建设人员", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
 	public ResponseQueryMsg searchData(
 			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,

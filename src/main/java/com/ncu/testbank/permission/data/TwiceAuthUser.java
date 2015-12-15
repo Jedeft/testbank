@@ -6,17 +6,17 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
- * 登录模块
+ * 二次权限认证模块（此处和User作为两个POJO是迫于swagger框架的无奈）
  * 
  * @author Jedeft
  * 
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@ApiModel(value = "loginAccount")
-public class User {
+@ApiModel(value = "TiwceAuthAccount")
+public class TwiceAuthUser {
 	private String username;
-	private String password;
 	@ApiModelProperty(hidden = true)
+	private String password;
 	private String second_pwd;
 	@ApiModelProperty(hidden = true)
 	private String name;
@@ -37,6 +37,14 @@ public class User {
 		this.password = password;
 	}
 
+	public String getSecond_pwd() {
+		return second_pwd;
+	}
+
+	public void setSecond_pwd(String second_pwd) {
+		this.second_pwd = second_pwd;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -45,11 +53,14 @@ public class User {
 		this.name = name;
 	}
 
-	public String getSecond_pwd() {
-		return second_pwd;
-	}
+	public User toUser() {
+		User user = new User();
 
-	public void setSecond_pwd(String second_pwd) {
-		this.second_pwd = second_pwd;
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setSecond_pwd(second_pwd);
+		user.setName(name);
+
+		return user;
 	}
 }

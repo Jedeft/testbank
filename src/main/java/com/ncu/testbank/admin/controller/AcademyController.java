@@ -52,7 +52,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.POST)
-	@ApiOperation(value = "添加学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "添加学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg insertAcademy(
 			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
@@ -86,7 +86,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys", method = RequestMethod.PATCH)
-	@ApiOperation(value = "更新学院", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "更新学院", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg updateAcademy(
 			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
@@ -120,7 +120,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.DELETE)
-	@ApiOperation(value = "删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteAcademy(
 			@ApiParam(required = true, name = "academy_id", value = "学院ID") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
@@ -153,7 +153,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/batch", method = RequestMethod.DELETE)
-	@ApiOperation(value = "批量删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "批量删除学院", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteAcademys(
 			@ApiParam(required = true, name = "academy_id", value = "academy_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
@@ -186,7 +186,7 @@ public class AcademyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/academys/{academy_id}", method = RequestMethod.GET)
-	@ApiOperation(value = "获取指定学院", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限")
+	@ApiOperation(value = "获取指定学院", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
 	public ResponseMsg getAcademy(
 			@ApiParam(required = true, name = "academy_id", value = "学院ID") @PathVariable String academy_id) {
 		ResponseMsg msg = new ResponseMsg();
@@ -219,7 +219,7 @@ public class AcademyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/academys", method = RequestMethod.GET)
-	@ApiOperation(value = "检索学院", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限")
+	@ApiOperation(value = "检索学院", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
 	public ResponseQueryMsg searchData(
 			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
@@ -270,7 +270,7 @@ public class AcademyController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/academys/csv", method = RequestMethod.POST)
-	@ApiOperation(value = "批量导入学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限")
+	@ApiOperation(value = "批量导入学院", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg loadCsv(
 			@ApiParam(required = true, name = "file", value = "csv文件") @RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request) {

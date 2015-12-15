@@ -21,6 +21,7 @@ import com.ncu.testbank.base.response.ResponsePermissionMsg;
 import com.ncu.testbank.base.response.ResponseToken;
 import com.ncu.testbank.permission.data.Authen;
 import com.ncu.testbank.permission.data.Role;
+import com.ncu.testbank.permission.data.TwiceAuthUser;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.permission.service.IUserService;
 import com.wordnik.swagger.annotations.Api;
@@ -43,11 +44,11 @@ public class LoginConroller {
 	 */
 	@RequestMapping(value = "/json_web_token", method = RequestMethod.POST)
 	@ApiOperation(value = "登录", httpMethod = "POST", response = ResponseToken.class, notes = "游客权限")
-	public ResponseToken login(@ApiParam(required = true, name = "user", value = "用户名密码json数据") @RequestBody User user) {
+	public ResponseToken login(
+			@ApiParam(required = true, name = "user", value = "用户名密码json数据") @RequestBody User user) {
 		ResponseToken msg = new ResponseToken();
 		try {
 			Subject currUser = SecurityUtils.getSubject();
-			Session session = currUser.getSession();
 			UsernamePasswordToken token = new UsernamePasswordToken(
 					user.getUsername(), user.getPassword());
 			token.setRememberMe(true);
@@ -82,9 +83,12 @@ public class LoginConroller {
 	 * @return
 	 */
 	@RequestMapping(value = "/twiceAuth", method = RequestMethod.POST)
-	public ResponsePermissionMsg reAuth(@RequestBody User user) {
+	@ApiOperation(value = "二级认证", httpMethod = "POST", response = ResponseToken.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponsePermissionMsg reAuth(
+			@ApiParam(required = true, name = "user", value = "用户名二级密码json数据") @RequestBody TwiceAuthUser twiceAuthUser) {
 		ResponsePermissionMsg msg = new ResponsePermissionMsg();
 		try {
+			User user = twiceAuthUser.toUser();
 			userService.reAuth(user);
 			List<Role> roleList = userService.searchAllRole(user.getUsername());
 			msg.errorCode = ErrorCode.LOGIN_SUCCESS.code;
