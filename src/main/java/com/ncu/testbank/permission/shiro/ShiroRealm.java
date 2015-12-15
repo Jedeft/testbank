@@ -131,8 +131,8 @@ public class ShiroRealm extends AuthorizingRealm{
     private void setSession(Object key, Object value){  
         Subject currentUser = SecurityUtils.getSubject();  
         if(null != currentUser){  
-            Session session = currentUser.getSession();  
-            System.out.println("Session默认超时时间为[" + session.getTimeout() + "]毫秒");  
+            Session session = currentUser.getSession(); 
+            session.setTimeout(3*60*60*1000);
             if(null != session){  
                 session.setAttribute(key, value);  
             }  

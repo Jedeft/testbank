@@ -28,7 +28,7 @@ public class TokenFilter extends OncePerRequestFilter{
         if (null == user)  
         {  
             response.setCharacterEncoding("UTF-8");  
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "您已经太长时间没有操作,请重新登录");  
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "太长时间没有操作,请重新登录");  
             return ;  
         }  else  {  
             // 如果session中存在登录者实体，则继续  
@@ -37,14 +37,14 @@ public class TokenFilter extends OncePerRequestFilter{
     		String json = jedis.get(user.getUsername());
     		if ( null == json || json.equals("") ) {
     			response.setCharacterEncoding("UTF-8");  
-                response.sendError(HttpStatus.UNAUTHORIZED.value(), "您已经太长时间没有操作,请重新登录");  
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "太长时间没有操作,请重新登录");  
     		}
     		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
     		
     		String token = request.getHeader("Token");
     		if (token == null) {
     			response.setCharacterEncoding("UTF-8");  
-                response.sendError(HttpStatus.FORBIDDEN.value(), "Token丢失!");  
+                response.sendError(HttpStatus.FORBIDDEN.value(), "Token已过期，请重新登录!");  
                 return ;
     		}
     		
