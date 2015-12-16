@@ -13,6 +13,17 @@ public class Major {
 	private String academy_id;
 	private String name;
 
+	public Major() {
+		super();
+	}
+
+	public Major(String major_id, String academy_id, String name) {
+		super();
+		this.major_id = major_id;
+		this.academy_id = academy_id;
+		this.name = name;
+	}
+
 	public String getMajor_id() {
 		return major_id;
 	}

@@ -37,6 +37,11 @@ import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
+/**
+ * 对于需要rootAdmin权限的操作需要关掉@RequiresRoles("rootAdmin")注解才可执行
+ * @author Jedeft
+ *
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")  
 @ContextHierarchy({  

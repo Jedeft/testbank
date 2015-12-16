@@ -78,6 +78,7 @@
 		<property name="realm" ref="shiroRealm" />
 	</bean>
 
+	<!-- 自定义的shiroFilter,用于改变shiro权限的and关系为or -->
 	<bean id="anyRolesAuthorizationFilter" class="com.ncu.testbank.base.filter.CustomRolesAuthorizationFilter" />
 
 	<!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->

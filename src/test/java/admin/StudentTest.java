@@ -34,6 +34,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.ncu.testbank.base.utils.JSONUtils;
 
+/**
+ * 对于需要rootAdmin权限的操作需要关掉@RequiresRoles("rootAdmin")注解才可执行
+ * @author Jedeft
+ *
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")  
 @ContextHierarchy({  
