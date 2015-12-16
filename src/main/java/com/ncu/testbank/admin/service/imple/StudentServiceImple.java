@@ -88,6 +88,10 @@ public class StudentServiceImple implements IStudentService {
 			throw new ServiceException(
 					new ErrorCode(30001, "删除学生信息失败，请联系管理人员！"));
 		}
+		if (userDao.deleteOne(student_id) < 1) {
+			throw new ServiceException(new ErrorCode(30003, "学生账号不存在，账号删除失败！"));
+		}
+
 	}
 
 	@Override
@@ -95,6 +99,13 @@ public class StudentServiceImple implements IStudentService {
 		if (studentDao.updateOne(student) < 1) {
 			throw new ServiceException(
 					new ErrorCode(30001, "更新学生信息失败，请联系管理人员！"));
+		}
+		User user = new User();
+		user.setUsername(student.getStudent_id());
+		user.setName(student.getName());
+		if (userDao.updateOne(user) < 1) {
+			throw new ServiceException(
+					new ErrorCode(30001, "学生账号不存在，账号信息更新失败！"));
 		}
 	}
 
@@ -170,5 +181,6 @@ public class StudentServiceImple implements IStudentService {
 	@Override
 	public void deleteData(List<String> student_id) {
 		studentDao.deleteData(student_id);
+		userDao.deleteData(student_id);
 	}
 }

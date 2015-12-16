@@ -52,4 +52,21 @@
   		username = #{username}
   </update>
   
+  <delete id="deleteOne" parameterType="java.lang.String">
+  	DELETE FROM
+  		user
+	WHERE
+		username = #{username}  		
+  </delete>
+  
+  <delete id="deleteData" parameterType="java.lang.String">
+	DELETE FROM
+		user
+	WHERE
+		username in
+		<foreach item="username" index="index" collection="list" open="(" separator="," close=")">
+			#{username}
+		</foreach>
+  </delete>
+  
 </mapper>
