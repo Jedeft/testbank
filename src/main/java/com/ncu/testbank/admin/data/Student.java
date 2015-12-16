@@ -13,6 +13,17 @@ public class Student {
 	private String class_id;
 	private String name;
 
+	public Student() {
+		super();
+	}
+
+	public Student(String student_id, String class_id, String name) {
+		super();
+		this.student_id = student_id;
+		this.class_id = class_id;
+		this.name = name;
+	}
+
 	public String getStudent_id() {
 		return student_id;
 	}

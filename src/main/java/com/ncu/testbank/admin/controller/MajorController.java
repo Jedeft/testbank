@@ -33,7 +33,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "major-api", description = "有关于课程的CURD操作", position = 2)
+@Api(value = "major-api", description = "有关于专业的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class MajorController {
