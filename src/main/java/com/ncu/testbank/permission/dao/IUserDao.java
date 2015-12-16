@@ -25,6 +25,13 @@ public interface IUserDao {
 	public int insertOne(User user);
 	
 	/**
+	 * 修改用户
+	 * @param user
+	 * @return
+	 */
+	public int updateOne(User user);
+	
+	/**
 	 * 批量录入用户
 	 * @param file
 	 */

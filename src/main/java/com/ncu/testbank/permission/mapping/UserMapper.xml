@@ -34,4 +34,22 @@
 	CHARACTER SET gbk FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n'
   </insert>
   
+  <update id="updateOne" parameterType="com.ncu.testbank.permission.data.User">
+  	UPDATE
+  		user
+  	<set>
+  		<if test="password != null and password != ''">
+  			password = #{password},
+  		</if>
+  		<if test="second_pwd != null and second_pwd != ''">
+  			second_pwd = #{second_pwd},
+  		</if>
+  		<if test="name != null and name != ''">
+  			name = #{name},
+  		</if>
+  	</set>
+  	WHERE
+  		username = #{username}
+  </update>
+  
 </mapper>

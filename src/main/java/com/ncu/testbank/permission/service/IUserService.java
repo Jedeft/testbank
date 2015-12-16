@@ -10,14 +10,6 @@ import com.ncu.testbank.permission.data.User;
 public interface IUserService {
 
 	/**
-	 * 登录
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public boolean login(User user);
-
-	/**
 	 * 获取用户角色（未做二级认证）
 	 * 
 	 * @param username
@@ -63,4 +55,16 @@ public interface IUserService {
 	 * @param user
 	 */
 	public void reAuth(User user);
+	
+	/**
+	 * 登出操作（删除redis中用户信息缓存）
+	 * @param username
+	 */
+	public void logout(String username);
+	
+	/**
+	 * 修改密码(包括二级密码修改)
+	 * @param user
+	 */
+	public void updatePassword(User user);
 }

@@ -30,11 +30,6 @@ public class UserServiceImple implements IUserService {
 	private IRoleDao roleDao;
 
 	@Override
-	public boolean login(User user) {
-		return false;
-	}
-
-	@Override
 	public List<Role> searchRole(String username) {
 		return roleDao.searchRole(username);
 	}
@@ -92,6 +87,23 @@ public class UserServiceImple implements IUserService {
 		jedis.setex(user.getUsername(), 3 * 60 * 60, json);
 		// 归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
+	}
+
+	@Override
+	public void logout(String username) {
+		JedisPool jedisPool = JedisPoolUtils.getPool();
+		Jedis jedis = jedisPool.getResource();
+		// 删除缓存中用户信息
+		jedis.del(username);
+		// 归还连接池
+		JedisPoolUtils.returnResource(jedisPool, jedis);
+	}
+
+	@Override
+	public void updatePassword(User user) {
+		if (userDao.updateOne(user) < 1) {
+			throw new ServiceException(new ErrorCode(70001, "修改密码失败，请重试！"));
+		}
 	}
 
 }

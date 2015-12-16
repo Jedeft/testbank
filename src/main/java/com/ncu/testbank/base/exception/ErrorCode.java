@@ -10,6 +10,7 @@ public class ErrorCode {
 	public static final ErrorCode USERINFO_MISSING = new ErrorCode(10050, "用户信息丢失，请重新登录！");
 	public static final ErrorCode USER_UNLOGIN = new ErrorCode(10088, "用户未登录！");
 	
+	public static final ErrorCode REAUTHEN_SUCCESS = new ErrorCode(20000, "二级认证成功");
 	public static final ErrorCode TOKEN_INVALID = new ErrorCode(20001, "用户登录失效，请重新登录！");
 	public static final ErrorCode REAUTHEN_FAIL = new ErrorCode(20002, "二级认证密码错误，请重新认证！");
 	
