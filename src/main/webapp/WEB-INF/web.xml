@@ -47,7 +47,7 @@
 		<url-pattern>/teacher/*</url-pattern>
 		<url-pattern>/student/*</url-pattern>
 		<url-pattern>/permission/twiceAuth</url-pattern>
-		<!-- 后续还有修改用户密码过滤 -->
+		<url-pattern>/common/*</url-pattern>
 	</filter-mapping>
 
 	<!-- 编码过滤器 -->

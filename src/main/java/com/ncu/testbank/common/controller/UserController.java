@@ -49,6 +49,8 @@ public class UserController {
 				return msg;
 			}
 			userService.updatePassword(user);
+			currentUser.setPassword(user.getPassword());
+			session.setAttribute("currentUser", currentUser);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
@@ -78,7 +80,15 @@ public class UserController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = twiceAuthUser.toUser();
+			User currentUser = (User) session.getAttribute("currentUser");
+			if (!currentUser.getUsername().equals(user.getUsername())) {
+				msg.errorCode = 99999;
+				msg.msg = "请勿修改别人的账号密码！";
+				return msg;
+			}
 			userService.updatePassword(user);
+			currentUser.setSecond_pwd(user.getSecond_pwd());
+			session.setAttribute("currentUser", currentUser);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
