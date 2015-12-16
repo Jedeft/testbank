@@ -132,7 +132,7 @@ public class LoginConroller {
 			}
 			userService.logout(username);
 			//删除session中的用户信息
-			session.removeAttribute("username");
+			session.removeAttribute("currentUser");
 			msg.errorCode = ErrorCode.LOGOUT_SUCCESS.code;
 			msg.msg = ErrorCode.LOGOUT_SUCCESS.name;
 		} catch (ShiroException e) {
