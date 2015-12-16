@@ -33,6 +33,8 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
+      	//发布到AliServer 上用AliServer的IP地址
+      	//url = "http://121.42.216.103/testbank/api-docs"
         url = "http://localhost:8080/testbank/api-docs";
       }
 
