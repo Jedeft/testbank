@@ -29,7 +29,11 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
+@Api(value = "teacher-api", description = "有关于教师的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class TeacherController {
@@ -47,7 +51,9 @@ public class TeacherController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/teachers", method = RequestMethod.POST)
-	public ResponseMsg insertTeacher(@RequestBody Teacher teacher) {
+	@ApiOperation(value = "添加教师", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg insertTeacher(
+			@ApiParam(required = true, name = "teacher", value = "教师信息json数据") @RequestBody Teacher teacher) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			teacherService.insertOne(teacher);
@@ -79,7 +85,9 @@ public class TeacherController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/teachers", method = RequestMethod.PATCH)
-	public ResponseMsg updateTeacher(@RequestBody Teacher teacher) {
+	@ApiOperation(value = "更新教师", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg updateTeacher(
+			@ApiParam(required = true, name = "teacher", value = "教师信息json数据") @RequestBody Teacher teacher) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 
@@ -111,7 +119,9 @@ public class TeacherController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/teachers/{teacher_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteTeacher(@PathVariable String teacher_id) {
+	@ApiOperation(value = "删除教师", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg deleteTeacher(
+			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			teacherService.deleteOne(teacher_id);
@@ -143,7 +153,9 @@ public class TeacherController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/teachers/batch", method = RequestMethod.DELETE)
-	public ResponseMsg deleteTeachers(@RequestBody Map<String, List<String>> map) {
+	@ApiOperation(value = "批量删除教师", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg deleteTeachers(
+			@ApiParam(required = true, name = "teacher_id", value = "teacher_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("teacher_id") != null) {
@@ -174,7 +186,9 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "/teachers/{teacher_id}", method = RequestMethod.GET)
-	public ResponseMsg getTeacher(@PathVariable String teacher_id) {
+	@ApiOperation(value = "获取指定教师", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponseMsg getTeacher(
+			@ApiParam(required = true, name = "teacher_id", value = "教师ID") @PathVariable String teacher_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Teacher data = teacherService.getTeacher(teacher_id);
@@ -205,19 +219,28 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "/teachers", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Teacher teacher) {
+	@ApiOperation(value = "检索教师", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = false, name = "teacher_id", value = "教师ID信息检索") @RequestParam(value = "teacher_id", required = false) String teacher_id,
+			@ApiParam(required = false, name = "academy_id", value = "学院ID信息检索") @RequestParam(value = "academy_id", required = false) String academy_id,
+			@ApiParam(required = false, name = "name", value = "教师姓名信息检索") @RequestParam(value = "name", required = false) String name) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<Teacher> teacherList;
-			teacherList = teacherService.searchData(page, teacher);
+
+			PageInfo pageInfo = new PageInfo(page, rows);
+			Teacher teacher = new Teacher(teacher_id, academy_id, name);
+			teacherList = teacherService.searchData(pageInfo, teacher);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = teacherList;
 
-			msg.total = page.getTotal();
-			msg.totalPage = page.getTotalPage();
-			msg.currentPage = page.getPage();
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = teacherList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
@@ -249,8 +272,9 @@ public class TeacherController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/teachers/csv", method = RequestMethod.POST)
+	@ApiOperation(value = "批量导入教师", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg loadCsv(
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			@ApiParam(required = true, name = "file", value = "csv文件") @RequestParam(value = "file", required = true) MultipartFile file,
 			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
 		try {

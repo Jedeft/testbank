@@ -30,7 +30,12 @@ import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
+@Api(value = "syllabus-api", description = "有关于课程表的CURD操作", position = 2)
 @RestController
 @RequestMapping("/admin")
 public class SyllabusController {
@@ -47,7 +52,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses", method = RequestMethod.POST)
-	public ResponseMsg insertSyllabus(@RequestBody Syllabus syllabus) {
+	@ApiOperation(value = "添加一条课程表", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token,日期类型精确到天")
+	public ResponseMsg insertSyllabus(
+			@ApiParam(required = true, name = "syllabus", value = "课程表信息json数据,日期类型精确到天，此处可不带ID参数，后台生成") @RequestBody Syllabus syllabus) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			syllabusService.insertOne(syllabus);
@@ -79,7 +86,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses", method = RequestMethod.PATCH)
-	public ResponseMsg updatesyllabus(@RequestBody Syllabus syllabus) {
+	@ApiOperation(value = "更新课程表", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token，日期类型精确到天")
+	public ResponseMsg updatesyllabus(
+			@ApiParam(required = true, name = "syllabus", value = "课程表信息json数据，日期类型精确到天") @RequestBody Syllabus syllabus) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 
@@ -111,7 +120,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses/{syllabus_id}", method = RequestMethod.GET)
-	public ResponseMsg getSyllabus(@PathVariable String syllabus_id) {
+	@ApiOperation(value = "获取指定课程表", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
+	public ResponseMsg getSyllabus(
+			@ApiParam(required = true, name = "syllabus_id", value = "课程表ID") @PathVariable String syllabus_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			SyllabusView data = syllabusService.getSyllabus(syllabus_id);
@@ -143,7 +154,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses/{syllabuses_id}", method = RequestMethod.DELETE)
-	public ResponseMsg deleteSyllabus(@PathVariable String syllabuses_id) {
+	@ApiOperation(value = "删除课程表", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
+	public ResponseMsg deleteSyllabus(
+			@ApiParam(required = true, name = "syllabus_id", value = "课程表ID") @PathVariable String syllabuses_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			syllabusService.deleteOne(syllabuses_id);
@@ -175,8 +188,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses/batch", method = RequestMethod.DELETE)
+	@ApiOperation(value = "批量删除课表", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteSyllabuses(
-			@RequestBody Map<String, List<String>> map) {
+			@ApiParam(required = true, name = "syllabuses_id", value = "syllabuses_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (map.get("syllabus_id") != null) {
@@ -207,19 +221,27 @@ public class SyllabusController {
 	 * @return
 	 */
 	@RequestMapping(value = "/syllabuses", method = RequestMethod.GET)
-	public ResponseQueryMsg searchData(PageInfo page, Syllabus syllabus) {
+	@ApiOperation(value = "检索课表", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token，日期精确到天")
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = false, name = "start", value = "起始时间（精确到天）") @RequestParam(value = "start", required = false) java.sql.Date start,
+			@ApiParam(required = false, name = "end", value = "结束时间（精确到天）") @RequestParam(value = "end", required = false) java.sql.Date end) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<SyllabusView> syllabusViewList;
-			syllabusViewList = syllabusService.searchData(page, syllabus);
+			PageInfo pageInfo = new PageInfo(page, rows);
+			Syllabus syllabus = new Syllabus(start, end);
+
+			syllabusViewList = syllabusService.searchData(pageInfo, syllabus);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = syllabusViewList;
 
-			msg.total = page.getTotal();
-			msg.totalPage = page.getTotalPage();
-			msg.currentPage = page.getPage();
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = syllabusViewList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
@@ -251,8 +273,9 @@ public class SyllabusController {
 	 */
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/syllabuses/csv", method = RequestMethod.POST)
+	@ApiOperation(value = "批量导入课程表", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token，csv文件中可不含ID")
 	public ResponseMsg loadCsv(
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			@ApiParam(required = true, name = "file", value = "csv文件") @RequestParam(value = "file", required = true) MultipartFile file,
 			HttpServletRequest request) {
 		ResponseMsg msg = new ResponseMsg();
 		try {

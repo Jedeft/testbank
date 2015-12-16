@@ -18,7 +18,6 @@ public class Teacher {
 
 	public Teacher() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Teacher(String teacher_id, String academy_id, String name) {

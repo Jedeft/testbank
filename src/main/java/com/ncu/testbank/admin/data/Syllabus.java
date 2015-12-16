@@ -18,6 +18,16 @@ public class Syllabus {
 	private Date start;
 	private Date end;
 
+	public Syllabus() {
+		super();
+	}
+
+	public Syllabus(Date start, Date end) {
+		super();
+		this.start = start;
+		this.end = end;
+	}
+
 	public String getSyllabus_id() {
 		return syllabus_id;
 	}
