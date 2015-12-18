@@ -2,6 +2,7 @@ package com.ncu.testbank.admin.service.imple;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,24 +10,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ncu.testbank.admin.dao.IBankBuilderDao;
+import com.ncu.testbank.admin.data.BankBuilder;
 import com.ncu.testbank.admin.data.Teacher;
+import com.ncu.testbank.admin.data.view.BankBuilderView;
 import com.ncu.testbank.admin.service.IBankBuilderService;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.BeanToMapUtils;
+import com.ncu.testbank.permission.dao.IRoleDao;
 
 @Service("bankBuilderService")
 public class BankBuilderServiceImple implements IBankBuilderService {
 
 	@Autowired
 	private IBankBuilderDao bankBuilderDao;
+	@Autowired
+	private IRoleDao roleDao;
 
 	@Override
-	public List<Teacher> searchData(PageInfo page, Teacher teacher)
+	public List<BankBuilderView> searchData(PageInfo page, BankBuilderView bankBuilder)
 			throws IllegalAccessException, InvocationTargetException,
 			IntrospectionException {
-		Map<String, Object> params = BeanToMapUtils.convertBean(teacher);
+		Map<String, Object> params = BeanToMapUtils.convertBean(bankBuilder);
 		int count = bankBuilderDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
@@ -43,29 +49,37 @@ public class BankBuilderServiceImple implements IBankBuilderService {
 	}
 
 	@Override
-	public void insertOne(String teacher_id) {
-		if (bankBuilderDao.insertOne(teacher_id) < 1) {
+	public void insertOne(BankBuilder bankBuilder) {
+		if (bankBuilderDao.insertOne(bankBuilder) < 1) {
 			throw new ServiceException(new ErrorCode(30001,
 					"添加题库建设人员失败，请联系管理人员！"));
 		}
-	}
-
-	@Override
-	public void deleteOne(String teacher_id) {
-		if (bankBuilderDao.deleteOne(teacher_id) < 1) {
-			throw new ServiceException(new ErrorCode(30001,
-					"删除题库建设人员失败，请联系管理人员！"));
+		Map<String, Object> params = new HashMap<>();
+		params.put("username", bankBuilder.getTeacher_id());
+		// 题库角色建设者ID 为5
+		params.put("role_id", 5);
+		// 角色等级为1
+		params.put("level", 1);
+		if (roleDao.putRole(params) < 1) {
+			throw new ServiceException(new ErrorCode(80003,
+					"添加题库建设权限失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
-	public void deleteData(List<String> teacher_id) {
-		bankBuilderDao.deleteData(teacher_id);
-	}
-
-	@Override
-	public Teacher getBankBuilder(String teacher_id) {
-		return bankBuilderDao.getBankBuilder(teacher_id);
+	public void deleteOne(BankBuilder bankBuilder) {
+		if (bankBuilderDao.deleteOne(bankBuilder) < 1) {
+			throw new ServiceException(new ErrorCode(30001,
+					"删除题库建设人员失败，请联系管理人员！"));
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("username", bankBuilder.getTeacher_id());
+		// 题库角色建设者ID 为5
+		params.put("role_id", 5);
+		if (roleDao.deleteRole(params) < 1) {
+			throw new ServiceException(new ErrorCode(80003,
+					"删除题库建设权限失败，请联系管理人员！"));
+		}
 	}
 
 }

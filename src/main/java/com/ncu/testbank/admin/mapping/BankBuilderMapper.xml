@@ -2,17 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.testbank.admin.dao.IBankBuilderDao" >
 
-	<resultMap id="BaseResultMap" type="com.ncu.testbank.admin.data.Teacher" >
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.admin.data.view.BankBuilderView" >
 	  <id column="teacher_id" property="teacher_id"/>
+	  <result column="teacher_name" property="teacher_name"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="course_name" property="course_name"/>
 	  <result column="academy_id" property="academy_id"/>
-	  <result column="name" property="name"/>
-	  <result column="email" property="email"/>
-	  <result column="phone" property="phone"/>
-	  <result column="qq" property="qq"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		teacher_id, academy_id, name, email, phone, qq
+		teacher_id, course_id, teacher_name, course_name, academy_id
 	</sql>
 	
 	<select id="getCount" resultType="java.lang.Integer">
@@ -24,13 +23,20 @@
 			<if test="teacher_id != null and teacher_id != ''">
 				teacher_id = #{teacher_id}
 			</if>
+			<if test="teacher_name != null and teacher_name != ''">
+				AND teacher_name = #{teacher_name}
+			</if>
 			<if test="academy_id != null and academy_id != ''">
 				AND academy_id = #{academy_id}
 			</if>
-			<if test="name != null and name != ''">
-				AND name = #{name}
+			<if test="course_id != null and course_id != ''">
+				AND course_id = #{course_id}
+			</if>
+			<if test="course_name != null and course_name != ''">
+				AND course_name = #{course_name}
 			</if>
 		</where>
+		
 	</select>
 	
 	<select id="searchData" resultMap="BaseResultMap">
@@ -42,52 +48,36 @@
 			<if test="teacher_id != null and teacher_id != ''">
 				teacher_id = #{teacher_id}
 			</if>
+			<if test="teacher_name != null and teacher_name != ''">
+				AND teacher_name = #{teacher_name}
+			</if>
 			<if test="academy_id != null and academy_id != ''">
 				AND academy_id = #{academy_id}
 			</if>
-			<if test="name != null and name != ''">
-				AND name = #{name}
+			<if test="course_id != null and course_id != ''">
+				AND course_id = #{course_id}
+			</if>
+			<if test="course_name != null and course_name != ''">
+				AND course_name = #{course_name}
 			</if>
 		</where>
 		LIMIT ${page * rows}, #{rows}
 	</select>
 	
-	<select id="getBankBuilder" resultMap="BaseResultMap" parameterType="java.lang.String">
-		SELECT 
-			<include refid="Base_Column_List"></include>
-		FROM 
-			bankbuilder_v
-		WHERE 
-			teacher_id = #{teacher_id}
-		LIMIT 1
-	</select>
-	
-	<insert id="insertOne" parameterType="java.lang.String">
+	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.BankBuilder">
 		INSERT INTO 
-			user_role
+			bankbuilder
 		VALUES
-			(#{teacher_id},5,1)
+			(#{teacher_id},#{course_id})
 	</insert>
 	
-	<delete id="deleteOne" parameterType="java.lang.String">
+	<delete id="deleteOne" parameterType="com.ncu.testbank.admin.data.BankBuilder">
 		DELETE FROM
-			user_role
+			bankbuilder
 		WHERE
-			username = #{teacher_id}
+			teacher_id = #{teacher_id}
 		AND
-			role_id = 5
+			course_id = #{course_id}
 	</delete>
 	
-	<delete id="deleteData" parameterType="java.lang.String">
-		DELETE FROM
-			user_role
-		WHERE
-			username in
-			<foreach item="teacher_id" index="index" collection="list" open="(" separator="," close=")">
-				#{teacher_id}
-			</foreach>
-		AND
-			role_id = 5
-	</delete>
-  
 </mapper>

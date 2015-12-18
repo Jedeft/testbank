@@ -5,20 +5,17 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.ncu.testbank.admin.data.Teacher;
+import com.ncu.testbank.admin.data.BankBuilder;
+import com.ncu.testbank.admin.data.view.BankBuilderView;
 
 @Repository
 public interface IBankBuilderDao {
 
 	public int getCount(Map<String, Object> params);
 
-	public List<Teacher> searchData(Map<String, Object> params);
+	public List<BankBuilderView> searchData(Map<String, Object> params);
 
-	public Teacher getBankBuilder(String teacher_id);
+	public int insertOne(BankBuilder bankBuilder);
 
-	public int insertOne(String teacher_id);
-
-	public int deleteOne(String teacher_id);
-
-	public void deleteData(List<String> teacher_id);
+	public int deleteOne(BankBuilder bankBuilder);
 }

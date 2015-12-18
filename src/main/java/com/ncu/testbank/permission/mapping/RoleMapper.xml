@@ -35,4 +35,19 @@
   		username = #{username}
   </select>
   
+  <insert id="putRole">
+  	INSERT INTO
+  		user_role
+  	VALUES(#{username}, #{role_id}, #{level})
+  </insert>
+  
+  <delete id="deleteRole">
+  	DELETE FROM
+  		user_role
+  	WHERE
+  		username = #{username}
+  	AND
+  		role_id = #{role_id}
+  </delete>
+  
 </mapper>
