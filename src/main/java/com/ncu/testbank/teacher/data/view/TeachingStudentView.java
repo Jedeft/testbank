@@ -20,6 +20,18 @@ public class TeachingStudentView {
 	// 授课结束时间
 	private Date end;
 
+	public TeachingStudentView() {
+		super();
+	}
+
+	public TeachingStudentView(String course_id, String student_id,
+			String student_name) {
+		super();
+		this.course_id = course_id;
+		this.student_id = student_id;
+		this.student_name = student_name;
+	}
+
 	public String getSyllabus_id() {
 		return syllabus_id;
 	}

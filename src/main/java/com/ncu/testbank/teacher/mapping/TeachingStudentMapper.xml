@@ -2,7 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.testbank.teacher.dao.ITeachingStudentDao" >
 
-	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.view.TeachingStudentView" >
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.TeachingStudent" >
+	  <id column="syllabus_id" property="syllabus_id"/>
+	  <result column="student_id" property="student_id"/>
+	</resultMap>
+
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.TeachingStudentView" >
 	  <id column="syllabus_id" property="syllabus_id"/>
 	  <result column="student_id" property="student_id"/>
 	  <result column="student_name" property="student_name"/>
@@ -14,8 +19,43 @@
 	</resultMap>
 	
 	<sql id="Base_Column_List">
+		syllabus_id, student_id
+	</sql>
+	
+	<sql id="View_Column_List">
 		syllabus_id, student_id, student_name, class_id, class_name, course_id, start, end
 	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			teachingstudent_v
+		WHERE
+			syllabus_id = #{syllabus_id}
+			<if test="student_id != null and student_id != ''">
+				AND student_id = #{student_id}
+			</if>
+			<if test="student_name != null and student_name != ''">
+				AND student_name = #{student_name}
+			</if>
+	</select>
+	
+	<select id="searchData" resultMap="ViewResultMap">
+		SELECT
+			<include refid="View_Column_List"/>
+		FROM
+			teachingstudent_v
+		WHERE
+			syllabus_id = #{syllabus_id}
+			<if test="student_id != null and student_id != ''">
+				AND student_id = #{student_id}
+			</if>
+			<if test="student_name != null and student_name != ''">
+				AND student_name = #{student_name}
+			</if>
+		LIMIT ${page * rows}, #{rows}
+	</select>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.TeachingStudent">
 		INSERT INTO
@@ -23,5 +63,12 @@
 		VALUES(#{syllabus_id},#{student_id})
 	</insert>  
   
-  
+  	<delete id="deleteOne" parameterType="com.ncu.testbank.teacher.data.TeachingStudent">
+		DELETE FROM
+			syllabus_student
+		WHERE
+			student_id = #{student_id}
+		AND
+			syllabus_id = #{syllabus_id}
+	</delete>
 </mapper>

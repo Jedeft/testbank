@@ -1,7 +1,6 @@
 package com.ncu.testbank.teacher.data.params;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 授课学生管理模块前台传来的params集合
@@ -10,7 +9,7 @@ import java.util.Map;
  * 
  */
 public class TeachingStudentParams {
-	
+
 	private String course_id;
 	// key : student_id
 	private List<String> student_id;

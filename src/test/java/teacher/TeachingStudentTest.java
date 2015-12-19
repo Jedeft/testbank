@@ -92,6 +92,45 @@ public class TeachingStudentTest {
 	}
 	
 	/**
+	 * url : /teacher/students
+	 * params : page=1 , rows=15
+	 * 		  : academy_id, name
+	 * method : GET
+	 * @throws Exception
+	 */
+	@Test
+	public void searchSutdentsTest() throws Exception{
+		mockMvc.perform(get("/teacher/students/?page=1&rows=15&class_id=1").contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
+	
+	/**
+	 * url : /teacher/teachingStudents
+	 * params : page=1 , rows=15
+	 * 		  : academy_id, name
+	 * method : GET
+	 * @throws Exception
+	 */
+	@Test
+	public void searchTeachingStudentsTest() throws Exception{
+		User user = new User();
+		user.setUsername("Jerry");
+		mockSession.setAttribute("currentUser", user);
+		
+		mockMvc.perform(get("/teacher/teachingStudents/?page=1&rows=15&class_id=1&course_id=1").session(mockSession)
+											   .contentType(MediaType.TEXT_HTML)
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(status().isOk())
+										  .andDo(print());
+	}
+	
+	/**
 	 * url : /admin/academys
 	 * method : PATCH
 	 * @throws Exception
