@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.ITeachingStudentDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.view.TeachingStudentView" >
+	  <id column="syllabus_id" property="syllabus_id"/>
+	  <result column="student_id" property="student_id"/>
+	  <result column="student_name" property="student_name"/>
+	  <result column="class_id" property="class_id"/>
+	  <result column="class_name" property="class_name"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="start" property="start"/>
+	  <result column="end" property="end"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		syllabus_id, student_id, student_name, class_id, class_name, course_id, start, end
+	</sql>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.TeachingStudent">
+		INSERT INTO
+			syllabus_student
+		VALUES(#{syllabus_id},#{student_id})
+	</insert>  
+  
+  
+</mapper>

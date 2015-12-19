@@ -26,4 +26,11 @@ public interface ISyllabusDao {
 	public void deleteData(List<String> syllabus_id);
 
 	public void loadCsv(String file);
+	
+	/**
+	 * 通过教师ID，课程ID以及当下时间查找当前正在使用的课程表
+	 * @param params teacher_id, course_id, today
+	 * @return
+	 */
+	public Syllabus getSyllabusNow(Map<String, Object> params);
 }

@@ -16,6 +16,14 @@ public interface IStudentDao {
 
 	public Student getStudent(String student_id);
 
+	/**
+	 * 通过student_id集合获取学生集合
+	 * 
+	 * @param student_id
+	 * @return
+	 */
+	public List<Student> getStudents(List<String> student_id);
+
 	public int insertOne(Student student);
 
 	public int deleteOne(String student_id);

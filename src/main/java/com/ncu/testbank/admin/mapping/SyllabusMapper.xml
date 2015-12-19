@@ -53,7 +53,7 @@
 				start >= #{start}
 			</if>
 			<if test="end != null and end != ''">
-				AND #{end} >= end
+				AND #{end} > end
 			</if>
 		</where>
 		LIMIT ${page * rows}, #{rows}
@@ -66,6 +66,23 @@
 			syllabus_v
 		WHERE
 			syllabus_id = #{syllabus_id}
+	</select>
+	
+	<!-- 通过教师ID，课程ID以及当下时间查找当前正在使用的课程表 ,teacher_id和course_id建立复合索引-->
+	<select id="getSyllabusNow" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			syllabus
+		WHERE
+			end > #{today}
+		AND
+			 #{today} >= start
+		AND 
+			teacher_id = #{teacher_id}
+		AND 
+			course_id = #{course_id}
+		LIMIT 1
 	</select>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.admin.data.Syllabus">

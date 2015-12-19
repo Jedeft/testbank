@@ -59,6 +59,18 @@
 		LIMIT 1
 	</select>
 	
+	<select id="getStudents" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			student
+		WHERE
+			student_id in
+			<foreach item="student_id" index="index" collection="list" open="(" separator="," close=")">
+				#{student_id}
+			</foreach>
+	</select>
+	
 	<!-- loadCsv文件入库 -->
 	<insert id="loadCsv" parameterType="java.lang.String" >
 		LOAD DATA LOCAL INFILE #{file} INTO TABLE student 
