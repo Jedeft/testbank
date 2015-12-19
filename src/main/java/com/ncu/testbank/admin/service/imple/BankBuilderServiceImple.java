@@ -59,7 +59,7 @@ public class BankBuilderServiceImple implements IBankBuilderService {
 		// 题库角色建设者ID 为5
 		params.put("role_id", 5);
 		// 角色等级为1
-		params.put("level", 1);
+		params.put("level", 0);
 		if (roleDao.putRole(params) < 1) {
 			throw new ServiceException(new ErrorCode(80003,
 					"添加题库建设权限失败，请联系管理人员！"));
