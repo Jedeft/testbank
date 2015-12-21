@@ -35,6 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.teacher.data.params.TeachingStudentParams;
 
 /**
  * 对于需要rootAdmin权限的操作需要关掉@RequiresRoles("rootAdmin")注解才可执行
@@ -131,46 +132,25 @@ public class TeachingStudentTest {
 	}
 	
 	/**
-	 * url : /admin/academys
-	 * method : PATCH
-	 * @throws Exception
-	 */
-	@Test
-	public void updateTest() throws Exception{
-		String requestBody = "{\"academy_id\":\"2\", \"name\":\"update!moke\"}";
-		
-		mockMvc.perform(patch("/admin/academys").contentType(MediaType.APPLICATION_JSON)
-											   .content(requestBody)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
-	}
-	
-	/**
-	 * url : /admin/academys/{academy_id}
-	 * method : GET
-	 * @throws Exception
-	 */
-	@Test
-	public void selectOneTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/{academy_id}", 1).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
-	
-	/**
-	 * url : /admin/academys/{academy_id}
+	 * url : /teacher/teachingStudents
 	 * method : DELETE
 	 * @throws Exception
 	 */
 	@Test
 	public void deleteTest() throws Exception{
-		mockMvc.perform(delete("/admin/academys/{academy_id}", 123).contentType(MediaType.TEXT_HTML)
+		User user = new User();
+		user.setUsername("Jerry");
+		mockSession.setAttribute("currentUser", user);
+		TeachingStudentParams teachingStudentParams = new TeachingStudentParams();
+		teachingStudentParams.setCourse_id("1");
+		List<String> student_id = new ArrayList<>();
+		student_id.add("1");
+		student_id.add("2");
+		teachingStudentParams.setStudent_id(student_id);
+		
+		mockMvc.perform(delete("/teacher/teachingStudents").session(mockSession)
+											   .content(JSONUtils.convertObject2Json(teachingStudentParams))
+											   .contentType(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
@@ -178,57 +158,4 @@ public class TeachingStudentTest {
 										  .andDo(print());
 	}
 	
-	/**
-	 * url : /admin/academys/batch
-	 * method : DELETE
-	 * @throws Exception
-	 */
-	@Test
-	public void batchDeleteTest() throws Exception{
-		String temp = "{\"academy_id\":[\"1\",\"2\"]}";
-		Map<String, List<String>> map = new HashMap<>();
-		List<String> list = new ArrayList<>();
-		list.add("1");
-		list.add("2");
-		map.put("academy_id", list);
-		mockMvc.perform(delete("/admin/academys/batch").contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(map))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
-	
-	/**
-	 * url : /admin/academys/csv
-	 * params : file
-	 * method : POST
-	 * @throws Exception
-	 */
-	@Test
-	public void loadCsvTest() throws Exception {
-		File file = new File("E:/CSV/academy.csv");
-		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file", "academy.csv", null, in);
-		mockMvc.perform(fileUpload("/admin/academys/csv").file(mokeFile))
-												    .andDo(print());
-	}
-	
-	/**
-	 * url : /admin/academys
-	 * params : page=1 , rows=15
-	 * 		  : academy_id, name
-	 * method : GET
-	 * @throws Exception
-	 */
-	@Test
-	public void searchTest() throws Exception{
-		mockMvc.perform(get("/admin/academys/?page=1&rows=15&academy_id=1").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
 }

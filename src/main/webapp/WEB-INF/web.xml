@@ -37,6 +37,7 @@
 			<url-pattern>*.css</url-pattern> <url-pattern>*.jsp</url-pattern> -->
 	</servlet-mapping>
 
+	<!--  
 	<filter>
 		<filter-name>tokenFilter</filter-name>
 		<filter-class>com.ncu.testbank.base.filter.TokenFilter</filter-class>
@@ -49,7 +50,8 @@
 		<url-pattern>/permission/twiceAuth</url-pattern>
 		<url-pattern>/common/*</url-pattern>
 	</filter-mapping>
-
+	-->
+	
 	<!-- 编码过滤器 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>

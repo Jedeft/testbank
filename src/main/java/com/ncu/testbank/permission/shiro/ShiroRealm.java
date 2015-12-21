@@ -68,11 +68,11 @@ public class ShiroRealm extends AuthorizingRealm {
 		JedisPool jedisPool = JedisPoolUtils.getPool();
 		Jedis jedis = jedisPool.getResource();
 		String json = jedis.get(currentUsername);
-		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
-		if (!JWTUtils.validateToken(authen.getToken(), currentUsername)) {
+		if (json == null || "".equals(json)) {
 			JedisPoolUtils.returnResource(jedisPool, jedis);
 			throw new ServiceException(ErrorCode.TOKEN_INVALID);
 		}
+		Authen authen = JSONUtils.convertJson2Object(json, Authen.class);
 		jedis.setex(currentUsername, 3 * 60 * 60, json);
 		// 归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);

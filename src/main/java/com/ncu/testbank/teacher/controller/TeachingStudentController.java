@@ -53,7 +53,7 @@ public class TeachingStudentController {
 	 */
 	@RequestMapping(value = "/teachingStudents", method = RequestMethod.POST)
 	@ApiOperation(value = "添加授课学生", httpMethod = "POST", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
-	public ResponseMsg insertAcademy(
+	public ResponseMsg insertStudents(
 			@ApiParam(required = true, name = "academy", value = "添加的授课学生json数据，集合中为student_id数组, 添加的教师ID为当前用户ID") @RequestBody TeachingStudentParams teachingSParams,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
@@ -129,7 +129,6 @@ public class TeachingStudentController {
 		return msg;
 	}
 
-	
 	/**
 	 * 分页获取授课学生信息
 	 * 
@@ -148,11 +147,13 @@ public class TeachingStudentController {
 		try {
 			List<Student> studentList;
 			PageInfo pageInfo = new PageInfo(page, rows);
-			TeachingStudentView teachingStudentView = new TeachingStudentView(course_id, student_id, student_name);
+			TeachingStudentView teachingStudentView = new TeachingStudentView(
+					course_id, student_id, student_name);
 
 			User user = (User) session.getAttribute("currentUser");
-			List<TeachingStudentView> list = teachingStudentService.searchData(pageInfo, teachingStudentView, user.getUsername());
-			
+			List<TeachingStudentView> list = teachingStudentService.searchData(
+					pageInfo, teachingStudentView, user.getUsername());
+
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = list;
@@ -173,11 +174,48 @@ public class TeachingStudentController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InvocationTargetException | IntrospectionException e) {
+		} catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
 			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
 			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
 			log.error(e.getMessage());
 		}
 		return msg;
 	}
+
+	/**
+	 * 
+	 * @param teachingSParams
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/teachingStudents", method = RequestMethod.DELETE)
+	@ApiOperation(value = "删除授课学生", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	public ResponseMsg deleteStudents(
+			@ApiParam(required = true, name = "academy", value = "删除的授课学生json数据，集合中为student_id数组, 添加的教师ID为当前用户ID") @RequestBody TeachingStudentParams teachingSParams,
+			@ApiIgnore HttpSession session) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			User user = (User) session.getAttribute("currentUser");
+			teachingStudentService.deleteStudents(user.getUsername(),
+					teachingSParams.getCourse_id(),
+					teachingSParams.getStudent_id());
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
 }

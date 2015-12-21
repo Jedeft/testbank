@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.IPointDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Point" >
+	  <id column="point_id" property="point_id"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="name" property="name"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		point_id, course_id, name
+	</sql>
+	
+	<select id="searchData" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			point
+		WHERE
+			course_id = #{course_id}
+	</select>
+	
+	<select id="getPoint" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			point
+		WHERE
+			point_id = #{point_id}
+	</select>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Point">
+		INSERT INTO
+			point
+		VALUES(#{point_id},#{course_id},#{name})
+	</insert>  
+  
+  	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Point">
+  		UPDATE
+  			point
+  		SET
+  			name = #{name}
+  		WHERE
+  			point_id = #{point_id}
+  	</update>
+  
+  	<delete id="deleteData" parameterType="java.lang.Long">
+		DELETE FROM
+			point
+		WHERE
+			point_id in
+			<foreach item="point_id" index="index" collection="list" open="(" separator="," close=")">
+				#{point_id}
+			</foreach>
+	</delete>
+</mapper>
