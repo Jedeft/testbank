@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.ISingleDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Single" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="point_id" property="point_id"/>
+	  <result column="question" property="question"/>
+	  <result column="A" property="A"/>
+	  <result column="B" property="B"/>
+	  <result column="C" property="C"/>
+	  <result column="D" property="D"/>
+	  <result column="answer" property="answer"/>
+	  <result column="type" property="type"/>
+	  <result column="level" property="level"/>
+	  <result column="create_time" property="create_time"/>
+	  <result column="modify_time" property="modify_time"/>
+	  <result column="create_teacher" property="create_teacher_id"/>
+	  <result column="modify_teacher" property="modify_teacher_id"/>
+	</resultMap>
+
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.SingleView" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="point_id" property="point_id"/>
+	  <result column="question" property="question"/>
+	  <result column="A" property="A"/>
+	  <result column="B" property="B"/>
+	  <result column="C" property="C"/>
+	  <result column="D" property="D"/>
+	  <result column="answer" property="answer"/>
+	  <result column="type" property="type"/>
+	  <result column="level" property="level"/>
+	  <result column="create_time" property="create_time"/>
+	  <result column="modify_time" property="modify_time"/>
+	  <result column="create_teacher" property="create_teacher_id"/>
+	  <result column="modify_teacher" property="modify_teacher_id"/>
+	  <result column="create_name" property="create_teacher_name"/>
+	  <result column="modify_name" property="modify_teacher_name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		question_id, point_id, question, A, B, C, D, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id
+	</sql>
+	
+	<sql id="View_Column_List">
+		question_id, point_id, question, A, B, C, D, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id, create_teacher_name, modify_teacher_name
+	</sql>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Single">
+		INSERT INTO
+			single(question_id, point_id, question, A, B, C, D, answer, type, level, create_time, create_teacher_id)
+		VALUES(#{question_id},#{point_id},#{question},#{A},#{B},#{C},#{D},#{answer},#{type},#{level},#{create_time},#{create_teacher_id})
+	</insert>
+	
+	
+	<!--  
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			teachingstudent_v
+		WHERE
+			syllabus_id = #{syllabus_id}
+			<if test="student_id != null and student_id != ''">
+				AND student_id = #{student_id}
+			</if>
+			<if test="student_name != null and student_name != ''">
+				AND student_name = #{student_name}
+			</if>
+	</select>
+	
+	<select id="searchData" resultMap="ViewResultMap">
+		SELECT
+			<include refid="View_Column_List"/>
+		FROM
+			teachingstudent_v
+		WHERE
+			syllabus_id = #{syllabus_id}
+			<if test="student_id != null and student_id != ''">
+				AND student_id = #{student_id}
+			</if>
+			<if test="student_name != null and student_name != ''">
+				AND student_name = #{student_name}
+			</if>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.TeachingStudent">
+		INSERT INTO
+			syllabus_student
+		VALUES(#{syllabus_id},#{student_id})
+	</insert>  
+  
+  	<delete id="deleteOne" parameterType="com.ncu.testbank.teacher.data.TeachingStudent">
+		DELETE FROM
+			syllabus_student
+		WHERE
+			student_id = #{student_id}
+		AND
+			syllabus_id = #{syllabus_id}
+	</delete>
+	-->
+	
+</mapper>
