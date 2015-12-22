@@ -19,7 +19,7 @@
 	</context:component-scan>
 	<context:annotation-config />
 	
-	<bean class="com.ncu.testbank.base.config.SwaggerConfig"></bean>
+	<bean class="com.ncu.testbank.base.config.SwaggerConfig"/>
 	  
 	<!-- Required for security annotations to work in this servlet -->
 	<bean

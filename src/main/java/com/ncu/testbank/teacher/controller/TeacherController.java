@@ -17,7 +17,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "teacher-api", description = "查看题库建设者教师信息", position = 3)
+@Api(value = "bankBuilderInfo-api", description = "查看题库建设者教师信息", position = 3)
 @RestController("teacherController2")
 @RequestMapping("/teacher")
 public class TeacherController {

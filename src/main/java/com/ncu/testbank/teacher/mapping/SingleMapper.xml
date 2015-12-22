@@ -52,6 +52,84 @@
 		VALUES(#{question_id},#{point_id},#{question},#{A},#{B},#{C},#{D},#{answer},#{type},#{level},#{create_time},#{create_teacher_id})
 	</insert>
 	
+	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Single">
+		UPDATE
+			single
+		<set>
+			<if test="point_id != null and point_id != ''">
+				point_id = #{point_id},
+			</if>
+			<if test="question != null and question != ''">
+				question = #{question},
+			</if>
+			<if test="A != null and A != ''">
+				A = #{A},
+			</if>
+			<if test="B != null and B != ''">
+				B = #{B},
+			</if>
+			<if test="C != null and C != ''">
+				C = #{C},
+			</if>
+			<if test="D != null and D != ''">
+				D = #{D},
+			</if>
+			<if test="level != null and level != ''">
+				level = #{level},
+			</if>
+			<if test="modify_teacher_id != null and modify_teacher_id != ''">
+				modify_teacher_id = #{modify_teacher_id},
+			</if>
+			<if test="modify_time != null and modify_time != ''">
+				modify_time = #{modify_time},
+			</if>
+		</set>
+		WHERE
+			question_id = #{question_id}
+	</update>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			single_v
+		<where>
+			<if test="question_id != null and question_id != ''">
+				question_id = #{question_id}
+			</if>
+			<if test="point_id != null and point_id != ''">
+				AND point_id = #{point_id}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="level != null and level != ''">
+				AND level = #{level}
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchData" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"></include>
+		FROM 
+			single_v
+		<where>
+			<if test="question_id != null and question_id != ''">
+				question_id = #{question_id}
+			</if>
+			<if test="point_id != null and point_id != ''">
+				AND point_id = #{point_id}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="level != null and level != ''">
+				AND level = #{level}
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
 	
 	<!--  
 	<select id="getCount" resultType="java.lang.Integer">

@@ -24,7 +24,7 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
  * @version 0.0.1
  */
 @EnableSwagger
-@ComponentScan(basePackages = { "com.ncu.testbank.admin.controller" })
+@ComponentScan(basePackages = { "com.ncu.testbank.*.controller" })
 public class SwaggerConfig extends WebMvcConfigurerAdapter {
 	private SpringSwaggerConfig springSwaggerConfig;
 

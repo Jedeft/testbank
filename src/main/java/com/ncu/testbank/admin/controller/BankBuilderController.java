@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +45,7 @@ public class BankBuilderController {
 	 * @param bankBuilder
 	 * @return
 	 */
-//	@RequiresRoles("rootAdmin")
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.POST)
 	@ApiOperation(value = "添加题库建设人员", httpMethod = "POST", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg insertBankBuilder(
@@ -78,7 +79,7 @@ public class BankBuilderController {
 	 * @param bankBuilder
 	 * @return
 	 */
-//	@RequiresRoles("rootAdmin")
+	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/bankBuilders", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题库建设人员", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
 	public ResponseMsg deleteBankBuilder(

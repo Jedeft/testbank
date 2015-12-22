@@ -15,6 +15,7 @@ public class Single {
 	private String C;
 	private String D;
 	private String answer;
+	@ApiModelProperty(hidden = true)
 	private int type;
 	private int level;
 	@ApiModelProperty(hidden = true)
@@ -25,6 +26,26 @@ public class Single {
 	private String create_teacher_id;
 	@ApiModelProperty(hidden = true)
 	private String modify_teacher_id;
+
+	public Single() {
+		super();
+	}
+
+	public Single(Long question_id, Long point_id, Integer type, Integer level) {
+		super();
+		if (question_id != null) {
+			this.question_id = question_id;
+		}
+		if (point_id != null) {
+			this.point_id = point_id;
+		}
+		if (type != null) {
+			this.type = type;
+		}
+		if (level != null) {
+			this.level = level;
+		}
+	}
 
 	public long getQuestion_id() {
 		return question_id;

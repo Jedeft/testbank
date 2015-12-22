@@ -77,7 +77,7 @@ public class SingleTest {
 		mockSession.setAttribute("currentUser", user);
 		Single single = new Single();
 		single.setPoint_id(145076563281901L);
-		single.setQuestion("demo question!");
+		single.setQuestion("demo question222!");
 		single.setA("answer one");
 		single.setB("answer two");
 		single.setC("answer three");
@@ -96,64 +96,40 @@ public class SingleTest {
 	}
 	
 	/**
-	 * url : /teacher/students
-	 * params : page=1 , rows=15
-	 * 		  : academy_id, name
-	 * method : GET
-	 * @throws Exception
-	 */
+     * url : /teacher/singles/writing
+     * method : PATCH
+     * @throws Exception
+     */
 	@Test
-	public void searchSutdentsTest() throws Exception{
-		mockMvc.perform(get("/teacher/students/?page=1&rows=15&class_id=1").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
-	
-	/**
-	 * url : /teacher/teachingStudents
-	 * params : page=1 , rows=15
-	 * 		  : academy_id, name
-	 * method : GET
-	 * @throws Exception
-	 */
-	@Test
-	public void searchTeachingStudentsTest() throws Exception{
+	public void updateWritingTest() throws Exception{
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
+		Single single = new Single();
+		single.setQuestion_id(145076630571401L);
+		single.setQuestion("update question!");
+		single.setLevel(5);
+		single.setAnswer("D");
 		
-		mockMvc.perform(get("/teacher/teachingStudents/?page=1&rows=15&class_id=1&course_id=1").session(mockSession)
-											   .contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
-	}
-	
-	/**
-	 * url : /teacher/teachingStudents
-	 * method : DELETE
-	 * @throws Exception
-	 */
-	@Test
-	public void deleteTest() throws Exception{
-		User user = new User();
-		user.setUsername("Jerry");
-		mockSession.setAttribute("currentUser", user);
-		TeachingStudentParams teachingStudentParams = new TeachingStudentParams();
-		teachingStudentParams.setCourse_id("1");
-		List<String> student_id = new ArrayList<>();
-		student_id.add("1");
-		student_id.add("2");
-		teachingStudentParams.setStudent_id(student_id);
-		
-		mockMvc.perform(delete("/teacher/teachingStudents").session(mockSession)
-											   .content(JSONUtils.convertObject2Json(teachingStudentParams))
+		mockMvc.perform(patch("/teacher/singles/writing").session(mockSession)
 											   .contentType(MediaType.APPLICATION_JSON)
+											   .content(JSONUtils.convertObject2Json(single))
+											   .characterEncoding(CharEncoding.UTF_8)
+											   .accept(MediaType.APPLICATION_JSON)
+											   .characterEncoding(CharEncoding.UTF_8))
+										  .andExpect(jsonPath("$.errorCode").value(0))
+										  .andDo(print());
+	}
+	
+	/**
+	 * url : /teacher/singles
+	 * params : page=1 , rows=15, point_id
+	 * method : GET
+	 * @throws Exception
+	 */
+	@Test
+	public void searchSingleTest() throws Exception{
+		mockMvc.perform(get("/teacher/singles/?page=1&rows=15&point_id=145076563281901").contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))
