@@ -27,7 +27,18 @@ public interface ISingleService {
 	 */
 	public void updateWriting(Single single, User user);
 
+	/**
+	 * 检索题目
+	 * @param pageInfo
+	 * @param single
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws IntrospectionException
+	 */
 	public List<SingleView> searchData(PageInfo pageInfo, Single single)
 			throws IllegalAccessException, InvocationTargetException,
 			IntrospectionException;
+	
+	
 }

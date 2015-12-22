@@ -131,6 +131,15 @@
 		LIMIT ${page * rows}, #{rows}
 	</select>
 	
+	<select id="getOne" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			single
+		WHERE
+			question_id = #{question_id}
+	</select>
+	
 	<!--  
 	<select id="getCount" resultType="java.lang.Integer">
 		SELECT

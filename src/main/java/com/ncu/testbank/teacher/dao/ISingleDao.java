@@ -17,4 +17,6 @@ public interface ISingleDao {
 	public int getCount(Map<String, Object> params);
 
 	public List<SingleView> searchData(Map<String, Object> params);
+	
+	public Single getOne(long question_id);
 }
