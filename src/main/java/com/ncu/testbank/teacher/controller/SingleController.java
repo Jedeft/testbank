@@ -232,7 +232,7 @@ public class SingleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/inimg", method = RequestMethod.POST)
+	@RequestMapping(value = "/singles/img", method = RequestMethod.POST)
 	@ApiOperation(value = "插入图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertImge(
 			@ApiParam(required = true, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = true) MultipartFile questionFile,
@@ -266,8 +266,8 @@ public class SingleController {
 	
 	
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/upimg", method = RequestMethod.POST)
-	@ApiOperation(value = "修改图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/singles/img", method = RequestMethod.PATCH)
+	@ApiOperation(value = "修改图片题目", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateImge(
 			@ApiParam(required = false, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = false) MultipartFile questionFile,
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @RequestParam(value = "question_id", required = false) Long question_id,
