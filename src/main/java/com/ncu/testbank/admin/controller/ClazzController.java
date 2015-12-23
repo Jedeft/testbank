@@ -158,8 +158,11 @@ public class ClazzController {
 			@ApiParam(required = true, name = "class_id", value = "class_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("class_id") != null) {
+			if (map.get("class_id") != null && !map.get("class_id").equals("")) {
 				clazzService.deleteData(map.get("class_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除班级！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

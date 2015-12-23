@@ -174,8 +174,8 @@ public class MajorTest {
 	public void loadCsvTest() throws Exception {
 		File file = new File("E:/CSV/major.csv");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mokeFile = new MockMultipartFile("file", "major.csv", null, in);
-		mockMvc.perform(fileUpload("/admin/majors/csv").file(mokeFile))
+		MockMultipartFile mockFile = new MockMultipartFile("file", "major.csv", null, in);
+		mockMvc.perform(fileUpload("/admin/majors/csv").file(mockFile))
 												    .andDo(print());
 	}
 	

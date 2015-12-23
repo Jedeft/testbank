@@ -156,8 +156,11 @@ public class CourseController {
 	public ResponseMsg deleteCourses(@ApiParam(required = true, name = "course_id", value = "course_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("course_id") != null) {
+			if (map.get("course_id") != null && !map.get("course_id").equals("")) {
 				courseService.deleteData(map.get("course_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除课程！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

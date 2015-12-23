@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.CharEncoding;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public class PointTest {
 
 		mockSession = new MockHttpSession();
 	}
-
+	
 	/**
 	 * url : /teacher/points method : POST
 	 * 

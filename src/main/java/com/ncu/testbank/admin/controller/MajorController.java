@@ -158,8 +158,11 @@ public class MajorController {
 			@ApiParam(required = true, name = "major_id", value = "major_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("major_id") != null) {
+			if (map.get("major_id") != null && !map.get("major_id").equals("")) {
 				majorService.deleteData(map.get("major_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除专业！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

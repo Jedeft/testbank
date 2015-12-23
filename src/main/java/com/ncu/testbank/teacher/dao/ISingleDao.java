@@ -19,4 +19,6 @@ public interface ISingleDao {
 	public List<SingleView> searchData(Map<String, Object> params);
 	
 	public Single getOne(long question_id);
+	
+	public int deleteData(List<Long> question_id);
 }

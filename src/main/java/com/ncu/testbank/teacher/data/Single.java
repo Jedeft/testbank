@@ -47,6 +47,22 @@ public class Single {
 		}
 	}
 
+	public Single(Long point_id, String answer, Integer type, Integer level) {
+		super();
+		if (point_id != null) {
+			this.point_id = point_id;
+		}
+		if (answer != null) {
+			this.answer = answer;
+		}
+		if (type != null) {
+			this.type = type;
+		}
+		if (level != null) {
+			this.level = level;
+		}
+	}
+
 	public long getQuestion_id() {
 		return question_id;
 	}

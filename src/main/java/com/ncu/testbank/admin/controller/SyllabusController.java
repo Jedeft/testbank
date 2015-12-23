@@ -193,8 +193,11 @@ public class SyllabusController {
 			@ApiParam(required = true, name = "syllabuses_id", value = "syllabuses_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("syllabus_id") != null) {
+			if (map.get("syllabus_id") != null && !map.get("syllabus_id").equals("")) {
 				syllabusService.deleteData(map.get("syllabus_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除课表！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

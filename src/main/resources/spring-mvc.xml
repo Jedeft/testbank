@@ -73,7 +73,7 @@
 		<!-- 内存中的最大值 -->
 		<property name="maxInMemorySize" value="40960" />
 		<!-- 上传文件的临时路径 -->
-		<property name="uploadTempDir" value="fileUpload/csv" />
+		<property name="uploadTempDir" value="fileUpload" />
 	</bean>
 
 </beans>  

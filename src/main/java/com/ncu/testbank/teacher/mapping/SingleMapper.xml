@@ -131,7 +131,7 @@
 		LIMIT ${page * rows}, #{rows}
 	</select>
 	
-	<select id="getOne" parameterType="java.lang.Long">
+	<select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap">
 		SELECT
 			<include refid="Base_Column_List"></include>
 		FROM
@@ -139,6 +139,16 @@
 		WHERE
 			question_id = #{question_id}
 	</select>
+	
+	<delete id="deleteData" parameterType="java.lang.Long">
+		DELETE FROM
+			single
+		WHERE
+			question_id in
+			<foreach item="question_id" index="index" collection="list" open="(" separator="," close=")">
+				#{question_id}
+			</foreach>
+	</delete>
 	
 	<!--  
 	<select id="getCount" resultType="java.lang.Integer">

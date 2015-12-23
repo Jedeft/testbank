@@ -158,8 +158,11 @@ public class StudentController {
 			@ApiParam(required = true, name = "student_id", value = "student_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("student_id") != null) {
+			if (map.get("student_id") != null && !map.get("student_id").equals("")) {
 				studentService.deleteData(map.get("student_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除学生！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

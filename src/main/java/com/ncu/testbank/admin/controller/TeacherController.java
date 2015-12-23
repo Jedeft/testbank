@@ -158,8 +158,11 @@ public class TeacherController {
 			@ApiParam(required = true, name = "teacher_id", value = "teacher_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("teacher_id") != null) {
+			if (map.get("teacher_id") != null && !map.get("teacher_id").equals("")) {
 				teacherService.deleteData(map.get("teacher_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除教师！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

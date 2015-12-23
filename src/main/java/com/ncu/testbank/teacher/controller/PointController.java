@@ -130,7 +130,7 @@ public class PointController {
 	
 	
 	/**
-	 * 修改考点
+	 * 删除考点
 	 * 
 	 * @param course_id
 	 * @return
@@ -142,8 +142,11 @@ public class PointController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<Long> point_id = null;
-			if (map != null) {
+			if (map != null && !map.get("point_id").equals("")) {
 				point_id = map.get("point_id");
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除考点！";
 			}
 			pointService.deletePoint(point_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;

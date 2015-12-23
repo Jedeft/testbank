@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/main/resources/accountInfo.properties=UTF-8
 encoding//src/main/resources/jdbc.properties=UTF-8
 encoding//src/main/resources/log4j.properties=UTF-8
+encoding//src/main/resources/questionImg.properties=UTF-8
 encoding//src/main/resources/redis.properties=UTF-8
 encoding//src/main/webapp/view/index.jsp=UTF-8
 encoding//src/test/java/admin/AcademyTest.java=UTF-8

@@ -157,8 +157,11 @@ public class AcademyController {
 			@ApiParam(required = true, name = "academy_id", value = "academy_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("academy_id") != null) {
+			if (map.get("academy_id") != null && !map.get("academy_id").equals("")) {
 				academyService.deleteData(map.get("academy_id"));
+			} else {
+				msg.errorCode = 66666;
+				msg.msg = "请选择删除学院！";
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

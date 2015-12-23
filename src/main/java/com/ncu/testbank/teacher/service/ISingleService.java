@@ -4,9 +4,13 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.primitives.Longs;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Single;
+import com.ncu.testbank.teacher.data.params.DELQuestionParams;
 import com.ncu.testbank.teacher.data.view.SingleView;
 
 public interface ISingleService {
@@ -40,5 +44,32 @@ public interface ISingleService {
 			throws IllegalAccessException, InvocationTargetException,
 			IntrospectionException;
 	
+	/**
+	 * 获取题目详细信息
+	 * @param question_id
+	 * @return
+	 */
+	public Single getSingle(long question_id);
 	
+	/**
+	 * 删除题目
+	 * @param question_id
+	 */
+	public void deleteQuestion(List<DELQuestionParams> question_id);
+	
+	/**
+	 * 插入图片题目
+	 * @param single
+	 * @param user
+	 * @param file
+	 */
+	public void insertImge(Single single, User user, MultipartFile file);
+	
+	/**
+	 * 修改图片题目
+	 * @param single
+	 * @param user
+	 * @param file
+	 */
+	public void updateImge(Single single, User user, MultipartFile file);
 }
