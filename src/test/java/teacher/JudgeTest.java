@@ -36,7 +36,6 @@ import org.springframework.web.context.WebApplicationContext;
 import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Judge;
-import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
 import com.ncu.testbank.teacher.data.params.ImgSingleParams;
 
@@ -230,8 +229,8 @@ public class JudgeTest {
 		mockSession.setAttribute("currentUser", user);
 		Map<String,List<DELQuestionParams>> map = new HashMap<>();
 		List<DELQuestionParams> list = new ArrayList<>();
-		list.add(new DELQuestionParams(145095665729101L, 2));
-		list.add(new DELQuestionParams(145095698568301L, 1));
+		list.add(new DELQuestionParams(145096085782301L, 2));
+		list.add(new DELQuestionParams(145095664785001L, 1));
 		map.put("question", list);
 		mockMvc.perform(delete("/teacher/judges").session(mockSession)
 											   .content(JSONUtils.convertObject2Json(map))

@@ -135,7 +135,6 @@ public class TeachingStudentController {
 			@ApiIgnore HttpSession session) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
-			List<Student> studentList;
 			PageInfo pageInfo = new PageInfo(page, rows);
 			TeachingStudentView teachingStudentView = new TeachingStudentView(
 					course_id, student_id, student_name);

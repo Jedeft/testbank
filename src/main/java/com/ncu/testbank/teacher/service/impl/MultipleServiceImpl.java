@@ -45,7 +45,7 @@ public class MultipleServiceImpl implements IMultipleService {
 		multiple.setCreate_teacher_id(user.getUsername());
 
 		if (multipleDao.insertOne(multiple) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "单选题添加失败，请联系管理人员！"));
+			throw new ServiceException(new ErrorCode(30001, "多选题添加失败，请联系管理人员！"));
 		}
 	}
 
@@ -55,7 +55,7 @@ public class MultipleServiceImpl implements IMultipleService {
 		multiple.setModify_teacher_id(user.getUsername());
 
 		if (multipleDao.updateOne(multiple) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "单选题修改失败，请联系管理人员！"));
+			throw new ServiceException(new ErrorCode(30001, "多选题修改失败，请联系管理人员！"));
 		}
 	}
 

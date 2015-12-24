@@ -2,6 +2,10 @@ package com.ncu.testbank.teacher.data;
 
 import java.sql.Timestamp;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@ApiModel("multiple")
 public class Multiple {
 	private long question_id;
 	private long point_id;
@@ -11,11 +15,16 @@ public class Multiple {
 	private String C;
 	private String D;
 	private String answer;
+	@ApiModelProperty(hidden = true)
 	private int type;
 	private int level;
+	@ApiModelProperty(hidden = true)
 	private Timestamp create_time;
+	@ApiModelProperty(hidden = true)
 	private Timestamp modify_time;
+	@ApiModelProperty(hidden = true)
 	private String create_teacher_id;
+	@ApiModelProperty(hidden = true)
 	private String modify_teacher_id;
 
 	public Multiple() {
@@ -53,8 +62,6 @@ public class Multiple {
 			this.level = level;
 		}
 	}
-	
-	
 
 	public long getQuestion_id() {
 		return question_id;

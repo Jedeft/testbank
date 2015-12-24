@@ -45,7 +45,7 @@ public class JudgeServiceImpl implements IJudgeService {
 		judge.setCreate_teacher_id(user.getUsername());
 
 		if (judgeDao.insertOne(judge) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "单选题添加失败，请联系管理人员！"));
+			throw new ServiceException(new ErrorCode(30001, "简答题添加失败，请联系管理人员！"));
 		}
 	}
 
@@ -55,7 +55,7 @@ public class JudgeServiceImpl implements IJudgeService {
 		judge.setModify_teacher_id(user.getUsername());
 
 		if (judgeDao.updateOne(judge) < 1) {
-			throw new ServiceException(new ErrorCode(30001, "单选题修改失败，请联系管理人员！"));
+			throw new ServiceException(new ErrorCode(30001, "简答题修改失败，请联系管理人员！"));
 		}
 	}
 

@@ -2,17 +2,60 @@ package com.ncu.testbank.teacher.data;
 
 import java.sql.Timestamp;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@ApiModel("shortAnswer")
 public class ShortAnswer {
 	private long question_id;
 	private long point_id;
 	private String question;
 	private String answer;
+	@ApiModelProperty(hidden = true)
 	private int type;
 	private int level;
+	@ApiModelProperty(hidden = true)
 	private Timestamp create_time;
+	@ApiModelProperty(hidden = true)
 	private Timestamp modify_time;
+	@ApiModelProperty(hidden = true)
 	private String create_teacher_id;
+	@ApiModelProperty(hidden = true)
 	private String modify_teacher_id;
+
+	public ShortAnswer() {
+		super();
+	}
+
+	public ShortAnswer(Long question_id, Long point_id, Integer type,
+			Integer level) {
+		super();
+		if (question_id != null) {
+			this.question_id = question_id;
+		}
+		if (point_id != null) {
+			this.point_id = point_id;
+		}
+		if (type != null) {
+			this.type = type;
+		}
+		if (level != null) {
+			this.level = level;
+		}
+	}
+
+	public ShortAnswer(Long point_id, Integer type, Integer level) {
+		super();
+		if (point_id != null) {
+			this.point_id = point_id;
+		}
+		if (type != null) {
+			this.type = type;
+		}
+		if (level != null) {
+			this.level = level;
+		}
+	}
 
 	public long getQuestion_id() {
 		return question_id;

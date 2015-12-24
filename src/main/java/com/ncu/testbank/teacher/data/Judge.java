@@ -2,18 +2,27 @@ package com.ncu.testbank.teacher.data;
 
 import java.sql.Timestamp;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@ApiModel("judge")
 public class Judge {
 	private long question_id;
 	private long point_id;
 	private String question;
 	private String answer;
+	@ApiModelProperty(hidden = true)
 	private int type;
 	private int level;
+	@ApiModelProperty(hidden = true)
 	private Timestamp create_time;
+	@ApiModelProperty(hidden = true)
 	private Timestamp modify_time;
+	@ApiModelProperty(hidden = true)
 	private String create_teacher_id;
+	@ApiModelProperty(hidden = true)
 	private String modify_teacher_id;
-	
+
 	public Judge() {
 		super();
 	}

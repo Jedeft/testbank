@@ -192,7 +192,7 @@ public class JudgeController {
 	 * @param question
 	 * @return
 	 */
-//	@RequiresRoles("bankBuilder")
+	@RequiresRoles("bankBuilder")
 	@RequestMapping(value = "/judges", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg deleteSingles(
