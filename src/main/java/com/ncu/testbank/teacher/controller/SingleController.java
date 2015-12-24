@@ -41,6 +41,12 @@ public class SingleController {
 	@Autowired
 	private ISingleService singleService;
 
+	/**
+	 * 添加文字单选题
+	 * @param single
+	 * @param session
+	 * @return
+	 */
 	@RequiresRoles("bankBuilder")
 	@RequestMapping(value = "/singles/writing", method = RequestMethod.POST)
 	@ApiOperation(value = "添加文字单选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
@@ -70,6 +76,12 @@ public class SingleController {
 		return msg;
 	}
 
+	/**
+	 * 修改文字单选题
+	 * @param single
+	 * @param session
+	 * @return
+	 */
 	@RequiresRoles("bankBuilder")
 	@RequestMapping(value = "/singles/writing", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改文字单选题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
@@ -185,7 +197,7 @@ public class SingleController {
 	@RequestMapping(value = "/singles", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg deleteSingles(
-			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为single数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
+			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为question数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<DELQuestionParams> params = null;
@@ -256,6 +268,16 @@ public class SingleController {
 		return msg;
 	}
 
+	/**
+	 * 修改图片题目
+	 * @param questionFile
+	 * @param question_id
+	 * @param point_id
+	 * @param level
+	 * @param answer
+	 * @param session
+	 * @return
+	 */
 	@RequiresRoles("bankBuilder")
 	@RequestMapping(value = "/singles/img", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改图片题目", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")

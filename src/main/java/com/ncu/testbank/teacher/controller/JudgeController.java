@@ -24,41 +24,41 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.ncu.testbank.permission.data.User;
-import com.ncu.testbank.teacher.data.Multiple;
+import com.ncu.testbank.teacher.data.Judge;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.MultipleView;
-import com.ncu.testbank.teacher.service.IMultipleService;
+import com.ncu.testbank.teacher.data.view.JudgeView;
+import com.ncu.testbank.teacher.service.IJudgeService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "multiple-api", description = "多选题CRUD", position = 3)
+@Api(value = "judge-api", description = "判断题CRUD", position = 3)
 @RestController
 @RequestMapping("/teacher")
-public class MultipleController {
+public class JudgeController {
 
 	@Autowired
-	private IMultipleService multipleService;
+	private IJudgeService judgeService;
 
 	/**
-	 * 添加文字多选题
-	 * @param multiple
+	 * 添加文字判断题
+	 * @param judge
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/multiples/writing", method = RequestMethod.POST)
-	@ApiOperation(value = "添加文字多选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/judges/writing", method = RequestMethod.POST)
+	@ApiOperation(value = "添加文字判断题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertWriting(
-			@ApiParam(required = true, name = "multiple", value = "添加的多选题json数据，ID为后台生成，多选答案逗号分隔") @RequestBody Multiple multiple,
+			@ApiParam(required = true, name = "judge", value = "添加的判断题json数据，ID为后台生成，答案：Y正确，N错误") @RequestBody Judge judge,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			multipleService.insertWriting(multiple, user);
+			judgeService.insertWriting(judge, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multiple;
+			msg.data = judge;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -76,24 +76,24 @@ public class MultipleController {
 	}
 
 	/**
-	 * 修改文字多选题
-	 * @param multiple
+	 * 修改文字判断题
+	 * @param judge
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/multiples/writing", method = RequestMethod.PATCH)
-	@ApiOperation(value = "修改文字多选题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/judges/writing", method = RequestMethod.PATCH)
+	@ApiOperation(value = "修改文字判断题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateWriting(
-			@ApiParam(required = true, name = "multiple", value = "修改的多选题json数据,多选答案逗号分隔") @RequestBody Multiple multiple,
+			@ApiParam(required = true, name = "judge", value = "修改的判断题json数据，答案：Y正确，N错误") @RequestBody Judge judge,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			multipleService.updateWriting(multiple, user);
+			judgeService.updateWriting(judge, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multipleService.getMultiple(multiple.getQuestion_id());
+			msg.data = judgeService.getJudge(judge.getQuestion_id());
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -111,12 +111,12 @@ public class MultipleController {
 	}
 
 	/**
-	 * 分页获取multiple多选题信息
+	 * 分页获取single判断题信息
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/multiples", method = RequestMethod.GET)
-	@ApiOperation(value = "检索多选题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	@RequestMapping(value = "/judges", method = RequestMethod.GET)
+	@ApiOperation(value = "检索判断题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseQueryMsg searchData(
 			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
@@ -126,19 +126,19 @@ public class MultipleController {
 			@ApiParam(required = false, name = "question_id", value = "题目ID信息检索") @RequestParam(value = "question_id", required = false) Long question_id) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
-			List<MultipleView> multipleList;
+			List<JudgeView> judgeList;
 			PageInfo pageInfo = new PageInfo(page, rows);
-			Multiple multiple = new Multiple(question_id, point_id, type, level);
-			multipleList = multipleService.searchData(pageInfo, multiple);
+			Judge judge = new Judge(question_id, point_id, type, level);
+			judgeList = judgeService.searchData(pageInfo, judge);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multipleList;
+			msg.data = judgeList;
 
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = multipleList.size();
+			msg.pageCount = judgeList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -160,16 +160,16 @@ public class MultipleController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/multiples/{question_id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/judges/{question_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取题目", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
-	public ResponseMsg getMultiples(
+	public ResponseMsg getSingles(
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @PathVariable long question_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			Multiple multiple = multipleService.getMultiple(question_id);
+			Judge judge = judgeService.getJudge(question_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multiple;
+			msg.data = judge;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -192,10 +192,10 @@ public class MultipleController {
 	 * @param question
 	 * @return
 	 */
-	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/multiples", method = RequestMethod.DELETE)
+//	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/judges", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
-	public ResponseMsg deleteMultiples(
+	public ResponseMsg deleteSingles(
 			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为question数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
@@ -207,7 +207,7 @@ public class MultipleController {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除题目！";
 			}
-			multipleService.deleteQuestion(params);
+			judgeService.deleteQuestion(params);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
@@ -235,22 +235,22 @@ public class MultipleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/multiples/img", method = RequestMethod.POST)
+	@RequestMapping(value = "/judges/img", method = RequestMethod.POST)
 	@ApiOperation(value = "插入图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertImge(
 			@ApiParam(required = true, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = true) MultipartFile questionFile,
 			@ApiParam(required = true, name = "point_id", value = "题目考点") @RequestParam Long point_id,
 			@ApiParam(required = true, name = "level", value = "题目难度") @RequestParam Integer level,
-			@ApiParam(required = true, name = "answer", value = "题目答案,多选答案逗号分隔") @RequestParam String answer,
+			@ApiParam(required = true, name = "answer", value = "题目答案，答案：Y正确，N错误") @RequestParam String answer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			Multiple multiple = new Multiple(point_id, answer, 2, level);
-			multipleService.insertImge(multiple, user, questionFile);
+			Judge judge = new Judge(point_id, answer, 2, level);
+			judgeService.insertImge(judge, user, questionFile);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multiple;
+			msg.data = judge;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -278,37 +278,36 @@ public class MultipleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/multiples/img", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/judges/img", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改图片题目", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateImge(
 			@ApiParam(required = false, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = false) MultipartFile questionFile,
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @RequestParam(value = "question_id", required = false) Long question_id,
 			@ApiParam(required = false, name = "point_id", value = "题目考点ID") @RequestParam(value = "point_id", required = false) Long point_id,
 			@ApiParam(required = false, name = "level", value = "题目难度") @RequestParam(value = "level", required = false) Integer level,
-			@ApiParam(required = false, name = "answer", value = "题目答案,多选答案逗号分隔") @RequestParam(value = "answer", required = false) String answer,
+			@ApiParam(required = false, name = "answer", value = "题目答案，答案：Y正确，N错误") @RequestParam(value = "answer", required = false) String answer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-
-			Multiple multiple = new Multiple();
+			Judge judge = new Judge();
 			if (answer != null) {
-				multiple.setAnswer(answer);
+				judge.setAnswer(answer);
 			}
 			if (question_id != null) {
-				multiple.setQuestion_id(question_id);
+				judge.setQuestion_id(question_id);
 			}
 			if (level != null) {
-				multiple.setLevel(level);
+				judge.setLevel(level);
 			}
 			if (point_id != null) {
-				multiple.setPoint_id(point_id);
+				judge.setPoint_id(point_id);
 			}
-			multipleService.updateImge(multiple, user, questionFile);
+			judgeService.updateImge(judge, user, questionFile);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = multiple;
+			msg.data = judge;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

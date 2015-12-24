@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.IJudgeDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Judge" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="point_id" property="point_id"/>
+	  <result column="question" property="question"/>
+	  <result column="answer" property="answer"/>
+	  <result column="type" property="type"/>
+	  <result column="level" property="level"/>
+	  <result column="create_time" property="create_time"/>
+	  <result column="modify_time" property="modify_time"/>
+	  <result column="create_teacher" property="create_teacher_id"/>
+	  <result column="modify_teacher" property="modify_teacher_id"/>
+	</resultMap>
+
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.JudgeView" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="point_id" property="point_id"/>
+	  <result column="question" property="question"/>
+	  <result column="answer" property="answer"/>
+	  <result column="type" property="type"/>
+	  <result column="level" property="level"/>
+	  <result column="create_time" property="create_time"/>
+	  <result column="modify_time" property="modify_time"/>
+	  <result column="create_teacher" property="create_teacher_id"/>
+	  <result column="modify_teacher" property="modify_teacher_id"/>
+	  <result column="create_name" property="create_teacher_name"/>
+	  <result column="modify_name" property="modify_teacher_name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		question_id, point_id, question, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id
+	</sql>
+	
+	<sql id="View_Column_List">
+		question_id, point_id, question, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id, create_teacher_name, modify_teacher_name
+	</sql>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Judge">
+		INSERT INTO
+			judge(question_id, point_id, question, answer, type, level, create_time, create_teacher_id)
+		VALUES(#{question_id},#{point_id},#{question},#{answer},#{type},#{level},#{create_time},#{create_teacher_id})
+	</insert>
+	
+	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Judge">
+		UPDATE
+			judge
+		<set>
+			<if test="point_id != null and point_id != ''">
+				point_id = #{point_id},
+			</if>
+			<if test="question != null and question != ''">
+				question = #{question},
+			</if>
+			<if test="level != null and level != ''">
+				level = #{level},
+			</if>
+			<if test="answer != null and answer != ''">
+				answer = #{answer},
+			</if>
+			<if test="modify_teacher_id != null and modify_teacher_id != ''">
+				modify_teacher_id = #{modify_teacher_id},
+			</if>
+			<if test="modify_time != null and modify_time != ''">
+				modify_time = #{modify_time},
+			</if>
+		</set>
+		WHERE
+			question_id = #{question_id}
+	</update>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			judge_v
+		<where>
+			<if test="question_id != null and question_id != ''">
+				question_id = #{question_id}
+			</if>
+			<if test="point_id != null and point_id != ''">
+				AND point_id = #{point_id}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="level != null and level != ''">
+				AND level = #{level}
+			</if>
+		</where>
+	</select>
+	
+	<select id="searchData" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"></include>
+		FROM 
+			judge_v
+		<where>
+			<if test="question_id != null and question_id != ''">
+				question_id = #{question_id}
+			</if>
+			<if test="point_id != null and point_id != ''">
+				AND point_id = #{point_id}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="level != null and level != ''">
+				AND level = #{level}
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			judge
+		WHERE
+			question_id = #{question_id}
+	</select>
+	
+	<delete id="deleteData" parameterType="java.lang.Long">
+		DELETE FROM
+			judge
+		WHERE
+			question_id in
+			<foreach item="question_id" index="index" collection="list" open="(" separator="," close=")">
+				#{question_id}
+			</foreach>
+	</delete>
+	
+</mapper>
