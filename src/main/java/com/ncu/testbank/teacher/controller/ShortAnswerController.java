@@ -24,42 +24,42 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.ncu.testbank.permission.data.User;
-import com.ncu.testbank.teacher.data.Single;
+import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.SingleView;
-import com.ncu.testbank.teacher.service.ISingleService;
+import com.ncu.testbank.teacher.data.view.ShortAnswerView;
+import com.ncu.testbank.teacher.service.IShortAnswerService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "single-api", description = "单选题CRUD", position = 3)
+@Api(value = "shortAnswer-api", description = "简答题题CRUD", position = 3)
 @RestController
 @RequestMapping("/teacher")
-public class SingleController {
+public class ShortAnswerController {
 
 	@Autowired
-	private ISingleService singleService;
+	private IShortAnswerService judgeService;
 
 	/**
-	 * 添加文字单选题
+	 * 添加文字简答题
 	 * 
-	 * @param single
+	 * @param shortAnswer
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/writing", method = RequestMethod.POST)
-	@ApiOperation(value = "添加文字单选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/shortAnswers/writing", method = RequestMethod.POST)
+	@ApiOperation(value = "添加文字简答题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertWriting(
-			@ApiParam(required = true, name = "single", value = "添加的单选题json数据，ID为后台生成") @RequestBody Single single,
+			@ApiParam(required = true, name = "shortAnswer", value = "添加的简答题json数据，ID为后台生成") @RequestBody ShortAnswer shortAnswer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			singleService.insertWriting(single, user);
+			judgeService.insertWriting(shortAnswer, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = shortAnswer;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -77,25 +77,26 @@ public class SingleController {
 	}
 
 	/**
-	 * 修改文字单选题
+	 * 修改文字简答题
 	 * 
-	 * @param single
+	 * @param shortAnswer
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/writing", method = RequestMethod.PATCH)
-	@ApiOperation(value = "修改文字单选题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/shortAnswers/writing", method = RequestMethod.PATCH)
+	@ApiOperation(value = "修改文字简答题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateWriting(
-			@ApiParam(required = true, name = "single", value = "修改的单选题json数据") @RequestBody Single single,
+			@ApiParam(required = true, name = "shortAnswer", value = "修改的简答题json数据") @RequestBody ShortAnswer shortAnswer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			singleService.updateWriting(single, user);
+			judgeService.updateWriting(shortAnswer, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = singleService.getSingle(single.getQuestion_id());
+			msg.data = judgeService
+					.getShortAnswer(shortAnswer.getQuestion_id());
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -113,12 +114,12 @@ public class SingleController {
 	}
 
 	/**
-	 * 分页获取single单选题信息
+	 * 分页获取single简答题信息
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/singles", method = RequestMethod.GET)
-	@ApiOperation(value = "检索单选题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	@RequestMapping(value = "/shortAnswers", method = RequestMethod.GET)
+	@ApiOperation(value = "检索简答题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseQueryMsg searchData(
 			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
@@ -128,19 +129,20 @@ public class SingleController {
 			@ApiParam(required = false, name = "question_id", value = "题目ID信息检索") @RequestParam(value = "question_id", required = false) Long question_id) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
-			List<SingleView> singleList;
+			List<ShortAnswerView> shortAnswerList;
 			PageInfo pageInfo = new PageInfo(page, rows);
-			Single single = new Single(question_id, point_id, type, level);
-			singleList = singleService.searchData(pageInfo, single);
+			ShortAnswer shortAnswer = new ShortAnswer(question_id, point_id,
+					type, level);
+			shortAnswerList = judgeService.searchData(pageInfo, shortAnswer);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = singleList;
+			msg.data = shortAnswerList;
 
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = singleList.size();
+			msg.pageCount = shortAnswerList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -162,16 +164,16 @@ public class SingleController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/singles/{question_id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/shortAnswers/{question_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取题目", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseMsg getSingles(
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @PathVariable long question_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			Single single = singleService.getSingle(question_id);
+			ShortAnswer shortAnswer = judgeService.getShortAnswer(question_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = shortAnswer;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -195,7 +197,7 @@ public class SingleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/shortAnswers", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg deleteSingles(
 			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为question数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
@@ -209,7 +211,7 @@ public class SingleController {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除题目！";
 			}
-			singleService.deleteQuestion(params);
+			judgeService.deleteQuestion(params);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
@@ -232,27 +234,30 @@ public class SingleController {
 	 * 插入图片题目
 	 * 
 	 * @param questionFile
-	 * @param params
+	 * @param answerFile
+	 * @param point_id
+	 * @param level
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/img", method = RequestMethod.POST)
+	@RequestMapping(value = "/shortAnswers/img", method = RequestMethod.POST)
 	@ApiOperation(value = "插入图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertImge(
 			@ApiParam(required = true, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = true) MultipartFile questionFile,
+			@ApiParam(required = true, name = "answerFile", value = "答案图片文件") @RequestParam(value = "answerFile", required = true) MultipartFile answerFile,
 			@ApiParam(required = true, name = "point_id", value = "题目考点") @RequestParam Long point_id,
 			@ApiParam(required = true, name = "level", value = "题目难度") @RequestParam Integer level,
-			@ApiParam(required = true, name = "answer", value = "题目答案") @RequestParam String answer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			Single single = new Single(point_id, answer, 2, level);
-			singleService.insertImge(single, user, questionFile);
+			ShortAnswer shortAnswer = new ShortAnswer(point_id, 2, level);
+			judgeService
+					.insertImge(shortAnswer, user, questionFile, answerFile);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = shortAnswer;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -273,44 +278,42 @@ public class SingleController {
 	 * 修改图片题目
 	 * 
 	 * @param questionFile
+	 * @param answerFile
 	 * @param question_id
 	 * @param point_id
 	 * @param level
-	 * @param answer
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/img", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/shortAnswers/img", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改图片题目", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateImge(
 			@ApiParam(required = false, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = false) MultipartFile questionFile,
+			@ApiParam(required = false, name = "answerFile", value = "答案图片文件") @RequestParam(value = "answerFile", required = false) MultipartFile answerFile,
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @RequestParam(value = "question_id", required = false) Long question_id,
 			@ApiParam(required = false, name = "point_id", value = "题目考点ID") @RequestParam(value = "point_id", required = false) Long point_id,
 			@ApiParam(required = false, name = "level", value = "题目难度") @RequestParam(value = "level", required = false) Integer level,
-			@ApiParam(required = false, name = "answer", value = "题目答案") @RequestParam(value = "answer", required = false) String answer,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			Single single = new Single();
-			if (answer != null) {
-				single.setAnswer(answer);
-			}
+			ShortAnswer shortAnswer = new ShortAnswer();
 			if (question_id != null) {
-				single.setQuestion_id(question_id);
+				shortAnswer.setQuestion_id(question_id);
 			}
 			if (level != null) {
-				single.setLevel(level);
+				shortAnswer.setLevel(level);
 			}
 			if (point_id != null) {
-				single.setPoint_id(point_id);
+				shortAnswer.setPoint_id(point_id);
 			}
-			singleService.updateImge(single, user, questionFile);
+			judgeService
+					.updateImge(shortAnswer, user, questionFile, answerFile);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = shortAnswer;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
