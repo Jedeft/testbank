@@ -1,11 +1,8 @@
 package com.ncu.testbank.admin.service;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.ncu.testbank.admin.data.BankBuilder;
-import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.admin.data.view.BankBuilderView;
 import com.ncu.testbank.base.response.PageInfo;
 
@@ -16,14 +13,9 @@ public interface IBankBuilderService {
 	 * @param page
 	 * @param teacher
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws InvocationTargetException
-	 * @throws IntrospectionException
 	 */
-	public List<BankBuilderView> searchData(PageInfo page, BankBuilderView bankBuilder)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException;
+	public List<BankBuilderView> searchData(PageInfo page,
+			BankBuilderView bankBuilder);
 
 	/**
 	 * 插入一个题库建设者

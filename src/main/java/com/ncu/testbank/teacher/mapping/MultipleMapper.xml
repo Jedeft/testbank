@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ncu.testbank.teacher.dao.ISingleDao" >
+<mapper namespace="com.ncu.testbank.teacher.dao.IMultipleDao" >
 
-	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Single" >
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Multiple" >
 	  <id column="question_id" property="question_id"/>
 	  <result column="point_id" property="point_id"/>
 	  <result column="question" property="question"/>
@@ -19,7 +19,7 @@
 	  <result column="modify_teacher" property="modify_teacher_id"/>
 	</resultMap>
 
-	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.SingleView" >
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.MultipleView" >
 	  <id column="question_id" property="question_id"/>
 	  <result column="point_id" property="point_id"/>
 	  <result column="question" property="question"/>
@@ -46,15 +46,15 @@
 		question_id, point_id, question, A, B, C, D, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id, create_teacher_name, modify_teacher_name
 	</sql>
 	
-	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Single">
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Multiple">
 		INSERT INTO
-			single(question_id, point_id, question, A, B, C, D, answer, type, level, create_time, create_teacher_id)
+			multiple(question_id, point_id, question, A, B, C, D, answer, type, level, create_time, create_teacher_id)
 		VALUES(#{question_id},#{point_id},#{question},#{A},#{B},#{C},#{D},#{answer},#{type},#{level},#{create_time},#{create_teacher_id})
 	</insert>
 	
-	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Single">
+	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Multiple">
 		UPDATE
-			single
+			multiple
 		<set>
 			<if test="point_id != null and point_id != ''">
 				point_id = #{point_id},
@@ -95,7 +95,7 @@
 		SELECT 
 			COUNT(*)
 		FROM
-			single_v
+			multiple_v
 		<where>
 			<if test="question_id != null and question_id != ''">
 				question_id = #{question_id}
@@ -116,7 +116,7 @@
 		SELECT 
 			<include refid="View_Column_List"></include>
 		FROM 
-			single_v
+			multiple_v
 		<where>
 			<if test="question_id != null and question_id != ''">
 				question_id = #{question_id}
@@ -138,14 +138,14 @@
 		SELECT
 			<include refid="Base_Column_List"></include>
 		FROM
-			single
+			multiple
 		WHERE
 			question_id = #{question_id}
 	</select>
 	
 	<delete id="deleteData" parameterType="java.lang.Long">
 		DELETE FROM
-			single
+			multiple
 		WHERE
 			question_id in
 			<foreach item="question_id" index="index" collection="list" open="(" separator="," close=")">

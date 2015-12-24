@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,23 @@ import com.ncu.testbank.permission.dao.IRoleDao;
 @Service("bankBuilderService")
 public class BankBuilderServiceImpl implements IBankBuilderService {
 
+	private Logger log = Logger.getLogger("testbankLog");
+	
 	@Autowired
 	private IBankBuilderDao bankBuilderDao;
 	@Autowired
 	private IRoleDao roleDao;
 
 	@Override
-	public List<BankBuilderView> searchData(PageInfo page, BankBuilderView bankBuilder)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException {
-		Map<String, Object> params = BeanToMapUtils.convertBean(bankBuilder);
+	public List<BankBuilderView> searchData(PageInfo page, BankBuilderView bankBuilder){
+		Map<String, Object> params = null;
+		try {
+			params = BeanToMapUtils.convertBean(bankBuilder);
+		} catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.MAP_CONVERT_ERROR);
+		}
 		int count = bankBuilderDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {

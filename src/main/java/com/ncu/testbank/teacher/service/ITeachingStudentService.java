@@ -1,7 +1,5 @@
 package com.ncu.testbank.teacher.service;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.ncu.testbank.base.response.PageInfo;
@@ -27,9 +25,7 @@ public interface ITeachingStudentService {
 	 * @return
 	 */
 	public List<TeachingStudentView> searchData(PageInfo page,
-			TeachingStudentView teachingStudentView, String teacher_id)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException;
+			TeachingStudentView teachingStudentView, String teacher_id);
 
 	/**
 	 * 1.通过教师ID、课程ID以及当下时间来确定出课程表syllabus_id 2.通过syllabus_id和学生ID，删除授课学生

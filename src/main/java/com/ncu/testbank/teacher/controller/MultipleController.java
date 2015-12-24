@@ -25,35 +25,34 @@ import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Multiple;
-import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.SingleView;
-import com.ncu.testbank.teacher.service.ISingleService;
+import com.ncu.testbank.teacher.data.view.MultipleView;
+import com.ncu.testbank.teacher.service.IMultipleService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "single-api", description = "单选题CRUD", position = 3)
+@Api(value = "multiple-api", description = "多选题CRUD", position = 3)
 @RestController
 @RequestMapping("/teacher")
-public class SingleController {
+public class MultipleController {
 
 	@Autowired
-	private ISingleService singleService;
+	private IMultipleService multipleService;
 
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/writing", method = RequestMethod.POST)
-	@ApiOperation(value = "添加文字单选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/multiples/writing", method = RequestMethod.POST)
+	@ApiOperation(value = "添加文字多选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertWriting(
-			@ApiParam(required = true, name = "single", value = "添加的单选题json数据，ID为后台生成") @RequestBody Single single,
+			@ApiParam(required = true, name = "multiple", value = "添加的多选题json数据，ID为后台生成") @RequestBody Multiple multiple,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			singleService.insertWriting(single, user);
+			multipleService.insertWriting(multiple, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = multiple;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -71,18 +70,18 @@ public class SingleController {
 	}
 
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/writing", method = RequestMethod.PATCH)
-	@ApiOperation(value = "修改文字单选题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@RequestMapping(value = "/multiples/writing", method = RequestMethod.PATCH)
+	@ApiOperation(value = "修改文字多选题", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateWriting(
-			@ApiParam(required = true, name = "single", value = "修改的单选题json数据") @RequestBody Single single,
+			@ApiParam(required = true, name = "multiple", value = "修改的多选题json数据") @RequestBody Multiple multiple,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			singleService.updateWriting(single, user);
+			multipleService.updateWriting(multiple, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = singleService.getSingle(single.getQuestion_id());
+			msg.data = multipleService.getMultiple(multiple.getQuestion_id());
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -100,12 +99,12 @@ public class SingleController {
 	}
 
 	/**
-	 * 分页获取single单选题信息
+	 * 分页获取multiple多选题信息
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/singles", method = RequestMethod.GET)
-	@ApiOperation(value = "检索单选题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	@RequestMapping(value = "/multiples", method = RequestMethod.GET)
+	@ApiOperation(value = "检索多选题目", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseQueryMsg searchData(
 			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
@@ -115,19 +114,19 @@ public class SingleController {
 			@ApiParam(required = false, name = "question_id", value = "题目ID信息检索") @RequestParam(value = "question_id", required = false) Long question_id) {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
-			List<SingleView> singleList;
+			List<MultipleView> multipleList;
 			PageInfo pageInfo = new PageInfo(page, rows);
-			Single single = new Single(question_id, point_id, type, level);
-			singleList = singleService.searchData(pageInfo, single);
+			Multiple multiple = new Multiple(question_id, point_id, type, level);
+			multipleList = multipleService.searchData(pageInfo, multiple);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = singleList;
+			msg.data = multipleList;
 
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = singleList.size();
+			msg.pageCount = multipleList.size();
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -149,16 +148,16 @@ public class SingleController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/singles/{question_id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/multiples/{question_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取题目", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
-	public ResponseMsg getSingles(
+	public ResponseMsg getMultiples(
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @PathVariable long question_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			Single single = singleService.getSingle(question_id);
+			Multiple multiple = multipleService.getMultiple(question_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = multiple;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -182,10 +181,10 @@ public class SingleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/multiples", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
-	public ResponseMsg deleteSingles(
-			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为single数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
+	public ResponseMsg deleteMultiples(
+			@ApiParam(required = true, name = "question", value = "删除题目json数组，集合中为multiple数组，每道题目携带题目类型type") @RequestBody Map<String, List<DELQuestionParams>> question) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<DELQuestionParams> params = null;
@@ -196,7 +195,7 @@ public class SingleController {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除题目！";
 			}
-			singleService.deleteQuestion(params);
+			multipleService.deleteQuestion(params);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
@@ -224,7 +223,7 @@ public class SingleController {
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/img", method = RequestMethod.POST)
+	@RequestMapping(value = "/multiples/img", method = RequestMethod.POST)
 	@ApiOperation(value = "插入图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertImge(
 			@ApiParam(required = true, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = true) MultipartFile questionFile,
@@ -235,11 +234,11 @@ public class SingleController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			Single single = new Single(point_id, answer, 2, level);
-			singleService.insertImge(single, user, questionFile);
+			Multiple multiple = new Multiple(point_id, answer, 2, level);
+			multipleService.insertImge(multiple, user, questionFile);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = multiple;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -257,7 +256,7 @@ public class SingleController {
 	}
 
 	@RequiresRoles("bankBuilder")
-	@RequestMapping(value = "/singles/img", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/multiples/img", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改图片题目", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg updateImge(
 			@ApiParam(required = false, name = "questionFile", value = "题目图片文件") @RequestParam(value = "questionFile", required = false) MultipartFile questionFile,
@@ -269,24 +268,25 @@ public class SingleController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			Single single = new Single();
+
+			Multiple multiple = new Multiple();
 			if (answer != null) {
-				single.setAnswer(answer);
+				multiple.setAnswer(answer);
 			}
 			if (question_id != null) {
-				single.setQuestion_id(question_id);
+				multiple.setQuestion_id(question_id);
 			}
 			if (level != null) {
-				single.setLevel(level);
+				multiple.setLevel(level);
 			}
 			if (point_id != null) {
-				single.setPoint_id(point_id);
+				multiple.setPoint_id(point_id);
 			}
-			singleService.updateImge(single, user, questionFile);
+			multipleService.updateImge(multiple, user, questionFile);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			msg.data = single;
+			msg.data = multiple;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

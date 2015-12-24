@@ -1,15 +1,11 @@
 package com.ncu.testbank.admin.controller;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +33,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/admin")
 public class StudentController {
-
-	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
 	private IStudentService studentService;
@@ -158,7 +152,8 @@ public class StudentController {
 			@ApiParam(required = true, name = "student_id", value = "student_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("student_id") != null && !map.get("student_id").equals("")) {
+			if (map.get("student_id") != null
+					&& !map.get("student_id").equals("")) {
 				studentService.deleteData(map.get("student_id"));
 			} else {
 				msg.errorCode = 66666;
@@ -256,11 +251,6 @@ public class StudentController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InstantiationException
-				| InvocationTargetException | IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}
@@ -306,14 +296,6 @@ public class StudentController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IOException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
-		} catch (IllegalStateException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}

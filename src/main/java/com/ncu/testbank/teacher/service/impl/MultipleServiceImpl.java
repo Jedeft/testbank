@@ -23,53 +23,53 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.permission.data.User;
-import com.ncu.testbank.teacher.dao.ISingleDao;
-import com.ncu.testbank.teacher.data.Single;
+import com.ncu.testbank.teacher.dao.IMultipleDao;
+import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.SingleView;
-import com.ncu.testbank.teacher.service.ISingleService;
+import com.ncu.testbank.teacher.data.view.MultipleView;
+import com.ncu.testbank.teacher.service.IMultipleService;
 
-@Service("singleService")
-public class SingleServiceImpl implements ISingleService {
+@Service("multipleService")
+public class MultipleServiceImpl implements IMultipleService {
 
 	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
-	private ISingleDao singleDao;
+	private IMultipleDao multipleDao;
 
 	@Override
-	public void insertWriting(Single single, User user) {
-		single.setQuestion_id(RandomID.getID());
-		single.setType(1);
-		single.setCreate_time(new Timestamp(new Date().getTime()));
-		single.setCreate_teacher_id(user.getUsername());
+	public void insertWriting(Multiple multiple, User user) {
+		multiple.setQuestion_id(RandomID.getID());
+		multiple.setType(1);
+		multiple.setCreate_time(new Timestamp(new Date().getTime()));
+		multiple.setCreate_teacher_id(user.getUsername());
 
-		if (singleDao.insertOne(single) < 1) {
+		if (multipleDao.insertOne(multiple) < 1) {
 			throw new ServiceException(new ErrorCode(30001, "单选题添加失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
-	public void updateWriting(Single single, User user) {
-		single.setModify_time(new Timestamp(new Date().getTime()));
-		single.setModify_teacher_id(user.getUsername());
+	public void updateWriting(Multiple multiple, User user) {
+		multiple.setModify_time(new Timestamp(new Date().getTime()));
+		multiple.setModify_teacher_id(user.getUsername());
 
-		if (singleDao.updateOne(single) < 1) {
+		if (multipleDao.updateOne(multiple) < 1) {
 			throw new ServiceException(new ErrorCode(30001, "单选题修改失败，请联系管理人员！"));
 		}
 	}
 
 	@Override
-	public List<SingleView> searchData(PageInfo page, Single single) {
+	public List<MultipleView> searchData(PageInfo page, Multiple multiple) {
 		Map<String, Object> params = null;
 		try {
-			params = BeanToMapUtils.convertBean(single);
+			params = BeanToMapUtils.convertBean(multiple);
 		} catch (IllegalAccessException | InvocationTargetException
 				| IntrospectionException e) {
 			log.error(e);
 			throw new ServiceException(ErrorCode.MAP_CONVERT_ERROR);
 		}
-		int count = singleDao.getCount(params);
+		int count = multipleDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
 			throw new ServiceException(new ErrorCode(30001, "分页信息错误，请联系管理人员！"));
@@ -81,12 +81,12 @@ public class SingleServiceImpl implements ISingleService {
 		// 数据库分页从0开始，前台分页从1开始
 		params.put("page", page.getPage() - 1);
 		params.put("rows", page.getRows());
-		return singleDao.searchData(params);
+		return multipleDao.searchData(params);
 	}
 
 	@Override
-	public Single getSingle(long question_id) {
-		return singleDao.getOne(question_id);
+	public Multiple getMultiple(long question_id) {
+		return multipleDao.getOne(question_id);
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class SingleServiceImpl implements ISingleService {
 		for (DELQuestionParams question : list) {
 			if (question.getType() == 2) {
 				// 图片题目处理
-				Single single = singleDao.getOne(question.getQuestion_id());
-				String fileName = single.getQuestion();
+				Multiple multiple = multipleDao.getOne(question.getQuestion_id());
+				String fileName = multiple.getQuestion();
 				File file = new File(fileName);
 				if (file.exists()) {
 					file.delete();
@@ -104,15 +104,15 @@ public class SingleServiceImpl implements ISingleService {
 			}
 			question_id.add(question.getQuestion_id());
 		}
-		singleDao.deleteData(question_id);
+		multipleDao.deleteData(question_id);
 	}
 
 	@Override
-	public void insertImge(Single single, User user, MultipartFile file) {
-		single.setQuestion_id(RandomID.getID());
-		single.setType(2);
-		single.setCreate_teacher_id(user.getUsername());
-		single.setCreate_time(new Timestamp(new Date().getTime()));
+	public void insertImge(Multiple nyktuoke, User user, MultipartFile file) {
+		nyktuoke.setQuestion_id(RandomID.getID());
+		nyktuoke.setType(2);
+		nyktuoke.setCreate_teacher_id(user.getUsername());
+		nyktuoke.setCreate_time(new Timestamp(new Date().getTime()));
 
 		Properties fileConfig = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader()
@@ -123,10 +123,10 @@ public class SingleServiceImpl implements ISingleService {
 			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
 		}
-		String filePath = (String) fileConfig.get("singlePath");
+		String filePath = (String) fileConfig.get("multiplePath");
 		String fileName = file.getOriginalFilename();
 		int suffix = fileName.lastIndexOf(".");
-		String targetName = single.getQuestion_id()
+		String targetName = nyktuoke.getQuestion_id()
 				+ fileName.substring(suffix, fileName.length());
 		File target = new File(filePath, targetName);
 
@@ -145,23 +145,23 @@ public class SingleServiceImpl implements ISingleService {
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
 
-		single.setQuestion(filePath + "/" + targetName);
-		singleDao.insertOne(single);
+		nyktuoke.setQuestion(filePath + "/" + targetName);
+		multipleDao.insertOne(nyktuoke);
 	}
 
 	@Override
-	public void updateImge(Single single, User user, MultipartFile file) {
-		single.setModify_teacher_id(user.getUsername());
-		single.setModify_time(new Timestamp(new Date().getTime()));
-		single.setType(2);
+	public void updateImge(Multiple multiple, User user, MultipartFile file) {
+		multiple.setModify_teacher_id(user.getUsername());
+		multiple.setModify_time(new Timestamp(new Date().getTime()));
+		multiple.setType(2);
 
-		Single dbSingle = singleDao.getOne(single.getQuestion_id());
-		if (dbSingle == null) {
+		Multiple dbMultiple = multipleDao.getOne(multiple.getQuestion_id());
+		if (dbMultiple == null) {
 			throw new ServiceException(new ErrorCode(30001,
 					"要修改的题目不存在，请联系管理人员！"));
 		}
 		if (file != null) {
-			File serverFile = new File(dbSingle.getQuestion());
+			File serverFile = new File(dbMultiple.getQuestion());
 			if (serverFile.exists()) {
 				serverFile.delete();
 			}
@@ -175,10 +175,10 @@ public class SingleServiceImpl implements ISingleService {
 				log.error(e);
 				throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
 			}
-			String filePath = (String) fileConfig.get("singlePath");
+			String filePath = (String) fileConfig.get("multiplePath");
 			String fileName = file.getOriginalFilename();
 			int suffix = fileName.lastIndexOf(".");
-			String targetName = single.getQuestion_id()
+			String targetName = multiple.getQuestion_id()
 					+ fileName.substring(suffix, fileName.length());
 			File target = new File(filePath, targetName);
 
@@ -197,9 +197,8 @@ public class SingleServiceImpl implements ISingleService {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 
-			single.setQuestion(filePath + "/" + targetName);
+			multiple.setQuestion(filePath + "/" + targetName);
 		}
-		singleDao.updateOne(single);
+		multipleDao.updateOne(multiple);
 	}
-
 }

@@ -1,8 +1,8 @@
-package com.ncu.testbank.teacher.data;
+package com.ncu.testbank.teacher.data.view;
 
 import java.sql.Timestamp;
 
-public class Multiple {
+public class MultipleView {
 	private long question_id;
 	private long point_id;
 	private String question;
@@ -16,45 +16,11 @@ public class Multiple {
 	private Timestamp create_time;
 	private Timestamp modify_time;
 	private String create_teacher_id;
+	// 创建题目教师名
+	private String create_teacher_name;
 	private String modify_teacher_id;
-
-	public Multiple() {
-		super();
-	}
-
-	public Multiple(Long question_id, Long point_id, Integer type, Integer level) {
-		super();
-		if (question_id != null) {
-			this.question_id = question_id;
-		}
-		if (point_id != null) {
-			this.point_id = point_id;
-		}
-		if (type != null) {
-			this.type = type;
-		}
-		if (level != null) {
-			this.level = level;
-		}
-	}
-
-	public Multiple(Long point_id, String answer, Integer type, Integer level) {
-		super();
-		if (point_id != null) {
-			this.point_id = point_id;
-		}
-		if (answer != null) {
-			this.answer = answer;
-		}
-		if (type != null) {
-			this.type = type;
-		}
-		if (level != null) {
-			this.level = level;
-		}
-	}
-	
-	
+	// 修改题目教师名
+	private String modify_teacher_name;
 
 	public long getQuestion_id() {
 		return question_id;
@@ -160,12 +126,28 @@ public class Multiple {
 		this.create_teacher_id = create_teacher_id;
 	}
 
+	public String getCreate_teacher_name() {
+		return create_teacher_name;
+	}
+
+	public void setCreate_teacher_name(String create_teacher_name) {
+		this.create_teacher_name = create_teacher_name;
+	}
+
 	public String getModify_teacher_id() {
 		return modify_teacher_id;
 	}
 
 	public void setModify_teacher_id(String modify_teacher_id) {
 		this.modify_teacher_id = modify_teacher_id;
+	}
+
+	public String getModify_teacher_name() {
+		return modify_teacher_name;
+	}
+
+	public void setModify_teacher_name(String modify_teacher_name) {
+		this.modify_teacher_name = modify_teacher_name;
 	}
 
 }

@@ -95,9 +95,10 @@ public class PointController {
 		}
 		return msg;
 	}
-	
+
 	/**
 	 * 修改考点
+	 * 
 	 * @param pointParams
 	 * @return
 	 */
@@ -127,8 +128,7 @@ public class PointController {
 		}
 		return msg;
 	}
-	
-	
+
 	/**
 	 * 删除考点
 	 * 

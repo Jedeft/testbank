@@ -1,10 +1,7 @@
 package com.ncu.testbank.admin.controller;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +29,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/admin")
 public class BankBuilderController {
-	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
 	private IBankBuilderService bankBuilderService;
@@ -125,9 +121,11 @@ public class BankBuilderController {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			List<BankBuilderView> bankBuilderList;
-			BankBuilderView bankBuilder = new BankBuilderView(teacher_id, teacher_name, course_id, course_name, academy_id);
+			BankBuilderView bankBuilder = new BankBuilderView(teacher_id,
+					teacher_name, course_id, course_name, academy_id);
 			PageInfo pageInfo = new PageInfo(page, rows);
-			bankBuilderList = bankBuilderService.searchData(pageInfo, bankBuilder);
+			bankBuilderList = bankBuilderService.searchData(pageInfo,
+					bankBuilder);
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -149,11 +147,6 @@ public class BankBuilderController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InvocationTargetException
-				| IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}

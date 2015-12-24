@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,14 +28,21 @@ import com.ncu.testbank.base.utils.RandomID;
 @Service("syllabusService")
 public class SyllabusServiceImpl implements ISyllabusService {
 
+	private Logger log = Logger.getLogger("testbankLog");
+
 	@Autowired
 	private ISyllabusDao syllabusDao;
 
 	@Override
-	public List<SyllabusView> searchData(PageInfo page, Syllabus syllabus)
-			throws IllegalAccessException, InstantiationException,
-			InvocationTargetException, IntrospectionException {
-		Map<String, Object> params = BeanToMapUtils.convertBean(syllabus);
+	public List<SyllabusView> searchData(PageInfo page, Syllabus syllabus) {
+		Map<String, Object> params = null;
+		try {
+			params = BeanToMapUtils.convertBean(syllabus);
+		} catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.MAP_CONVERT_ERROR);
+		}
 		int count = syllabusDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
@@ -81,27 +89,35 @@ public class SyllabusServiceImpl implements ISyllabusService {
 	}
 
 	@Override
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException {
+	public void loadCsv(String fileName, String path, MultipartFile file) {
 		String filePath = path + "/" + fileName;
-		CsvReader cr = new CsvReader(file.getInputStream(),
-				Charset.forName("GBK"));
-		CsvWriter cw = new CsvWriter(filePath);
+		CsvReader cr = null;
+		CsvWriter cw = null;
+		try {
+			cr = new CsvReader(file.getInputStream(), Charset.forName("GBK"));
+			cw = new CsvWriter(filePath);
 
-		while (cr.readRecord()) {
-			String[] values = cr.getValues();
-			String[] targetValues = new String[5];
-			targetValues[0] = RandomID.getID() + "";
-			for (int i = 0; i < values.length; i++) {
-				targetValues[i + 1] = values[i];
+			while (cr.readRecord()) {
+				String[] values = cr.getValues();
+				String[] targetValues = new String[5];
+				targetValues[0] = RandomID.getID() + "";
+				for (int i = 0; i < values.length; i++) {
+					targetValues[i + 1] = values[i];
+				}
+				cw.writeRecord(targetValues);
 			}
-			cw.writeRecord(targetValues);
+		} catch (IOException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+		} finally {
+			if (cr != null) {
+				cr.close();
+			}
+			if (cw != null) {
+				cw.close();
+			}
 		}
-		cr.close();
-		cw.close();
-
 		syllabusDao.loadCsv(filePath);
-
 		File target = new File(filePath);
 		if (target.exists()) {
 			target.delete();

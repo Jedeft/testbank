@@ -1,12 +1,9 @@
 package com.ncu.testbank.teacher.controller;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +33,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/teacher")
 public class TeachingStudentController {
-
-	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
 	private ITeachingStudentService teachingStudentService;
@@ -120,11 +115,6 @@ public class TeachingStudentController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InstantiationException
-				| InvocationTargetException | IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}
@@ -174,11 +164,6 @@ public class TeachingStudentController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InvocationTargetException
-				| IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}

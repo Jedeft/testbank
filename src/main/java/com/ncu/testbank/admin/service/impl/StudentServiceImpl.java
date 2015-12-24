@@ -2,6 +2,7 @@ package com.ncu.testbank.admin.service.impl;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,9 @@ import com.ncu.testbank.permission.data.User;
 
 @Service("studentService")
 public class StudentServiceImpl implements IStudentService {
+
+	private Logger log = Logger.getLogger("testbankLog");
+
 	@Autowired
 	private IStudentDao studentDao;
 
@@ -35,10 +40,15 @@ public class StudentServiceImpl implements IStudentService {
 	private IUserDao userDao;
 
 	@Override
-	public List<Student> searchData(PageInfo page, Student student)
-			throws IllegalAccessException, InstantiationException,
-			InvocationTargetException, IntrospectionException {
-		Map<String, Object> params = BeanToMapUtils.convertBean(student);
+	public List<Student> searchData(PageInfo page, Student student) {
+		Map<String, Object> params = null;
+		try {
+			params = BeanToMapUtils.convertBean(student);
+		} catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.MAP_CONVERT_ERROR);
+		}
 		int count = studentDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
@@ -115,19 +125,22 @@ public class StudentServiceImpl implements IStudentService {
 	}
 
 	@Override
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException {
+	public void loadCsv(String fileName, String path, MultipartFile file) {
 		File target = new File(path, fileName);
 		if (!target.getParentFile().exists()) {
 			if (!target.getParentFile().mkdirs()) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 		}
-		if (!target.createNewFile()) {
+		try {
+			if (!target.createNewFile()) {
+				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+			}
+			file.transferTo(target);
+		} catch (IOException e) {
+			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
-
-		file.transferTo(target);
 		studentDao.loadCsv(target.getPath());
 
 		// 录入学生信息到用户表中
@@ -137,36 +150,59 @@ public class StudentServiceImpl implements IStudentService {
 		try {
 			config.load(in);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
 		}
 		String defaultPassword = config.getProperty("defaultPassword");
 		String defaultSecond_pwd = config.getProperty("defaultSecond_pwd");
-		CsvReader cr = new CsvReader(target.getPath());
-		List<User> userList = new ArrayList<>();
-		while (cr.readRecord()) {
-			String values[] = cr.getValues();
-			User user = new User();
-			user.setUsername(values[0]);
-			user.setName(values[2]);
-			user.setPassword(defaultPassword);
-			user.setSecond_pwd(defaultSecond_pwd);
-
-			userList.add(user);
+		CsvReader cr;
+		try {
+			cr = new CsvReader(target.getPath());
+		} catch (FileNotFoundException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.FILE_NOTFOUND);
 		}
-		cr.close();
+		List<User> userList = new ArrayList<>();
+		try {
+			while (cr.readRecord()) {
+				String values[] = cr.getValues();
+				User user = new User();
+				user.setUsername(values[0]);
+				user.setName(values[2]);
+				user.setPassword(defaultPassword);
+				user.setSecond_pwd(defaultSecond_pwd);
+
+				userList.add(user);
+			}
+		} catch (IOException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+		} finally {
+			if (cr != null) {
+				cr.close();
+			}
+		}
 
 		String outFileName = path + "\\account_" + fileName;
 		CsvWriter cw = new CsvWriter(outFileName);
-		for (User user : userList) {
-			String[] values = new String[4];
-			values[0] = user.getUsername();
-			values[1] = user.getPassword();
-			values[2] = user.getName();
-			values[3] = user.getSecond_pwd();
-			cw.writeRecord(values);
+		try {
+			for (User user : userList) {
+				String[] values = new String[4];
+				values[0] = user.getUsername();
+				values[1] = user.getPassword();
+				values[2] = user.getName();
+				values[3] = user.getSecond_pwd();
+
+				cw.writeRecord(values);
+			}
+		} catch (IOException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+		} finally {
+			if (cw != null) {
+				cw.close();
+			}
 		}
-		cw.close();
 		userDao.loadCsv(outFileName);
 
 		File outCsv = new File(outFileName);

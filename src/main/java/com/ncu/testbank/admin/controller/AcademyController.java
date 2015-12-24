@@ -1,15 +1,11 @@
 package com.ncu.testbank.admin.controller;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +34,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RequestMapping("/admin")
 public class AcademyController {
 
-	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
 	private IAcademyService academyService;
@@ -254,11 +249,6 @@ public class AcademyController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InvocationTargetException
-				| IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}
@@ -303,14 +293,6 @@ public class AcademyController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IOException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
-		} catch (IllegalStateException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}

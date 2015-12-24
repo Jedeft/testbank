@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,14 +23,21 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 @Service("academyService")
 public class AcademyServiceImpl implements IAcademyService {
 
+	private Logger log = Logger.getLogger("testbankLog");
+
 	@Autowired
 	private IAcademyDao academyDao;
 
 	@Override
-	public List<Academy> searchData(PageInfo page, Academy academy)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException {
-		Map<String, Object> params = BeanToMapUtils.convertBean(academy);
+	public List<Academy> searchData(PageInfo page, Academy academy) {
+		Map<String, Object> params = null;
+		try {
+			params = BeanToMapUtils.convertBean(academy);
+		} catch (IllegalAccessException | InvocationTargetException
+				| IntrospectionException e) {
+			log.error(e);
+			throw new ServiceException(ErrorCode.MAP_CONVERT_ERROR);
+		}
 		int count = academyDao.getCount(params);
 		page.setTotal(count);
 		if (page.getRows() == 0) {
@@ -75,19 +83,22 @@ public class AcademyServiceImpl implements IAcademyService {
 	}
 
 	@Override
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException {
+	public void loadCsv(String fileName, String path, MultipartFile file) {
 		File target = new File(path, fileName);
 		if (!target.getParentFile().exists()) {
 			if (!target.getParentFile().mkdirs()) {
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
 		}
-		if (!target.createNewFile()) {
+		try {
+			if (!target.createNewFile()) {
+				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+			}
+			file.transferTo(target);
+		} catch (IOException e) {
+			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
-
-		file.transferTo(target);
 		academyDao.loadCsv(target.getPath());
 		if (target.exists()) {
 			target.delete();

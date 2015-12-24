@@ -1,8 +1,5 @@
 package com.ncu.testbank.admin.service;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -19,14 +16,8 @@ public interface ISyllabusService {
 	 * @param page
 	 * @param syllabus
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws InvocationTargetException
-	 * @throws IntrospectionException
 	 */
-	public List<SyllabusView> searchData(PageInfo page, Syllabus syllabus)
-			throws IllegalAccessException, InstantiationException,
-			InvocationTargetException, IntrospectionException;
+	public List<SyllabusView> searchData(PageInfo page, Syllabus syllabus);
 
 	/**
 	 * 插入一条syllabus信息
@@ -73,9 +64,6 @@ public interface ISyllabusService {
 	 *            文件路径
 	 * @param file
 	 *            multipartFile文件
-	 * @throws IllegalStateException
-	 * @throws IOException
 	 */
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException;
+	public void loadCsv(String fileName, String path, MultipartFile file);
 }

@@ -1,7 +1,5 @@
 package com.ncu.testbank.teacher.service.impl;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,9 +66,7 @@ public class TeachingStudentServiceImpl implements ITeachingStudentService {
 
 	@Override
 	public List<TeachingStudentView> searchData(PageInfo page,
-			TeachingStudentView teachingStudentView, String teacher_id)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException {
+			TeachingStudentView teachingStudentView, String teacher_id) {
 
 		// 1.通过教师ID、课程ID以及当下时间来确定出课程表syllabus_id
 		Syllabus syllabus = getSyllabus(teacher_id,

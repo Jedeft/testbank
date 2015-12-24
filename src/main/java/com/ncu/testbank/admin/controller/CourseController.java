@@ -1,15 +1,11 @@
 package com.ncu.testbank.admin.controller;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +33,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/admin")
 public class CourseController {
-
-	private Logger log = Logger.getLogger("testbankLog");
 
 	@Autowired
 	private ICourseService courseService;
@@ -120,7 +114,8 @@ public class CourseController {
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/courses/{course_id}", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除课程", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
-	public ResponseMsg deleteCourse(@ApiParam(required = true, name = "course_id", value = "课程ID") @PathVariable String course_id) {
+	public ResponseMsg deleteCourse(
+			@ApiParam(required = true, name = "course_id", value = "课程ID") @PathVariable String course_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			courseService.deleteOne(course_id);
@@ -153,10 +148,12 @@ public class CourseController {
 	@RequiresRoles("rootAdmin")
 	@RequestMapping(value = "/courses/batch", method = RequestMethod.DELETE)
 	@ApiOperation(value = "批量删除课程", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要rootAdmin权限，请header中携带Token")
-	public ResponseMsg deleteCourses(@ApiParam(required = true, name = "course_id", value = "course_id数组json数据") @RequestBody Map<String, List<String>> map) {
+	public ResponseMsg deleteCourses(
+			@ApiParam(required = true, name = "course_id", value = "course_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("course_id") != null && !map.get("course_id").equals("")) {
+			if (map.get("course_id") != null
+					&& !map.get("course_id").equals("")) {
 				courseService.deleteData(map.get("course_id"));
 			} else {
 				msg.errorCode = 66666;
@@ -188,7 +185,8 @@ public class CourseController {
 	 */
 	@RequestMapping(value = "/courses/{course_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取指定课程", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
-	public ResponseMsg getCourse(@ApiParam(required = true, name = "course_id", value = "课程ID") @PathVariable String course_id) {
+	public ResponseMsg getCourse(
+			@ApiParam(required = true, name = "course_id", value = "课程ID") @PathVariable String course_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			Course data = courseService.getCourse(course_id);
@@ -220,7 +218,8 @@ public class CourseController {
 	 */
 	@RequestMapping(value = "/courses", method = RequestMethod.GET)
 	@ApiOperation(value = "检索课程", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseAdmin权限，请header中携带Token")
-	public ResponseQueryMsg searchData(@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+	public ResponseQueryMsg searchData(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
 			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
 			@ApiParam(required = false, name = "course_id", value = "课程ID信息检索") @RequestParam(value = "course_id", required = false) String course_id,
 			@ApiParam(required = false, name = "major_id", value = "专业ID信息检索") @RequestParam(value = "major_id", required = false) String major_id,
@@ -252,11 +251,6 @@ public class CourseController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IllegalAccessException | InstantiationException
-				| InvocationTargetException | IntrospectionException e) {
-			msg.errorCode = ErrorCode.MAP_CONVERT_ERROR.code;
-			msg.msg = ErrorCode.MAP_CONVERT_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}
@@ -302,14 +296,6 @@ public class CourseController {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
 			msg.msg = error.name;
-		} catch (IOException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
-		} catch (IllegalStateException e) {
-			msg.errorCode = ErrorCode.FILE_IO_ERROR.code;
-			msg.msg = ErrorCode.FILE_IO_ERROR.name;
-			log.error(e.getMessage());
 		}
 		return msg;
 	}

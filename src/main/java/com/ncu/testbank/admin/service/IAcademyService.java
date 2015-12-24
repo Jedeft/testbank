@@ -1,8 +1,5 @@
 package com.ncu.testbank.admin.service;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -18,14 +15,8 @@ public interface IAcademyService {
 	 * @param page
 	 * @param academy
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws InvocationTargetException
-	 * @throws IntrospectionException
 	 */
-	public List<Academy> searchData(PageInfo page, Academy academy)
-			throws IllegalAccessException, InvocationTargetException,
-			IntrospectionException;
+	public List<Academy> searchData(PageInfo page, Academy academy);
 
 	/**
 	 * 插入一条academy信息
@@ -71,9 +62,7 @@ public interface IAcademyService {
 	 *            文件路径
 	 * @param file
 	 *            multipartFile文件
-	 * @throws IllegalStateException
-	 * @throws IOException
 	 */
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException;
+	public void loadCsv(String fileName, String path, MultipartFile file);
+
 }

@@ -1,8 +1,5 @@
 package com.ncu.testbank.admin.service;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +14,8 @@ public interface IClazzService {
 	 * @param page
 	 * @param clazz
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws InvocationTargetException
-	 * @throws IntrospectionException
 	 */
-	public List<Clazz> searchData(PageInfo page, Clazz clazz)
-			throws IllegalAccessException, InstantiationException,
-			InvocationTargetException, IntrospectionException;
+	public List<Clazz> searchData(PageInfo page, Clazz clazz);
 
 	/**
 	 * 插入一条class信息
@@ -70,9 +61,6 @@ public interface IClazzService {
 	 *            文件路径
 	 * @param file
 	 *            multipartFile文件
-	 * @throws IllegalStateException
-	 * @throws IOException
 	 */
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException;
+	public void loadCsv(String fileName, String path, MultipartFile file);
 }

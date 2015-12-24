@@ -6,36 +6,36 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
-import com.ncu.testbank.teacher.data.Single;
+import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.SingleView;
+import com.ncu.testbank.teacher.data.view.MultipleView;
 
-public interface ISingleService {
+public interface IMultipleService {
 	/**
 	 * 插入文字题目
 	 * 
-	 * @param single
+	 * @param multiple
 	 * @param user
 	 *            当前操作用户信息
 	 */
-	public void insertWriting(Single single, User user);
+	public void insertWriting(Multiple multiple, User user);
 
 	/**
 	 * 修改文字题目
 	 * 
-	 * @param single
+	 * @param multiple
 	 * @param user
 	 */
-	public void updateWriting(Single single, User user);
+	public void updateWriting(Multiple multiple, User user);
 
 	/**
 	 * 检索题目
 	 * 
 	 * @param pageInfo
-	 * @param single
+	 * @param multiple
 	 * @return
 	 */
-	public List<SingleView> searchData(PageInfo pageInfo, Single single);
+	public List<MultipleView> searchData(PageInfo pageInfo, Multiple multiple);
 
 	/**
 	 * 获取题目详细信息
@@ -43,7 +43,7 @@ public interface ISingleService {
 	 * @param question_id
 	 * @return
 	 */
-	public Single getSingle(long question_id);
+	public Multiple getMultiple(long question_id);
 
 	/**
 	 * 删除题目
@@ -55,18 +55,18 @@ public interface ISingleService {
 	/**
 	 * 插入图片题目
 	 * 
-	 * @param single
+	 * @param multiple
 	 * @param user
 	 * @param file
 	 */
-	public void insertImge(Single single, User user, MultipartFile file);
+	public void insertImge(Multiple multiple, User user, MultipartFile file);
 
 	/**
 	 * 修改图片题目
 	 * 
-	 * @param single
+	 * @param multiple
 	 * @param user
 	 * @param file
 	 */
-	public void updateImge(Single single, User user, MultipartFile file);
+	public void updateImge(Multiple multiple, User user, MultipartFile file);
 }

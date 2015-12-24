@@ -1,8 +1,5 @@
 package com.ncu.testbank.admin.service;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,9 +14,7 @@ public interface ITeacherService {
 	 * @param teacher
 	 * @return
 	 */
-	public List<Teacher> searchData(PageInfo page, Teacher teacher)
-			throws IllegalAccessException, InstantiationException,
-			InvocationTargetException, IntrospectionException;
+	public List<Teacher> searchData(PageInfo page, Teacher teacher);
 
 	/**
 	 * 插入一条teacher信息
@@ -61,6 +56,5 @@ public interface ITeacherService {
 	 * 
 	 * @param in
 	 */
-	public void loadCsv(String fileName, String path, MultipartFile file)
-			throws IllegalStateException, IOException;
+	public void loadCsv(String fileName, String path, MultipartFile file);
 }
