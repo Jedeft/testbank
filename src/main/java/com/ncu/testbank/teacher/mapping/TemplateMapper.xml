@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.ITemplateDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Template" >
+	  <id column="template_id" property="template_id"/>
+	  <result column="course_id" property="course_id"/>
+	  <result column="name" property="name"/>
+	  <result column="single_num" property="single_num"/>
+	  <result column="multiple_num" property="multiple_num"/>
+	  <result column="judge_num" property="judge_num"/>
+	  <result column="shortanswer_num" property="shortAnswer_num"/>
+	  <result column="single_score" property="single_score"/>
+	  <result column="multiple_score" property="multiple_score"/>
+	  <result column="judge_score" property="judge_score"/>
+	  <result column="shortanswer_score" property="shortAnswer_score"/>
+	  <result column="level" property="level"/>
+	  <result column="easy_ratio" property="easy_ratio"/>
+	  <result column="medium_ratio" property="medium_ratio"/>
+	  <result column="hard_ratio" property="hard_ratio"/>
+	  <result column="create_time" property="create_time"/>
+	  <result column="modify_time" property="modify_time"/>
+	  <result column="user_id" property="user_id"/>
+	  <result column="type" property="type"/>
+	  <result column="point_id" property="point_id"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		template_id, course_id, name, single_num, multiple_num, judge_num, shortanswer_num, single_score, multiple_score, 
+		judge_score, shortanswer_score, level, easy_ratio, medium_ratio, hard_ratio, create_time, modify_time, user_id, type, point_id
+	</sql>
+
+	<select id="searchData" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			template
+		WHERE
+			course_id = #{course_id}
+	</select>
+	
+	<select id="getOne" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			template
+		WHERE
+			template_id = #{template_id}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Template">
+		INSERT INTO
+			template(template_id, course_id, name, single_num, multiple_num, judge_num, shortanswer_num, single_score, multiple_score, 
+					 judge_score, shortanswer_score, level, easy_ratio, medium_ratio, hard_ratio, create_time, user_id, type, point_id)
+		VALUES(#{template_id}, #{course_id}, #{name}, #{single_num}, #{multiple_num}, #{judge_num}, #{shortAnswer_num}, #{single_score}, #{multiple_score}, 
+					 #{judge_score}, #{shortAnswer_score}, #{level}, #{easy_ratio}, #{medium_ratio}, #{hard_ratio}, #{create_time}, #{user_id}, #{type}, #{point_id})
+	</insert>
+	
+	<update id="updateOne" parameterType="com.ncu.testbank.teacher.data.Template">
+		UPDATE
+			template
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="single_num != null and single_num != ''">
+				single_num = #{single_num},
+			</if>
+			<if test="multiple_num != null and multiple_num != ''">
+				multiple_num = #{multiple_num},
+			</if>
+			<if test="judge_num != null and judge_num != ''">
+				judge_num = #{judge_num},
+			</if>
+			<if test="shortAnswer_num != null and shortAnswer_num != ''">
+				shortanswer_num = #{shortAnswer_num},
+			</if>
+			<if test="single_score != null and single_score != ''">
+				single_score = #{single_score},
+			</if>
+			<if test="multiple_score != null and multiple_score != ''">
+				multiple_score = #{multiple_score},
+			</if>
+			<if test="judge_score != null and judge_score != ''">
+				judge_score = #{judge_score},
+			</if>
+			<if test="shortAnswer_score != null and shortAnswer_score != ''">
+				shortanswer_score = #{shortAnswer_score},
+			</if>
+			<if test="level != null and level != ''">
+				level = #{level},
+			</if>
+			<if test="easy_ratio != null and easy_ratio != ''">
+				answer = #{easy_ratio},
+			</if>
+			<if test="medium_ratio != null and medium_ratio != ''">
+				medium_ratio = #{medium_ratio},
+			</if>
+			<if test="hard_ratio != null and hard_ratio != ''">
+				hard_ratio = #{hard_ratio},
+			</if>
+			<if test="point_id != null and point_id != ''">
+				point_id = #{point_id},
+			</if>
+			<if test="modify_time != null and modify_time != ''">
+				modify_time = #{modify_time},
+			</if>
+		</set>
+		WHERE
+			template_id = #{template_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="java.lang.Long">
+		DELETE FROM
+			template
+		WHERE
+			template_id in
+			<foreach item="template_id" index="index" collection="list" open="(" separator="," close=")">
+				#{template_id}
+			</foreach>
+	</delete>
+	
+	
+</mapper>

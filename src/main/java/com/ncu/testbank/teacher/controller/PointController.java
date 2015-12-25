@@ -142,7 +142,7 @@ public class PointController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<Long> point_id = null;
-			if (map != null && !map.get("point_id").equals("")) {
+			if (map != null && map.get("point_id") != null) {
 				point_id = map.get("point_id");
 			} else {
 				msg.errorCode = 66666;

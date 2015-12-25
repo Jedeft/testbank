@@ -162,7 +162,7 @@ public class MultipleController {
 	 */
 	@RequestMapping(value = "/multiples/{question_id}", method = RequestMethod.GET)
 	@ApiOperation(value = "获取题目", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
-	public ResponseMsg getMultiples(
+	public ResponseMsg getMultiple(
 			@ApiParam(required = true, name = "question_id", value = "题目ID") @PathVariable long question_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
@@ -200,8 +200,7 @@ public class MultipleController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<DELQuestionParams> params = null;
-			if (question.get("question") != null
-					&& !question.get("question").equals("")) {
+			if (question != null && question.get("question") != null) {
 				params = question.get("question");
 			} else {
 				msg.errorCode = 66666;

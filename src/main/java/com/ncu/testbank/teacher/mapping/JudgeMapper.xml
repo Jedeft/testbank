@@ -121,6 +121,7 @@
 			judge
 		WHERE
 			question_id = #{question_id}
+		LIMIT 1
 	</select>
 	
 	<delete id="deleteData" parameterType="java.lang.Long">

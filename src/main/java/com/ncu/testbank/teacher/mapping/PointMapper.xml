@@ -28,6 +28,7 @@
 			point
 		WHERE
 			point_id = #{point_id}
+		LIMIT 1
 	</select>
 	
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Point">

@@ -175,7 +175,7 @@ public class TeachingStudentController {
 	 */
 	@RequestMapping(value = "/teachingStudents", method = RequestMethod.DELETE)
 	@ApiOperation(value = "删除授课学生", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
-	public ResponseMsg deleteStudents(
+	public ResponseMsg deleteStudent(
 			@ApiParam(required = true, name = "academy", value = "删除的授课学生json数据，集合中为student_id数组, 添加的教师ID为当前用户ID") @RequestBody TeachingStudentParams teachingSParams,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
