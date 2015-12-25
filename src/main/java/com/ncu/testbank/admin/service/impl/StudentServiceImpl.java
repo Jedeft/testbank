@@ -110,12 +110,14 @@ public class StudentServiceImpl implements IStudentService {
 			throw new ServiceException(
 					new ErrorCode(30001, "更新学生信息失败，请联系管理人员！"));
 		}
-		User user = new User();
-		user.setUsername(student.getStudent_id());
-		user.setName(student.getName());
-		if (userDao.updateOne(user) < 1) {
-			throw new ServiceException(
-					new ErrorCode(30001, "学生账号不存在，账号信息更新失败！"));
+		if (student.getName() != null) {
+			User user = new User();
+			user.setUsername(student.getStudent_id());
+			user.setName(student.getName());
+			if (userDao.updateOne(user) < 1) {
+				throw new ServiceException(
+						new ErrorCode(30001, "学生账号不存在，账号信息更新失败！"));
+			}
 		}
 	}
 
