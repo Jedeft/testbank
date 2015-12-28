@@ -56,4 +56,11 @@ public interface IUserDao {
 	 * @param username
 	 */
 	public void deleteData(List<String> username);
+	
+	/**
+	 * 获取批量用户
+	 * @param username
+	 * @return
+	 */
+	public List<User> getUsers(List<String> username);
 }

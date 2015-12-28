@@ -147,6 +147,7 @@ public class PointController {
 			} else {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除考点！";
+				return msg;
 			}
 			pointService.deletePoint(point_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;

@@ -192,6 +192,7 @@ public class SyllabusController {
 			} else {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除课表！";
+				return msg;
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

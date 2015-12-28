@@ -184,6 +184,7 @@ public class TemplateController {
 			} else {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除模板！";
+				return msg;
 			}
 			templateService.deleteData(params);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;

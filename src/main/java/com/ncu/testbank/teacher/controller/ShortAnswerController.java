@@ -209,6 +209,7 @@ public class ShortAnswerController {
 			} else {
 				msg.errorCode = 66666;
 				msg.msg = "请选择删除题目！";
+				return msg;
 			}
 			judgeService.deleteQuestion(params);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;

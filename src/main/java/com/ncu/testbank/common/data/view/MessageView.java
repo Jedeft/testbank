@@ -1,31 +1,19 @@
-package com.ncu.testbank.common.data;
+package com.ncu.testbank.common.data.view;
 
 import java.sql.Timestamp;
 
-public class Message {
+public class MessageView {
 	private long message_id;
 	private long title_id;
 	private String title;
 	private String message;
 	private String send_id;
+	private String send_name;
 	private String receive_id;
+	private String receive_name;
 	private Timestamp send_time;
 	private Timestamp receive_time;
 	private String flag;
-
-	public Message() {
-		super();
-	}
-
-	public Message(Long title_id, String send_id, String receive_id, String flag) {
-		super();
-		if ( title_id != null ) {
-			this.title_id = title_id;
-		}
-		this.send_id = send_id;
-		this.receive_id = receive_id;
-		this.flag = flag;
-	}
 
 	public long getMessage_id() {
 		return message_id;
@@ -65,6 +53,22 @@ public class Message {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getSend_name() {
+		return send_name;
+	}
+
+	public void setSend_name(String send_name) {
+		this.send_name = send_name;
+	}
+
+	public String getReceive_name() {
+		return receive_name;
+	}
+
+	public void setReceive_name(String receive_name) {
+		this.receive_name = receive_name;
 	}
 
 	public long getTitle_id() {

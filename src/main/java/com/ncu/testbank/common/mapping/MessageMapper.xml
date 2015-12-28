@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.common.dao.IMessageDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.common.data.Message" >
+	  <id column="message_id" property="message_id"/>
+	  <result column="title_id" property="title_id"/>
+	  <result column="title" property="title"/>
+	  <result column="message" property="message"/>
+	  <result column="send_id" property="send_id"/>
+	  <result column="receive_id" property="receive_id"/>
+	  <result column="send_time" property="send_time"/>
+	  <result column="receive_time" property="receive_time"/>
+	  <result column="flag" property="flag"/>
+	</resultMap>
+	
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.common.data.view.MessageView" >
+	  <id column="message_id" property="message_id"/>
+	  <result column="title_id" property="title_id"/>
+	  <result column="title" property="title"/>
+	  <result column="message" property="message"/>
+	  <result column="send_id" property="send_id"/>
+	  <result column="receive_id" property="receive_id"/>
+	  <result column="send_time" property="send_time"/>
+	  <result column="receive_time" property="receive_time"/>
+	  <result column="flag" property="flag"/>
+	  <result column="send_name" property="send_name"/>
+	  <result column="receive_name" property="receive_name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		message_id, title_id, title, message, send_id, receive_id, send_time,  receive_time, flag
+	</sql>
+	
+	<sql id="View_Column_List">
+		message_id, title_id, title, message, send_id, receive_id, send_time,  receive_time, flag, send_name, receive_name
+	</sql>
+	
+	<select id="getMessageCount" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			message
+		<where>
+			<if test="title_id != null and title_id != ''">
+				title_id = #{title_id}
+			</if>
+			<if test="send_id != null and send_id != ''">
+				AND send_id = #{send_id}
+			</if>
+			<if test="receive_id != null and receive_id != ''">
+				AND receive_id = #{receive_id}
+			</if>
+			<if test="flag != null and flag != ''">
+				AND flag = #{flag}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTitleCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT 
+			COUNT(distinct title_id)
+		FROM
+			message
+		WHERE
+			send_id = #{send_id}
+	</select>
+	
+	<select id="searchMessageData" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"></include>
+		FROM 
+			message_v
+		<where>
+			<if test="title_id != null and title_id != ''">
+				title_id = #{title_id}
+			</if>
+			<if test="send_id != null and send_id != ''">
+				AND send_id = #{send_id}
+			</if>
+			<if test="receive_id != null and receive_id != ''">
+				AND receive_id = #{receive_id}
+			</if>
+			<if test="flag != null and flag != ''">
+				AND flag = #{flag}
+			</if>
+		</where>
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<select id="searchTitleData" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM 
+			message
+		WHERE
+			send_id = #{send_id}
+		GROUP BY
+			title_id
+		LIMIT ${page * rows}, #{rows}
+	</select>
+	
+	<!-- 根据消息ID或者主题ID来查找Message -->
+	<select id="getMessage" resultMap="ViewResultMap">
+		SELECT 
+			<include refid="View_Column_List"></include>
+		FROM 
+			message_v
+		<where>
+			<if test="message_id != null and message_id != ''">
+				message_id = #{message_id}
+			</if>
+			<if test="title_id != null and title_id != ''">
+				title_id = #{title_id}
+			</if>
+		</where>
+		LIMIT 1
+	</select>
+	
+	<insert id="insertOne" parameterType="com.ncu.testbank.common.data.Message">
+		INSERT INTO 
+			message(message_id,title_id,title,message,send_id,receive_id,send_time,flag)
+		VALUES
+			(#{message_id},#{title_id},#{title},#{message},#{send_id},#{receive_id},#{send_time},#{flag})
+	</insert>
+	
+	<!-- 通过主题ID删除组消息 -->
+	<delete id="deleteMessage" parameterType="java.lang.Long">
+		DELETE FROM
+			message
+		WHERE
+			title_id in
+			<foreach item="title_id" index="index" collection="list" open="(" separator="," close=")">
+				#{title_id}
+			</foreach>
+	</delete>
+	
+	<!-- 修改只可添加接收时间以及接收标志 -->
+	<update id="updateOne" parameterType="com.ncu.testbank.common.data.Message">
+		UPDATE
+			message
+		SET
+			receive_time = #{receive_time},
+			flag = #{flag}
+		WHERE
+			message_id = #{message_id}
+	</update>
+  
+</mapper>
