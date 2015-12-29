@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans    
-                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
-                        http://www.springframework.org/schema/context    
-                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
-                        http://www.springframework.org/schema/mvc    
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd                    
+	               http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd 
+	               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+	               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+	               http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd"
+	default-autowire="byName">
 	<mvc:annotation-driven />
-	
+
+	<mvc:default-servlet-handler />
+	<!-- 出处理类和握手协议的spring配置 -->
+	<bean id="websocket" class="com.ncu.testbank.common.websocket.WebsocketEndPoint" />
+	<websocket:handlers>
+		<websocket:mapping path="/websocket/messages" handler="websocket" />
+		<websocket:handshake-interceptors>
+			<bean class="com.ncu.testbank.common.websocket.HandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+	</websocket:handlers>
+
+
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="com.ncu.testbank">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	<context:annotation-config />
-	
-	<bean class="com.ncu.testbank.base.config.SwaggerConfig"/>
-	  
+
+	<bean class="com.ncu.testbank.base.config.SwaggerConfig" />
+
 	<!-- Required for security annotations to work in this servlet -->
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
@@ -44,7 +54,7 @@
 			</list>
 		</property>
 	</bean>
-	
+
 
 	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<bean
@@ -76,4 +86,4 @@
 		<property name="uploadTempDir" value="fileUpload" />
 	</bean>
 
-</beans>  
+</beans>
