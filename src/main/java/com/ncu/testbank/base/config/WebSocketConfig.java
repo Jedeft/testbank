@@ -23,7 +23,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
 	//客户端建立websocket连接的url请求地址
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/websocket/messages").withSockJS();
+		registry.addEndpoint("/websocket/messages", "/client/sendResult").withSockJS();
 	}
-
+	
 }

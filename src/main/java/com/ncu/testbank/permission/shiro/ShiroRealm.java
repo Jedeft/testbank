@@ -3,10 +3,6 @@ package com.ncu.testbank.permission.shiro;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -20,11 +16,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.subject.WebSubject;
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -33,7 +25,6 @@ import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.utils.JSONUtils;
-import com.ncu.testbank.base.utils.JWTUtils;
 import com.ncu.testbank.base.utils.JedisPoolUtils;
 import com.ncu.testbank.permission.data.Authen;
 import com.ncu.testbank.permission.data.Role;

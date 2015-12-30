@@ -112,25 +112,26 @@ public class MessageTest {
 										  .andDo(print());
 	}
 	
-	/**
-     * url : /common/messages/sending
-     * method : GET
-     * @throws Exception
-     */
-	@Test
-	public void searchSendingTest() throws Exception{
-		User user = new User();
-		user.setUsername("Jerry");
-		mockSession.setAttribute("currentUser", user);
-		
-		mockMvc.perform(get("/common/messages/sending?page=1&rows=15&title_id=145129260141401").session(mockSession)
-											   .contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
-	}
+//	/**
+//	 * 该发送消息方法被舍弃，采用websocket
+//     * url : /common/messages/sending
+//     * method : GET
+//     * @throws Exception
+//     */
+//	@Test
+//	public void searchSendingTest() throws Exception{
+//		User user = new User();
+//		user.setUsername("Jerry");
+//		mockSession.setAttribute("currentUser", user);
+//		
+//		mockMvc.perform(get("/common/messages/sending?page=1&rows=15&title_id=145129260141401").session(mockSession)
+//											   .contentType(MediaType.TEXT_HTML)
+//											   .characterEncoding(CharEncoding.UTF_8)
+//											   .accept(MediaType.APPLICATION_JSON)
+//											   .characterEncoding(CharEncoding.UTF_8))
+//										  .andExpect(jsonPath("$.errorCode").value(0))
+//										  .andDo(print());
+//	}
 	
 	/**
      * url : /common/messages/receiving

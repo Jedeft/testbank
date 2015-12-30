@@ -2,12 +2,10 @@ package com.ncu.testbank.permission.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -114,15 +112,18 @@ public class LoginConroller {
 		}
 		return msg;
 	}
-	
+
 	/**
 	 * 登出
+	 * 
 	 * @param username
 	 * @return
 	 */
 	@RequestMapping(value = "//{username}", method = RequestMethod.DELETE)
 	@ApiOperation(value = "登出", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要baseAdmin权限，请header中携带Token,登出成功errorCode=10010")
-	public ResponseMsg logout(@ApiParam(required = true, name = "username", value = "用户名") @PathVariable String username,@ApiIgnore HttpSession session){
+	public ResponseMsg logout(
+			@ApiParam(required = true, name = "username", value = "用户名") @PathVariable String username,
+			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			if (null == username || username.equals("")) {
@@ -131,7 +132,7 @@ public class LoginConroller {
 				return msg;
 			}
 			userService.logout(username);
-			//删除session中的用户信息
+			// 删除session中的用户信息
 			session.removeAttribute("currentUser");
 			msg.errorCode = ErrorCode.LOGOUT_SUCCESS.code;
 			msg.msg = ErrorCode.LOGOUT_SUCCESS.name;

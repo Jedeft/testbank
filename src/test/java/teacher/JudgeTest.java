@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +59,7 @@ public class JudgeTest {
     private MockMvc mockMvc;
     
     private MockHttpSession mockSession;
+    
     @Before  
     public void setUp() {  
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  

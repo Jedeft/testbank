@@ -170,42 +170,42 @@ public class MessageController {
 		return msg;
 	}
 
-	/**
-	 * 发送消息
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/messages", method = RequestMethod.POST)
-	@ApiOperation(value = "发送消息", httpMethod = "POST", response = ResponseMsg.class, notes = "需要baseAdmin或者baseTeacher、baseStudent权限，请header中携带Token")
-	public ResponseMsg sendMessage(
-			@ApiParam(required = true, name = "message", value = "通知json数据") @RequestBody MessageParams messageParams,
-			@ApiIgnore HttpSession session) {
-		ResponseMsg msg = new ResponseMsg();
-		try {
-			User user = (User) session.getAttribute("currentUser");
-			Message message = new Message();
-			message.setMessage(messageParams.getMessage());
-			message.setTitle(messageParams.getTitle());
-			messageService.sendMessage(message, messageParams.getReceive_id(),
-					user);
-
-			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-			msg.msg = ErrorCode.CALL_SUCCESS.name;
-		} catch (ShiroException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (ServiceException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		} catch (DaoException e) {
-			ErrorCode error = e.getErrorCode();
-			msg.errorCode = error.code;
-			msg.msg = error.name;
-		}
-		return msg;
-	}
+//	/**
+//	 * 发送消息(早期旧解决方案，采用轮询查找消息，效率低下。舍弃！)
+//	 * 
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/messages", method = RequestMethod.POST)
+//	@ApiOperation(value = "发送消息", httpMethod = "POST", response = ResponseMsg.class, notes = "需要baseAdmin或者baseTeacher、baseStudent权限，请header中携带Token")
+//	public ResponseMsg sendMessage(
+//			@ApiParam(required = true, name = "message", value = "通知json数据") @RequestBody MessageParams messageParams,
+//			@ApiIgnore HttpSession session) {
+//		ResponseMsg msg = new ResponseMsg();
+//		try {
+//			User user = (User) session.getAttribute("currentUser");
+//			Message message = new Message();
+//			message.setMessage(messageParams.getMessage());
+//			message.setTitle(messageParams.getTitle());
+//			messageService.sendMessage(message, messageParams.getReceive_id(),
+//					user);
+//
+//			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+//			msg.msg = ErrorCode.CALL_SUCCESS.name;
+//		} catch (ShiroException e) {
+//			ErrorCode error = e.getErrorCode();
+//			msg.errorCode = error.code;
+//			msg.msg = error.name;
+//		} catch (ServiceException e) {
+//			ErrorCode error = e.getErrorCode();
+//			msg.errorCode = error.code;
+//			msg.msg = error.name;
+//		} catch (DaoException e) {
+//			ErrorCode error = e.getErrorCode();
+//			msg.errorCode = error.code;
+//			msg.msg = error.name;
+//		}
+//		return msg;
+//	}
 
 	/**
 	 * 查看消息，将消息标记为已读
