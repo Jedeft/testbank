@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.IExamDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.teacher.data.Exam" >
+	  <id column="exam_id" property="exam_id"/>
+	  <result column="template_id" property="template_id"/>
+	  <result column="start_time" property="start_time"/>
+	  <result column="end_time" property="end_time"/>
+	  <result column="score" property="score"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		exam_id, template_id, start_time, end_time, score
+	</sql>
+
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
+		INSERT INTO
+			exam(exam_id, template_id, start_time, end_time)
+		VALUES(#{exam_id}, #{template_id}, #{start_time}, #{end_time})
+	</insert>
+	
+</mapper>

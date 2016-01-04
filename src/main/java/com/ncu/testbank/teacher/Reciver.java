@@ -1,7 +1,4 @@
-package common;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.ncu.testbank.teacher;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -13,62 +10,11 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ncu.testbank.base.utils.ActiveMqUtils;
-import com.ncu.testbank.base.utils.JWTUtils;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring-mybatis.xml" })
-public class SpringTest {
-
-	// 第一部分 {alg=HS256} 第二部分{sub=Joe}
-	// 先验证token的合法性，之后再做用户信息验证
-	// 每个token放在redis里面做缓存
-	// 若没有请求，那么定期清理redis缓存
-	@Test
-	public void testJWT() {
-		String token = JWTUtils.createToken("Jedeft");
-		System.out.println(JWTUtils.validateToken(token, "Jedeft"));
-		List<String> list = new ArrayList<>();
-		list.toString();
-	}
-
-	@Test
-	public void testJedis() {
-		// JedisPool jedisPool = JedisPoolUtils.getPool();
-		// Jedis jedis = jedisPool.getResource();
-		//
-		// User user = new User();
-		// user.setName("jedeft");
-		// user.setUsername("admin");
-		// user.setPassword("admin");
-		// user.setRole_id(1);
-		//
-		// String json = JSONUtils.convertObject2Json(user);
-		// jedis.setex("user", 20, json);
-		//
-		// //归还连接池
-		// JedisPoolUtils.returnResource(jedisPool, jedis);
-		// userService.createToken("admin");
-	}
-	
-	
-	@Test
-	public void testActiveMq() {
-		for (int i = 0; i < 100; i++) {
-			ActiveMqUtils.senderMessage("这是第" + i + "条消息！");
-		}
-		
-	}
-	
-	
-	@Test
-	public void testReciver(){
-		//创建工厂
+public class Reciver {
+    
+    public static void main(String[] args) {
+        //创建工厂
         ConnectionFactory connectionFactory;
         //创建connection
         Connection connection = null;
@@ -110,5 +56,7 @@ public class SpringTest {
                 e.printStackTrace();
             }
         }
-	}
+    }
+
 }
+
