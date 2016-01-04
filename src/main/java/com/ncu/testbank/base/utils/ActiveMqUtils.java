@@ -57,6 +57,7 @@ public class ActiveMqUtils {
 			session.commit();
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
+			// 打印到日志，并且发送邮件给对应教师告诉组卷失败
 			e.printStackTrace();
 		} finally {
 			try {
