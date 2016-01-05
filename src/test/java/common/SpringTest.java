@@ -1,7 +1,9 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -15,11 +17,14 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ncu.testbank.base.utils.ActiveMqUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
+import com.ncu.testbank.teacher.dao.ITemplateDao;
+import com.ncu.testbank.teacher.data.Template;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring-mybatis.xml" })
@@ -64,7 +69,6 @@ public class SpringTest {
 		}
 		
 	}
-	
 	
 	@Test
 	public void testReciver(){

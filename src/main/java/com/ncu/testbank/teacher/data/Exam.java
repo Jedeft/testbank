@@ -8,6 +8,21 @@ public class Exam {
 	private Timestamp start_time;
 	private Timestamp end_time;
 	private double score;
+	private String user_id;
+
+	public Exam() {
+		super();
+	}
+
+	public Exam(long exam_id, long template_id, Timestamp start_time,
+			Timestamp end_time, String user_id) {
+		super();
+		this.exam_id = exam_id;
+		this.template_id = template_id;
+		this.start_time = start_time;
+		this.end_time = end_time;
+		this.user_id = user_id;
+	}
 
 	public long getExam_id() {
 		return exam_id;
@@ -47,6 +62,14 @@ public class Exam {
 
 	public void setScore(double score) {
 		this.score = score;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 
 }

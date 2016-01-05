@@ -20,4 +20,34 @@
 		VALUES(#{exam_id}, #{template_id}, #{start_time}, #{end_time})
 	</insert>
 	
+	<delete id="deleteOne" parameterType="java.lang.Long">
+		DELETE FROM
+			exam
+		WHERE
+			exam_id = #{exam_id}
+	</delete>
+	
+	<insert id="insertSingle" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			single_exam(exam_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
+	
+	<insert id="insertMultiple" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			multiple_exam(exam_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
+	
+	<insert id="insertJudge" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			judge_exam(exam_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
+	
+	<insert id="insertShortAnswer" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			shortanswer_exam(exam_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
 </mapper>

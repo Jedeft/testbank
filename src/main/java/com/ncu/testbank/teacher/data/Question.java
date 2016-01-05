@@ -7,9 +7,20 @@ package com.ncu.testbank.teacher.data;
  * 
  */
 public class Question {
+	// 试卷或者练习ID
+	private long test_id;
 	private long question_id;
 	private long point_id;
 	private int level;
+	private String answer;
+
+	public long getTest_id() {
+		return test_id;
+	}
+
+	public void setTest_id(long test_id) {
+		this.test_id = test_id;
+	}
 
 	public long getQuestion_id() {
 		return question_id;
@@ -33,6 +44,14 @@ public class Question {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
 
 }
