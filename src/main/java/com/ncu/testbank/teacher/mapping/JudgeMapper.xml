@@ -124,6 +124,17 @@
 		LIMIT 1
 	</select>
 	
+	<select id="searchByCourse" parameterType="java.lang.String" resultType="com.ncu.testbank.teacher.data.Question">
+		SELECT
+			question_id, point_id, level
+		FROM
+			judge J, point P
+		WHERE
+			P.course_id = #{course_id}
+		AND
+			P.point_id = J.point_id
+	</select>
+	
 	<delete id="deleteData" parameterType="java.lang.Long">
 		DELETE FROM
 			judge

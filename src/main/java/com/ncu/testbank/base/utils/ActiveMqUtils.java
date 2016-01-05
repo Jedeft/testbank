@@ -1,5 +1,9 @@
 package com.ncu.testbank.base.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
@@ -10,10 +14,22 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
+import org.apache.log4j.Logger;
 
 public class ActiveMqUtils {
 
+	private static Logger log = Logger.getLogger("testbankLog");
+
 	public static void senderMessage(String message) {
+		Properties properties = new Properties();
+		InputStream in = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("activemq.properties");
+		try {
+			properties.load(in);
+		} catch (IOException e) {
+			log.error(e);
+		}
+
 		// 链接工厂
 		ConnectionFactory connectionFactory;
 		// 创建链接
@@ -27,7 +43,8 @@ public class ActiveMqUtils {
 		// 构造ConnectionFactory
 		connectionFactory = new org.apache.activemq.ActiveMQConnectionFactory(
 				ActiveMQConnection.DEFAULT_USER,
-				ActiveMQConnection.DEFAULT_PASSWORD, "tcp://121.42.216.103:61616");
+				ActiveMQConnection.DEFAULT_PASSWORD,
+				properties.getProperty("url"));
 
 		// 设置用户名和密码，这个用户名和密码在conf目录下的credentials.properties文件中，也可以在activemq.xml中配置，我这里是默认的，所以就注释掉了
 		// connectionFactory.setUserName("用户名");
@@ -56,17 +73,15 @@ public class ActiveMqUtils {
 			sendMessage(session, messageProducer, message);
 			session.commit();
 		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			// 打印到日志，并且发送邮件给对应教师告诉组卷失败
-			e.printStackTrace();
+			// TODO 打印到日志，并且发送邮件给对应教师告诉组卷失败
+			log.error(e);
 		} finally {
 			try {
 				if (null != connection) {
 					connection.close();
 				}
 			} catch (JMSException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.teacher.data.Judge;
+import com.ncu.testbank.teacher.data.Question;
 import com.ncu.testbank.teacher.data.view.JudgeView;
 
 @Repository
@@ -21,4 +22,6 @@ public interface IJudgeDao {
 	public Judge getOne(long question_id);
 
 	public int deleteData(List<Long> question_id);
+	
+	public List<Question> searchByCourse(String course_id);
 }
