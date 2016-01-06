@@ -77,19 +77,23 @@ public class ShortAnswerTest {
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
 		ShortAnswer judge = new ShortAnswer();
-		judge.setPoint_id(145076563281901L);
-		judge.setQuestion("这是一道大题！！！！！");
-		judge.setLevel(3);
-		judge.setAnswer("这是大题的答案！！！！！");
-		
-		mockMvc.perform(post("/teacher/shortAnswers/writing").session(mockSession)
-											   .contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(judge))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+		for (int j = 0; j < 10; j++) {
+			for (int i = 1; i <= 5; i++) {
+				judge.setPoint_id(i*10+i);
+				judge.setQuestion("这是一道大题！！！！！"+i);
+				judge.setLevel(i);
+				judge.setAnswer("这是大题的答案！！！！！"+i);
+				
+				mockMvc.perform(post("/teacher/shortAnswers/writing").session(mockSession)
+													   .contentType(MediaType.APPLICATION_JSON)
+													   .content(JSONUtils.convertObject2Json(judge))
+													   .characterEncoding(CharEncoding.UTF_8)
+													   .accept(MediaType.APPLICATION_JSON)
+													   .characterEncoding(CharEncoding.UTF_8));
+//												  .andExpect(jsonPath("$.errorCode").value(0))
+//												  .andDo(print());
+			}
+		}
 	}
 	
 	/**

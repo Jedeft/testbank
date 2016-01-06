@@ -78,20 +78,24 @@ public class JudgeTest {
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
-		Judge judge = new Judge();
-		judge.setPoint_id(145076563281901L);
-		judge.setQuestion("demo question222!");
-		judge.setLevel(3);
-		judge.setAnswer("Y");
-		
-		mockMvc.perform(post("/teacher/judges/writing").session(mockSession)
-											   .contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(judge))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+		for (int j = 0; j < 10; j++) {
+			for (int i = 1; i <= 5; i++) {
+				Judge judge = new Judge();
+				judge.setPoint_id(i*10+i);
+				judge.setQuestion("demo question" + i);
+				judge.setLevel(i);
+				judge.setAnswer("Y");
+				
+				mockMvc.perform(post("/teacher/judges/writing").session(mockSession)
+													   .contentType(MediaType.APPLICATION_JSON)
+													   .content(JSONUtils.convertObject2Json(judge))
+													   .characterEncoding(CharEncoding.UTF_8)
+													   .accept(MediaType.APPLICATION_JSON)
+													   .characterEncoding(CharEncoding.UTF_8));
+//												  .andExpect(jsonPath("$.errorCode").value(0))
+//												  .andDo(print());
+			}
+		}
 	}
 	
 	/**

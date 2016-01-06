@@ -77,24 +77,28 @@ public class MultipleTest {
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
-		Multiple multiple = new Multiple();
-		multiple.setPoint_id(145076563281901L);
-		multiple.setQuestion("demo question222!");
-		multiple.setA("answer one");
-		multiple.setB("answer two");
-		multiple.setC("answer three");
-		multiple.setD("answer four");
-		multiple.setLevel(3);
-		multiple.setAnswer("C");
+		for (int j = 0; j < 10; j++) {
+			for (int i = 1; i <= 5; i++) {
+			Multiple multiple = new Multiple();
+			multiple.setPoint_id(i*10+i);
+			multiple.setQuestion("demo question" + i);
+			multiple.setA("answer one" + i);
+			multiple.setB("answer two" + i);
+			multiple.setC("answer three" + i);
+			multiple.setD("answer four" + i);
+			multiple.setLevel(i);
+			multiple.setAnswer("C");
 		
-		mockMvc.perform(post("/teacher/multiples/writing").session(mockSession)
+			mockMvc.perform(post("/teacher/multiples/writing").session(mockSession)
 											   .contentType(MediaType.APPLICATION_JSON)
 											   .content(JSONUtils.convertObject2Json(multiple))
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+											   .characterEncoding(CharEncoding.UTF_8));
+//										  .andExpect(jsonPath("$.errorCode").value(0))
+//										  .andDo(print());
+			}
+		}
 	}
 	
 	/**

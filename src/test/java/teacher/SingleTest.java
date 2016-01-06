@@ -76,11 +76,11 @@ public class SingleTest {
 	 */
 	@Test
 	public void insertWritingTest() throws Exception {
+		User user = new User();
+		user.setUsername("Jerry");
+		mockSession.setAttribute("currentUser", user);
 		for (int j = 0; j < 3; j++) {
 			for (int i = 1; i <= 5; i++) {
-				User user = new User();
-				user.setUsername("Jerry");
-				mockSession.setAttribute("currentUser", user);
 				Single single = new Single();
 				single.setPoint_id(55L);
 				single.setQuestion("demo question" + i);

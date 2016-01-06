@@ -37,7 +37,7 @@ public class PointServiceImpl implements IPointService {
 			throw new ServiceException(new ErrorCode(30001, "更新考点失败，请联系管理人员！"));
 		}
 	}
-	
+
 	@Override
 	public Point getPoint(long point_id) {
 		return pointDao.getPoint(point_id);
@@ -47,7 +47,5 @@ public class PointServiceImpl implements IPointService {
 	public List<Point> searchPoint(String course_id) {
 		return pointDao.searchData(course_id);
 	}
-
-	
 
 }
