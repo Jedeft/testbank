@@ -16,8 +16,8 @@
 
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
 		INSERT INTO
-			exam(exam_id, template_id, start_time, end_time)
-		VALUES(#{exam_id}, #{template_id}, #{start_time}, #{end_time})
+			exam(exam_id, template_id, start_time, end_time, user_id)
+		VALUES(#{exam_id}, #{template_id}, #{start_time}, #{end_time}, #{user_id})
 	</insert>
 	
 	<delete id="deleteOne" parameterType="java.lang.Long">

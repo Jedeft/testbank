@@ -44,68 +44,74 @@ import com.ncu.testbank.teacher.data.params.ImgSingleParams;
 
 /**
  * 对于需要rootAdmin权限的操作需要关掉@RequiresRoles("rootAdmin")注解才可执行
+ * 
  * @author Jedeft
- *
+ * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration(value = "src/main/webapp")  
-@ContextHierarchy({  
-        @ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),  
-        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")  
-})  
+@WebAppConfiguration(value = "src/main/webapp")
+@ContextHierarchy({
+		@ContextConfiguration(name = "parent", locations = "classpath:spring-mybatis.xml"),
+		@ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml") })
 public class SingleTest {
-	
-	@Autowired  
-    private WebApplicationContext wac;  
-	
-    private MockMvc mockMvc;
-    
-    private MockHttpSession mockSession;
-    @Before  
-    public void setUp() {  
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();  
-        
-        mockSession = new MockHttpSession();
-    } 
-	
-    
-    /**
-     * url : /teacher/singles/writing
-     * method : POST
-     * @throws Exception
-     */
-	@Test
-	public void insertWritingTest() throws Exception{
-		User user = new User();
-		user.setUsername("Jerry");
-		mockSession.setAttribute("currentUser", user);
-		Single single = new Single();
-		single.setPoint_id(145076563281901L);
-		single.setQuestion("demo question222!");
-		single.setA("answer one");
-		single.setB("answer two");
-		single.setC("answer three");
-		single.setD("answer four");
-		single.setLevel(3);
-		single.setAnswer("C");
-		
-		mockMvc.perform(post("/teacher/singles/writing").session(mockSession)
-											   .contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(single))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+
+	@Autowired
+	private WebApplicationContext wac;
+
+	private MockMvc mockMvc;
+
+	private MockHttpSession mockSession;
+
+	@Before
+	public void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+
+		mockSession = new MockHttpSession();
 	}
-	
+
 	/**
-     * url : /teacher/singles/writing
-     * method : PATCH
-     * @throws Exception
-     */
+	 * url : /teacher/singles/writing method : POST
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void updateWritingTest() throws Exception{
+	public void insertWritingTest() throws Exception {
+		for (int j = 0; j < 3; j++) {
+			for (int i = 1; i <= 5; i++) {
+				User user = new User();
+				user.setUsername("Jerry");
+				mockSession.setAttribute("currentUser", user);
+				Single single = new Single();
+				single.setPoint_id(55L);
+				single.setQuestion("demo question" + i);
+				single.setA("answer one" + i);
+				single.setB("answer two" + i);
+				single.setC("answer three" + i);
+				single.setD("answer four" + i);
+				single.setLevel(i);
+				single.setAnswer("A");
+
+				mockMvc.perform(post("/teacher/singles/writing")
+						.session(mockSession)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(JSONUtils.convertObject2Json(single))
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8));
+				// .andExpect(jsonPath("$.errorCode").value(0))
+				// .andDo(print());
+			}
+		}
+
+	}
+
+	/**
+	 * url : /teacher/singles/writing method : PATCH
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void updateWritingTest() throws Exception {
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
@@ -114,57 +120,56 @@ public class SingleTest {
 		single.setQuestion("update question!");
 		single.setLevel(5);
 		single.setAnswer("D");
-		
-		mockMvc.perform(patch("/teacher/singles/writing")
-											   .session(mockSession)
-											   .contentType(MediaType.APPLICATION_JSON)
-											   .content(JSONUtils.convertObject2Json(single))
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(jsonPath("$.errorCode").value(0))
-										  .andDo(print());
+
+		mockMvc.perform(
+				patch("/teacher/singles/writing").session(mockSession)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(JSONUtils.convertObject2Json(single))
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
 	}
-	
+
 	/**
-	 * url : /teacher/singles
-	 * params : page=1 , rows=15, point_id
-	 * method : GET
+	 * url : /teacher/singles params : page=1 , rows=15, point_id method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void searchSingleTest() throws Exception{
-		mockMvc.perform(get("/teacher/singles/?page=1&rows=15&point_id=145076563281901").contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void searchSingleTest() throws Exception {
+		mockMvc.perform(
+				get("/teacher/singles/?page=1&rows=15&point_id=145076563281901")
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-	 * url : /teacher/singles/{question_id}
-	 * params : question_id
-	 * method : GET
+	 * url : /teacher/singles/{question_id} params : question_id method : GET
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void getSingleTest() throws Exception{
-		mockMvc.perform(get("/teacher/singles/{question_id}", 145077563869301L).contentType(MediaType.TEXT_HTML)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+	public void getSingleTest() throws Exception {
+		mockMvc.perform(
+				get("/teacher/singles/{question_id}", 145077563869301L)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	/**
-     * url : /teacher/singles/img
-     * method : POST
-     * @throws Exception
-     */
+	 * url : /teacher/singles/img method : POST
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void insertImgTest() throws Exception{
+	public void insertImgTest() throws Exception {
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
@@ -172,80 +177,82 @@ public class SingleTest {
 		single.setPoint_id(145076563281901L);
 		single.setLevel(3);
 		single.setAnswer("C");
-		
+
 		File file = new File("D:/img/demo.png");
 		InputStream in = new FileInputStream(file);
-		MockMultipartFile mockFile = new MockMultipartFile("questionFile", "demo.png", null, in);
-		mockMvc.perform(fileUpload("/teacher/singles/img").file(mockFile)
-				   .session(mockSession)
-				   .contentType(MediaType.MULTIPART_FORM_DATA)
-				   .param("point_id", single.getPoint_id()+"")
-				   .param("level", single.getLevel()+"")
-				   .param("answer", single.getAnswer())
-				   .characterEncoding(CharEncoding.UTF_8)
-				   .accept(MediaType.APPLICATION_JSON)
-				   .characterEncoding(CharEncoding.UTF_8)) 
-					   .andExpect(jsonPath("$.errorCode").value(0))
-					   .andDo(print());
+		MockMultipartFile mockFile = new MockMultipartFile("questionFile",
+				"demo.png", null, in);
+		mockMvc.perform(
+				fileUpload("/teacher/singles/img").file(mockFile)
+						.session(mockSession)
+						.contentType(MediaType.MULTIPART_FORM_DATA)
+						.param("point_id", single.getPoint_id() + "")
+						.param("level", single.getLevel() + "")
+						.param("answer", single.getAnswer())
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
 	}
-	
+
 	/**
-	 * 由于测试mock upload只支持post请求，只能测试post接口，实际环境为patch请求
-     * url : /teacher/singles/upimg
-     * method : POST
-     * @throws Exception
-     */
-//	@Test
-//	public void updateImgTest() throws Exception{
-//		User user = new User();
-//		user.setUsername("Jerry");
-//		mockSession.setAttribute("currentUser", user);
-//		Single single = new Single();
-//		single.setQuestion_id(145085189895101L);
-//		single.setPoint_id(145076563281901L);
-//		single.setLevel(5);
-//		single.setAnswer("D");
-//		
-//		File file = new File("D:/img/demo.png");
-//		InputStream in = new FileInputStream(file);
-//		MockMultipartFile mockFile = new MockMultipartFile("questionFile", "demo.png", null, in);
-//		
-//		mockMvc.perform(fileUpload("/teacher/singles/upimg")
-//				   .file(mockFile)
-//				   .session(mockSession)
-//				   .contentType(MediaType.MULTIPART_FORM_DATA)
-//				   .param("question_id", single.getQuestion_id()+"")
-//				   .param("level", single.getLevel()+"")
-//				   .param("answer", single.getAnswer())
-//				   .characterEncoding(CharEncoding.UTF_8)
-//				   .accept(MediaType.APPLICATION_JSON)
-//				   .characterEncoding(CharEncoding.UTF_8)) 
-//					   .andExpect(jsonPath("$.errorCode").value(0))
-//					   .andDo(print());
-//	}
-	
+	 * 由于测试mock upload只支持post请求，只能测试post接口，实际环境为patch请求 url :
+	 * /teacher/singles/upimg method : POST
+	 * 
+	 * @throws Exception
+	 */
+	// @Test
+	// public void updateImgTest() throws Exception{
+	// User user = new User();
+	// user.setUsername("Jerry");
+	// mockSession.setAttribute("currentUser", user);
+	// Single single = new Single();
+	// single.setQuestion_id(145085189895101L);
+	// single.setPoint_id(145076563281901L);
+	// single.setLevel(5);
+	// single.setAnswer("D");
+	//
+	// File file = new File("D:/img/demo.png");
+	// InputStream in = new FileInputStream(file);
+	// MockMultipartFile mockFile = new MockMultipartFile("questionFile",
+	// "demo.png", null, in);
+	//
+	// mockMvc.perform(fileUpload("/teacher/singles/upimg")
+	// .file(mockFile)
+	// .session(mockSession)
+	// .contentType(MediaType.MULTIPART_FORM_DATA)
+	// .param("question_id", single.getQuestion_id()+"")
+	// .param("level", single.getLevel()+"")
+	// .param("answer", single.getAnswer())
+	// .characterEncoding(CharEncoding.UTF_8)
+	// .accept(MediaType.APPLICATION_JSON)
+	// .characterEncoding(CharEncoding.UTF_8))
+	// .andExpect(jsonPath("$.errorCode").value(0))
+	// .andDo(print());
+	// }
+
 	/**
-	 * url : /teacher/singles
-	 * method : DELETE
+	 * url : /teacher/singles method : DELETE
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void deleteTest() throws Exception{
+	public void deleteTest() throws Exception {
 		User user = new User();
 		user.setUsername("Jerry");
 		mockSession.setAttribute("currentUser", user);
-		Map<String,List<DELQuestionParams>> map = new HashMap<>();
+		Map<String, List<DELQuestionParams>> map = new HashMap<>();
 		List<DELQuestionParams> list = new ArrayList<>();
 		list.add(new DELQuestionParams(145085189895101L, 2));
 		list.add(new DELQuestionParams(145077563869301L, 1));
 		map.put("question", list);
-		mockMvc.perform(delete("/teacher/singles").session(mockSession)
-											   .content(JSONUtils.convertObject2Json(map))
-											   .contentType(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8)
-											   .accept(MediaType.APPLICATION_JSON)
-											   .characterEncoding(CharEncoding.UTF_8))
-										  .andExpect(status().isOk())
-										  .andDo(print());
+		mockMvc.perform(
+				delete("/teacher/singles").session(mockSession)
+						.content(JSONUtils.convertObject2Json(map))
+						.contentType(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+				.andExpect(status().isOk()).andDo(print());
 	}
 }

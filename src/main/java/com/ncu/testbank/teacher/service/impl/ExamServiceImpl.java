@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.ncu.testbank.base.utils.ExamUtils;
@@ -22,9 +23,12 @@ import com.ncu.testbank.teacher.dao.ISingleDao;
 import com.ncu.testbank.teacher.dao.ITemplateDao;
 import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Question;
+import com.ncu.testbank.teacher.data.QuestionCount;
+import com.ncu.testbank.teacher.data.QuestionLevel;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.service.IExamService;
 
+@Service("examService")
 public class ExamServiceImpl implements IExamService {
 
 	private Logger log = Logger.getLogger("testbankLog");
@@ -65,23 +69,16 @@ public class ExamServiceImpl implements IExamService {
 			// TODO 短信或邮件通知教师组卷失败
 			return;
 		}
-		// 对应难度题目数量
-		Integer hardCount = 0;
-		Integer mediumCount = 0;
-		Integer easyCount = 0;
-
 		// 对应档次难度等级
-		Integer hard = 0;
-		Integer medium = 0;
-		Integer easy = 0;
-		ExamUtils.initLevel(template.getLevel(), hard, medium, easy);
+		QuestionLevel questionLevel = ExamUtils.initLevel(template.getLevel());
 
 		if (template.getSingle_num() > 0) {
-			hardCount = 0;
-			mediumCount = 0;
-			easyCount = 0;
-			ExamUtils.initCount(template.getSingle_num(), template, hardCount,
-					mediumCount, easyCount);
+			// 对应难度题目数量
+			QuestionCount questionCount = ExamUtils.initCount(
+					template.getSingle_num(), template);
+			int hardCount = questionCount.getHardCount();
+			int mediumCount = questionCount.getMediumCount();
+			int easyCount = questionCount.getEasyCount();
 
 			List<Question> list = singleDao.searchByCourse(template
 					.getCourse_id());
@@ -91,7 +88,7 @@ public class ExamServiceImpl implements IExamService {
 
 			for (Question question : list) {
 				question.setTest_id(exam.getExam_id());
-				if (question.getLevel() == hard) {
+				if (question.getLevel() == questionLevel.getHard()) {
 					if (!hardMap.containsKey(question.getPoint_id())) {
 						List<Question> questions = new ArrayList<>();
 						questions.add(question);
@@ -102,7 +99,7 @@ public class ExamServiceImpl implements IExamService {
 						questions.add(question);
 						hardMap.put(question.getPoint_id(), questions);
 					}
-				} else if (question.getLevel() == medium) {
+				} else if (question.getLevel() == questionLevel.getMedium()) {
 					if (!mediumMap.containsKey(question.getPoint_id())) {
 						List<Question> questions = new ArrayList<>();
 						questions.add(question);
@@ -113,7 +110,7 @@ public class ExamServiceImpl implements IExamService {
 						questions.add(question);
 						mediumMap.put(question.getPoint_id(), questions);
 					}
-				} else if (question.getLevel() <= easy) {
+				} else if (question.getLevel() <= questionLevel.getEasy()) {
 					if (!easyMap.containsKey(question.getPoint_id())) {
 						List<Question> questions = new ArrayList<>();
 						questions.add(question);
@@ -159,11 +156,11 @@ public class ExamServiceImpl implements IExamService {
 			}
 			if (hardCount == 1) {
 				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, hardPoints.size());
+				int random = RandomUtils.random(0, hardPoints.size()-1);
 				long point_id = hardPoints.get(random);
 				List<Question> questions = hardMap.get(point_id);
 				Question question = questions.get(RandomUtils.random(0,
-						questions.size()));
+						questions.size()-1));
 				if (examDao.insertSingle(question) < 1) {
 					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
@@ -175,7 +172,7 @@ public class ExamServiceImpl implements IExamService {
 				for (int i = 0; i < hardCount; i++) {
 					List<Question> questions = hardMap.get(hardPoints.get(i));
 					Question question = questions.get(RandomUtils.random(0,
-							questions.size()));
+							questions.size()-1));
 					if (examDao.insertSingle(question) < 1) {
 						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 						// TODO 发送邮件告知教师组卷失败
@@ -187,16 +184,19 @@ public class ExamServiceImpl implements IExamService {
 				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
 				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 				int flag = 0;
+				// 总体全部组卷三次需要的大循环次数
+				int max = (hardCount / hardPoints.size() + 1) * 3;
 				// 已经添加的题目数量
 				int count = 0;
 				List<Long> question_id = new ArrayList<>();
-				while (flag > 3 || count == hardCount) {
+				outer:
+				while (flag > max || count == hardCount) {
 					// 循环出卷
 					for (int i = 0; i < hardPoints.size(); i++) {
 						List<Question> questions = hardMap.get(hardPoints
 								.get(i));
 						Question question = questions.get(RandomUtils.random(0,
-								questions.size()));
+								questions.size()-1));
 						if (count == 0) {
 							if (examDao.insertSingle(question) < 1) {
 								log.error(user_id
@@ -221,10 +221,13 @@ public class ExamServiceImpl implements IExamService {
 							}
 						}
 						count++;
+						if (count == easyCount) {
+							break outer;
+						}
 					}
 					flag++;
 				}
-				if (flag > 3) {
+				if (flag >= max) {
 					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
@@ -245,11 +248,11 @@ public class ExamServiceImpl implements IExamService {
 			}
 			if (mediumCount == 1) {
 				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, mediumPoints.size());
+				int random = RandomUtils.random(0, mediumPoints.size()-1);
 				long point_id = mediumPoints.get(random);
 				List<Question> questions = mediumMap.get(point_id);
 				Question question = questions.get(RandomUtils.random(0,
-						questions.size()));
+						questions.size()-1));
 				if (examDao.insertSingle(question) < 1) {
 					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
@@ -262,7 +265,7 @@ public class ExamServiceImpl implements IExamService {
 					List<Question> questions = mediumMap.get(mediumPoints
 							.get(i));
 					Question question = questions.get(RandomUtils.random(0,
-							questions.size()));
+							questions.size()-1));
 					if (examDao.insertSingle(question) < 1) {
 						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 						// TODO 发送邮件告知教师组卷失败
@@ -274,16 +277,19 @@ public class ExamServiceImpl implements IExamService {
 				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
 				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 				int flag = 0;
+				// 总体全部组卷三次需要的大循环次数
+				int max = (mediumCount / mediumPoints.size() + 1) * 3;
 				// 已经添加的题目数量
 				int count = 0;
 				List<Long> question_id = new ArrayList<>();
-				while (flag > 3 || count == mediumCount) {
+				outer:
+				while (flag > max || count == mediumCount) {
 					// 循环出卷
 					for (int i = 0; i < mediumPoints.size(); i++) {
 						List<Question> questions = mediumMap.get(hardPoints
 								.get(i));
 						Question question = questions.get(RandomUtils.random(0,
-								questions.size()));
+								questions.size()-1));
 						if (count == 0) {
 							if (examDao.insertSingle(question) < 1) {
 								log.error(user_id
@@ -308,10 +314,13 @@ public class ExamServiceImpl implements IExamService {
 							}
 						}
 						count++;
+						if (count == easyCount) {
+							break outer;
+						}
 					}
 					flag++;
 				}
-				if (flag > 3) {
+				if (flag >= max) {
 					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
@@ -334,11 +343,11 @@ public class ExamServiceImpl implements IExamService {
 			}
 			if (easyCount == 1) {
 				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, easyPoints.size());
+				int random = RandomUtils.random(0, easyPoints.size()-1);
 				long point_id = easyPoints.get(random);
 				List<Question> questions = easyMap.get(point_id);
 				Question question = questions.get(RandomUtils.random(0,
-						questions.size()));
+						questions.size()-1));
 				if (examDao.insertSingle(question) < 1) {
 					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
@@ -350,7 +359,7 @@ public class ExamServiceImpl implements IExamService {
 				for (int i = 0; i < easyCount; i++) {
 					List<Question> questions = easyMap.get(easyPoints.get(i));
 					Question question = questions.get(RandomUtils.random(0,
-							questions.size()));
+							questions.size()-1));
 					if (examDao.insertSingle(question) < 1) {
 						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
 						// TODO 发送邮件告知教师组卷失败
@@ -362,16 +371,19 @@ public class ExamServiceImpl implements IExamService {
 				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
 				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 				int flag = 0;
+				// 总体全部组卷三次需要的大循环次数
+				int max = (easyCount / easyPoints.size() + 1) * 3;
 				// 已经添加的题目数量
 				int count = 0;
 				List<Long> question_id = new ArrayList<>();
-				while (flag > 3 || count == easyCount) {
+				outer:
+				while (flag < max && count < easyCount) {
 					// 循环出卷
 					for (int i = 0; i < easyPoints.size(); i++) {
 						List<Question> questions = easyMap.get(hardPoints
 								.get(i));
 						Question question = questions.get(RandomUtils.random(0,
-								questions.size()));
+								questions.size()-1));
 						if (count == 0) {
 							if (examDao.insertSingle(question) < 1) {
 								log.error(user_id
@@ -396,10 +408,13 @@ public class ExamServiceImpl implements IExamService {
 							}
 						}
 						count++;
+						if (count == easyCount) {
+							break outer;
+						}
 					}
 					flag++;
 				}
-				if (flag > 3) {
+				if (flag >= max) {
 					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
