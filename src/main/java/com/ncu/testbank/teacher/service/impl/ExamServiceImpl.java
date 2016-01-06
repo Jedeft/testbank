@@ -154,87 +154,8 @@ public class ExamServiceImpl implements IExamService {
 				mediumCount += (total - hardCount);
 				hardCount = total;
 			}
-			if (hardCount == 1) {
-				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, hardPoints.size()-1);
-				long point_id = hardPoints.get(random);
-				List<Question> questions = hardMap.get(point_id);
-				Question question = questions.get(RandomUtils.random(0,
-						questions.size()-1));
-				if (examDao.insertSingle(question) < 1) {
-					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			} else if (hardCount > 1 && hardCount <= hardPoints.size()) {
-				// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
-				for (int i = 0; i < hardCount; i++) {
-					List<Question> questions = hardMap.get(hardPoints.get(i));
-					Question question = questions.get(RandomUtils.random(0,
-							questions.size()-1));
-					if (examDao.insertSingle(question) < 1) {
-						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-						// TODO 发送邮件告知教师组卷失败
-						examDao.deleteOne(exam.getExam_id());
-						return;
-					}
-				}
-			} else if (hardCount > hardPoints.size()) {
-				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
-				int flag = 0;
-				// 总体全部组卷三次需要的大循环次数
-				int max = (hardCount / hardPoints.size() + 1) * 3;
-				// 已经添加的题目数量
-				int count = 0;
-				List<Long> question_id = new ArrayList<>();
-				outer:
-				while (flag > max || count == hardCount) {
-					// 循环出卷
-					for (int i = 0; i < hardPoints.size(); i++) {
-						List<Question> questions = hardMap.get(hardPoints
-								.get(i));
-						Question question = questions.get(RandomUtils.random(0,
-								questions.size()-1));
-						if (count == 0) {
-							if (examDao.insertSingle(question) < 1) {
-								log.error(user_id
-										+ "组卷失败！原因：题目录入single_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
-								examDao.deleteOne(exam.getExam_id());
-								return;
-							}
-							question_id.add(question.getQuestion_id());
-						} else {
-							// 查找已经完成组卷的题目是否出现重复
-							if (!question_id
-									.contains(question.getQuestion_id())) {
-								if (examDao.insertSingle(question) < 1) {
-									log.error(user_id
-											+ "组卷失败！原因：题目录入single_exam表中失败。");
-									// TODO 发送邮件告知教师组卷失败
-									examDao.deleteOne(exam.getExam_id());
-									return;
-								}
-								question_id.add(question.getQuestion_id());
-							}
-						}
-						count++;
-						if (count == easyCount) {
-							break outer;
-						}
-					}
-					flag++;
-				}
-				if (flag >= max) {
-					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			}
-
+			this.create(hardCount, hardPoints, hardMap, exam);
+			
 			// 次之难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : mediumMap.entrySet()) {
@@ -246,88 +167,8 @@ public class ExamServiceImpl implements IExamService {
 				easyCount += (total - mediumCount);
 				mediumCount = total;
 			}
-			if (mediumCount == 1) {
-				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, mediumPoints.size()-1);
-				long point_id = mediumPoints.get(random);
-				List<Question> questions = mediumMap.get(point_id);
-				Question question = questions.get(RandomUtils.random(0,
-						questions.size()-1));
-				if (examDao.insertSingle(question) < 1) {
-					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			} else if (mediumCount > 1 && mediumCount <= mediumPoints.size()) {
-				// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
-				for (int i = 0; i < mediumCount; i++) {
-					List<Question> questions = mediumMap.get(mediumPoints
-							.get(i));
-					Question question = questions.get(RandomUtils.random(0,
-							questions.size()-1));
-					if (examDao.insertSingle(question) < 1) {
-						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-						// TODO 发送邮件告知教师组卷失败
-						examDao.deleteOne(exam.getExam_id());
-						return;
-					}
-				}
-			} else if (mediumCount > mediumPoints.size()) {
-				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
-				int flag = 0;
-				// 总体全部组卷三次需要的大循环次数
-				int max = (mediumCount / mediumPoints.size() + 1) * 3;
-				// 已经添加的题目数量
-				int count = 0;
-				List<Long> question_id = new ArrayList<>();
-				outer:
-				while (flag > max || count == mediumCount) {
-					// 循环出卷
-					for (int i = 0; i < mediumPoints.size(); i++) {
-						List<Question> questions = mediumMap.get(hardPoints
-								.get(i));
-						Question question = questions.get(RandomUtils.random(0,
-								questions.size()-1));
-						if (count == 0) {
-							if (examDao.insertSingle(question) < 1) {
-								log.error(user_id
-										+ "组卷失败！原因：题目录入single_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
-								examDao.deleteOne(exam.getExam_id());
-								return;
-							}
-							question_id.add(question.getQuestion_id());
-						} else {
-							// 查找已经完成组卷的题目是否出现重复
-							if (!question_id
-									.contains(question.getQuestion_id())) {
-								if (examDao.insertSingle(question) < 1) {
-									log.error(user_id
-											+ "组卷失败！原因：题目录入single_exam表中失败。");
-									// TODO 发送邮件告知教师组卷失败
-									examDao.deleteOne(exam.getExam_id());
-									return;
-								}
-								question_id.add(question.getQuestion_id());
-							}
-						}
-						count++;
-						if (count == easyCount) {
-							break outer;
-						}
-					}
-					flag++;
-				}
-				if (flag >= max) {
-					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			}
-
+			this.create(mediumCount, mediumPoints, mediumMap, exam);
+			
 			// 最低难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : easyMap.entrySet()) {
@@ -341,86 +182,7 @@ public class ExamServiceImpl implements IExamService {
 				examDao.deleteOne(exam.getExam_id());
 				return;
 			}
-			if (easyCount == 1) {
-				// 只有一道题目时，随机出题
-				int random = RandomUtils.random(0, easyPoints.size()-1);
-				long point_id = easyPoints.get(random);
-				List<Question> questions = easyMap.get(point_id);
-				Question question = questions.get(RandomUtils.random(0,
-						questions.size()-1));
-				if (examDao.insertSingle(question) < 1) {
-					log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			} else if (easyCount > 1 && easyCount <= easyPoints.size()) {
-				// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
-				for (int i = 0; i < easyCount; i++) {
-					List<Question> questions = easyMap.get(easyPoints.get(i));
-					Question question = questions.get(RandomUtils.random(0,
-							questions.size()-1));
-					if (examDao.insertSingle(question) < 1) {
-						log.error(user_id + "组卷失败！原因：题目录入single_exam表中失败。");
-						// TODO 发送邮件告知教师组卷失败
-						examDao.deleteOne(exam.getExam_id());
-						return;
-					}
-				}
-			} else if (easyCount > easyPoints.size()) {
-				// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-				// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
-				int flag = 0;
-				// 总体全部组卷三次需要的大循环次数
-				int max = (easyCount / easyPoints.size() + 1) * 3;
-				// 已经添加的题目数量
-				int count = 0;
-				List<Long> question_id = new ArrayList<>();
-				outer:
-				while (flag < max && count < easyCount) {
-					// 循环出卷
-					for (int i = 0; i < easyPoints.size(); i++) {
-						List<Question> questions = easyMap.get(hardPoints
-								.get(i));
-						Question question = questions.get(RandomUtils.random(0,
-								questions.size()-1));
-						if (count == 0) {
-							if (examDao.insertSingle(question) < 1) {
-								log.error(user_id
-										+ "组卷失败！原因：题目录入single_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
-								examDao.deleteOne(exam.getExam_id());
-								return;
-							}
-							question_id.add(question.getQuestion_id());
-						} else {
-							// 查找已经完成组卷的题目是否出现重复
-							if (!question_id
-									.contains(question.getQuestion_id())) {
-								if (examDao.insertSingle(question) < 1) {
-									log.error(user_id
-											+ "组卷失败！原因：题目录入single_exam表中失败。");
-									// TODO 发送邮件告知教师组卷失败
-									examDao.deleteOne(exam.getExam_id());
-									return;
-								}
-								question_id.add(question.getQuestion_id());
-							}
-						}
-						count++;
-						if (count == easyCount) {
-							break outer;
-						}
-					}
-					flag++;
-				}
-				if (flag >= max) {
-					log.error(user_id + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-					// TODO 发送邮件告知教师组卷失败
-					examDao.deleteOne(exam.getExam_id());
-					return;
-				}
-			}
+			this.create(easyCount, easyPoints, easyMap, exam);
 		}
 		if (template.getMultiple_num() > 0) {
 			// TODO 多选题智能组卷过程
@@ -432,6 +194,89 @@ public class ExamServiceImpl implements IExamService {
 			// TODO 简答题智能组卷过程
 		}
 
+	}
+	
+	private void create(int questionCount, List<Long> points, Map<Long,List<Question>> map, Exam exam){
+		if (questionCount == 1) {
+			// 只有一道题目时，随机出题
+			int random = RandomUtils.random(0, points.size()-1);
+			long point_id = points.get(random);
+			List<Question> questions = map.get(point_id);
+			Question question = questions.get(RandomUtils.random(0,
+					questions.size()-1));
+			if (examDao.insertSingle(question) < 1) {
+				log.error(exam.getUser_id() + "组卷失败！原因：题目录入single_exam表中失败。");
+				// TODO 发送邮件告知教师组卷失败
+				examDao.deleteOne(exam.getExam_id());
+				return;
+			}
+		} else if (questionCount > 1 && questionCount <= points.size()) {
+			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
+			for (int i = 0; i < questionCount; i++) {
+				List<Question> questions = map.get(points.get(i));
+				Question question = questions.get(RandomUtils.random(0,
+						questions.size()-1));
+				if (examDao.insertSingle(question) < 1) {
+					log.error(exam.getUser_id() + "组卷失败！原因：题目录入single_exam表中失败。");
+					// TODO 发送邮件告知教师组卷失败
+					examDao.deleteOne(exam.getExam_id());
+					return;
+				}
+			}
+		} else if (questionCount > points.size()) {
+			// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
+			// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
+			int flag = 0;
+			// 总体全部组卷三次需要的大循环次数
+			int max = (questionCount / points.size() + 1) * 3;
+			// 已经添加的题目数量
+			int count = 0;
+			List<Long> question_id = new ArrayList<>();
+			outer:
+			while (flag < max && count < questionCount) {
+				// 循环出卷
+				for (int i = 0; i < points.size(); i++) {
+					List<Question> questions = map.get(points
+							.get(i));
+					Question question = questions.get(RandomUtils.random(0,
+							questions.size()-1));
+					if (count == 0) {
+						if (examDao.insertSingle(question) < 1) {
+							log.error(exam.getUser_id()
+									+ "组卷失败！原因：题目录入single_exam表中失败。");
+							// TODO 发送邮件告知教师组卷失败
+							examDao.deleteOne(exam.getExam_id());
+							return;
+						}
+						question_id.add(question.getQuestion_id());
+					} else {
+						// 查找已经完成组卷的题目是否出现重复
+						if (!question_id
+								.contains(question.getQuestion_id())) {
+							if (examDao.insertSingle(question) < 1) {
+								log.error(exam.getUser_id()
+										+ "组卷失败！原因：题目录入single_exam表中失败。");
+								// TODO 发送邮件告知教师组卷失败
+								examDao.deleteOne(exam.getExam_id());
+								return;
+							}
+							question_id.add(question.getQuestion_id());
+						}
+					}
+					count++;
+					if (count == questionCount) {
+						break outer;
+					}
+				}
+				flag++;
+			}
+			if (flag >= max) {
+				log.error(exam.getUser_id() + "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
+				// TODO 发送邮件告知教师组卷失败
+				examDao.deleteOne(exam.getExam_id());
+				return;
+			}
+		}
 	}
 
 }
