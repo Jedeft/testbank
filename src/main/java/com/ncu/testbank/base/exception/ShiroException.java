@@ -1,6 +1,8 @@
 package com.ncu.testbank.base.exception;
 
-public class ShiroException extends RuntimeException {
+import org.apache.shiro.authc.AuthenticationException;
+
+public class ShiroException extends AuthenticationException{
 
 	/**
 	 * 
