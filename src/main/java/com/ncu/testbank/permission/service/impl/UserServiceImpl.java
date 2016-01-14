@@ -70,6 +70,9 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public void reAuth(User user) {
 		User DBUser = userDao.getUser(user.getUsername());
+		if (DBUser == null) {
+			throw new ServiceException(ErrorCode.USERNAME_MISSING);
+		}
 		if (!DBUser.getSecond_pwd().equals(user.getSecond_pwd())) {
 			throw new ServiceException(ErrorCode.REAUTHEN_FAIL);
 		}
