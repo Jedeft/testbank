@@ -54,7 +54,7 @@ public class LoginConroller {
 			Subject currUser = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken(
 					user.getUsername(), user.getPassword());
-			token.setRememberMe(true);
+//			token.setRememberMe(true);
 			currUser.login(token);
 			// 赋token值
 			Authen authen = userService.createToken(user.getUsername());
