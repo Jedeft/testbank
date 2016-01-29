@@ -131,6 +131,7 @@ public class LoginConroller {
 				msg.msg = ErrorCode.USERNAME_MISSING.name;
 				return msg;
 			}
+			
 			userService.logout(username);
 			// 删除session中的用户信息
 			session.removeAttribute("currentUser");

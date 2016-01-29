@@ -2,6 +2,8 @@ package com.ncu.testbank.permission.service.impl;
 
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,6 +102,9 @@ public class UserServiceImpl implements IUserService {
 		jedis.del(username);
 		// 归还连接池
 		JedisPoolUtils.returnResource(jedisPool, jedis);
+		//shiro登出
+		Subject currUser = SecurityUtils.getSubject();
+		currUser.logout();
 	}
 
 	@Override
