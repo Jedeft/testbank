@@ -34,7 +34,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 @RequestMapping("/admin")
 public class AcademyController {
 
-
 	@Autowired
 	private IAcademyService academyService;
 
@@ -85,8 +84,8 @@ public class AcademyController {
 			@ApiParam(required = true, name = "academy", value = "学院信息json数据") @RequestBody Academy academy) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-
 			academyService.updateOne(academy);
+			
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = academyService.getAcademy(academy.getAcademy_id());
@@ -120,9 +119,9 @@ public class AcademyController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			academyService.deleteOne(academy_id);
+			
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -152,7 +151,8 @@ public class AcademyController {
 			@ApiParam(required = true, name = "academy_id", value = "academy_id数组json数据") @RequestBody Map<String, List<String>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			if (map.get("academy_id") != null && !map.get("academy_id").equals("")) {
+			if (map.get("academy_id") != null
+					&& !map.get("academy_id").equals("")) {
 				academyService.deleteData(map.get("academy_id"));
 			} else {
 				msg.errorCode = 66666;
