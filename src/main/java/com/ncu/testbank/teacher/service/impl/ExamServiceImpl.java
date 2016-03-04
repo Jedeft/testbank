@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
+import com.ncu.testbank.admin.dao.ITeacherDao;
 import com.ncu.testbank.base.utils.ExamUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.RandomUtils;
@@ -50,6 +51,9 @@ public class ExamServiceImpl implements IExamService {
 
 	@Autowired
 	private IShortAnswerDao shortAnswerDao;
+	
+	@Autowired
+	private ITeacherDao teacherDao;
 
 	@Override
 	public void createExam(long template_id, String user_id, Timestamp start,

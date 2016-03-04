@@ -9,18 +9,24 @@ import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 
 public class ActiveMqUtils {
 
 	private static Logger log = Logger.getLogger("testbankLog");
 
-	public static void senderMessage(String message) {
+	/**
+	 * 发送消息入队列
+	 * @param message
+	 */
+	public static void sendMessage(String message) {
 		Properties properties = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("activemq.properties");
@@ -66,7 +72,8 @@ public class ActiveMqUtils {
 			// 指定消息提供者在消息接收者没有确认发送时重新发送消息（这种确认模式不在乎接收者收到重复的消息）。
 			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
 			// 获取服务商的消息
-			destination = session.createQueue("examQueue");
+			destination = session.createQueue(properties
+					.getProperty("queueName"));
 			// 得到消息的发送者
 			messageProducer = session.createProducer(destination);
 			messageProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
@@ -87,11 +94,67 @@ public class ActiveMqUtils {
 
 	}
 
-	public static void sendMessage(Session session,
+	private static void sendMessage(Session session,
 			MessageProducer messageProducer, String messages)
 			throws JMSException {
 		TextMessage message = session.createTextMessage(messages);
 		// 发送消息到服务器
 		messageProducer.send(message);
+	}
+
+	/**
+	 * 接收一条消息
+	 * @return
+	 */
+	public static String receiveMessage() {
+		Properties properties = new Properties();
+		InputStream in = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("activemq.properties");
+		try {
+			properties.load(in);
+		} catch (IOException e) {
+			log.error(e);
+		}
+
+		// 创建工厂
+		ConnectionFactory connectionFactory;
+		// 创建connection
+		Connection connection = null;
+		// 创建session
+		Session session;
+		// 创建目的地
+		Destination destination;
+		// 消费者
+		MessageConsumer consumer;
+		// 得到工厂
+		connectionFactory = new ActiveMQConnectionFactory(
+				ActiveMQConnection.DEFAULT_USER,
+				ActiveMQConnection.DEFAULT_PASSWORD,
+				properties.getProperty("url"));
+		String text = null;
+		try {
+			// 创建链接
+			connection = connectionFactory.createConnection();
+			// 启动
+			connection.start();
+			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			// 获取服务器上的消息
+			destination = session.createQueue(properties
+					.getProperty("queueName"));
+			consumer = session.createConsumer(destination);
+			TextMessage message = (TextMessage) consumer.receive(100000);
+			text = message.getText();
+		} catch (JMSException e) {
+			log.error(e);
+		} finally {
+			try {
+				if (null != null) {
+					connection.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return text;
 	}
 }

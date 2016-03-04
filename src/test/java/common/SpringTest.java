@@ -70,7 +70,7 @@ public class SpringTest {
 	@Test
 	public void testActiveMq() {
 		for (int i = 0; i < 100; i++) {
-			ActiveMqUtils.senderMessage("这是第" + i + "条消息！");
+			ActiveMqUtils.sendMessage("这是第" + i + "条消息！");
 		}
 
 	}
