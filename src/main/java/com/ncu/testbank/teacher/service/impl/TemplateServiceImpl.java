@@ -2,7 +2,9 @@ package com.ncu.testbank.teacher.service.impl;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,10 @@ public class TemplateServiceImpl implements ITemplateService {
 	@Override
 	public Template insertOne(TemplateParams templateParams, User user) {
 		Template template = templateParams.toTemplate();
-		if (template.getEasy_ratio() + template.getHard_ratio() + template.getMedium_ratio() != 1) {
-			throw new ServiceException(
-					new ErrorCode(30006, "考试模板中难度比例之和不为100%，请重新设置！"));
+		if (template.getEasy_ratio() + template.getHard_ratio()
+				+ template.getMedium_ratio() != 1) {
+			throw new ServiceException(new ErrorCode(30006,
+					"考试模板中难度比例之和不为100%，请重新设置！"));
 		}
 		template.setTemplate_id(RandomID.getID());
 		template.setUser_id(user.getUsername());
@@ -55,8 +58,11 @@ public class TemplateServiceImpl implements ITemplateService {
 	}
 
 	@Override
-	public List<Template> searchData(String course_id) {
-		return templateDao.searchData(course_id);
+	public List<Template> searchData(String course_id, Integer type) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("course_id", course_id);
+		params.put("type", type);
+		return templateDao.searchData(params);
 	}
 
 	@Override

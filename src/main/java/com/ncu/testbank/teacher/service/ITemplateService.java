@@ -30,11 +30,12 @@ public interface ITemplateService {
 	public Template getOne(long template_id);
 	
 	/**
-	 * 根据课程ID获取考试模板集合
+	 * 根据课程ID和模板类型获取考试模板集合
 	 * @param course_id
+	 * @param type
 	 * @return
 	 */
-	public List<Template> searchData(String course_id);
+	public List<Template> searchData(String course_id, Integer type);
 	
 	/**
 	 * 根据模板ID删除模板

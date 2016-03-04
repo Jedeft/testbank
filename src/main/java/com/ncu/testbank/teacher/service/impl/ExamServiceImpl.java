@@ -51,7 +51,7 @@ public class ExamServiceImpl implements IExamService {
 
 	@Autowired
 	private IShortAnswerDao shortAnswerDao;
-	
+
 	@Autowired
 	private ITeacherDao teacherDao;
 

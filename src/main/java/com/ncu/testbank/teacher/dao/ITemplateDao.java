@@ -1,6 +1,7 @@
 package com.ncu.testbank.teacher.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,7 @@ import com.ncu.testbank.teacher.data.Template;
 
 @Repository
 public interface ITemplateDao {
-	public List<Template> searchData(String course_id);
+	public List<Template> searchData(Map<String, Object> params);
 
 	public int insertOne(Template template);
 
