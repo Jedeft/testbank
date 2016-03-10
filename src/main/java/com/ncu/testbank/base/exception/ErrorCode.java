@@ -23,6 +23,8 @@ public class ErrorCode {
 	
 	public static final ErrorCode MAP_CONVERT_ERROR = new ErrorCode(40001, "数据转换Map出错，联系管理人员！");
 	
+	public static final ErrorCode ERROR_CREATE_EXAM = new ErrorCode(60001, "组卷失败，请配置正确的参数后重试！");
+	
 	public static final ErrorCode CALL_SUCCESS = new ErrorCode(0, "操作成功");
 	public static final ErrorCode ERROR_HTTP_REQUEST_IS_NOT_AVAILABLE = new ErrorCode(90001,"HTTP请求错误"); 
 	public static final ErrorCode ERROR_REMOTE_SERVER_RETURN_ERROR = new ErrorCode(90002, "远程服务返回错误"); 

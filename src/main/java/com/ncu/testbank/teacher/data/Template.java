@@ -8,7 +8,7 @@ import java.sql.Timestamp;
  * 
  */
 public class Template {
-	private long template_id;
+	private Long template_id;
 	private String course_id;
 	private String name;
 	private int single_num;
@@ -35,7 +35,7 @@ public class Template {
 		return template_id;
 	}
 
-	public void setTemplate_id(long template_id) {
+	public void setTemplate_id(Long template_id) {
 		this.template_id = template_id;
 	}
 
