@@ -1,9 +1,6 @@
 package com.ncu.testbank.admin.data;
 
 import java.sql.Date;
-import java.sql.Timestamp;
-
-import com.ncu.testbank.base.response.PageInfo;
 
 /**
  * 基础数据模块

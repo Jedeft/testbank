@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
+import com.ncu.testbank.admin.dao.ITeacherDao;
+import com.ncu.testbank.base.exception.ErrorCode;
+import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.utils.ExamUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.RandomUtils;
@@ -51,8 +54,11 @@ public class ExamServiceImpl implements IExamService {
 	@Autowired
 	private IShortAnswerDao shortAnswerDao;
 
+	@Autowired
+	private ITeacherDao teacherDao;
+
 	@Override
-	public void createExam(long template_id, String user_id, Timestamp start,
+	public Long createExam(long template_id, String user_id, Timestamp start,
 			Timestamp end) {
 		Template template = templateDao.getOne(template_id);
 		Exam exam = new Exam(RandomID.getID(), template_id, start, end, user_id);
@@ -67,7 +73,7 @@ public class ExamServiceImpl implements IExamService {
 		if (examDao.insertOne(exam) < 1) {
 			log.error(user_id + "使用者组卷失败！原因：插入exam试卷表出错！");
 			// TODO 短信或邮件通知教师组卷失败
-			return;
+			throw new ServiceException(ErrorCode.ERROR_CREATE_EXAM);
 		}
 		// 对应档次难度等级
 		QuestionLevel questionLevel = ExamUtils.initLevel(template.getLevel());
@@ -180,7 +186,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60002,
+						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
 			this.createSingle(easyCount, easyPoints, easyMap, exam);
 		}
@@ -292,7 +299,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60002,
+						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
 			this.createMultiple(easyCount, easyPoints, easyMap, exam);
 		}
@@ -404,7 +412,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60002,
+						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
 			this.createJudge(easyCount, easyPoints, easyMap, exam);
 		}
@@ -516,10 +525,13 @@ public class ExamServiceImpl implements IExamService {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60002,
+						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
 			this.createShortAnswer(easyCount, easyPoints, easyMap, exam);
 		}
+
+		return exam.getExam_id();
 	}
 
 	private void createSingle(int questionCount, List<Long> points,
@@ -535,7 +547,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入single_exam表中失败。");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60003,
+						"组卷失败！原因：题目录入single_exam表中失败。"));
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -548,7 +561,8 @@ public class ExamServiceImpl implements IExamService {
 							+ "组卷失败！原因：题目录入single_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					return;
+					throw new ServiceException(new ErrorCode(60003,
+							"组卷失败！原因：题目录入single_exam表中失败。"));
 				}
 			}
 		} else if (questionCount > points.size()) {
@@ -572,7 +586,8 @@ public class ExamServiceImpl implements IExamService {
 									+ "组卷失败！原因：题目录入single_exam表中失败。");
 							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							return;
+							throw new ServiceException(new ErrorCode(60003,
+									"组卷失败！原因：题目录入single_exam表中失败。"));
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -584,7 +599,8 @@ public class ExamServiceImpl implements IExamService {
 										+ "组卷失败！原因：题目录入single_exam表中失败。");
 								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								return;
+								throw new ServiceException(new ErrorCode(60003,
+										"组卷失败！原因：题目录入single_exam表中失败。"));
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -601,7 +617,8 @@ public class ExamServiceImpl implements IExamService {
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60004,
+						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
 			}
 		}
 	}
@@ -619,7 +636,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入multiple_exam表中失败。");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60005,
+						"组卷失败！原因：题目录入multiple_exam表中失败。"));
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -632,7 +650,8 @@ public class ExamServiceImpl implements IExamService {
 							+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					return;
+					throw new ServiceException(new ErrorCode(60005,
+							"组卷失败！原因：题目录入multiple_exam表中失败。"));
 				}
 			}
 		} else if (questionCount > points.size()) {
@@ -656,7 +675,8 @@ public class ExamServiceImpl implements IExamService {
 									+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							return;
+							throw new ServiceException(new ErrorCode(60005,
+									"组卷失败！原因：题目录入multiple_exam表中失败。"));
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -668,7 +688,8 @@ public class ExamServiceImpl implements IExamService {
 										+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								return;
+								throw new ServiceException(new ErrorCode(60005,
+										"组卷失败！原因：题目录入multiple_exam表中失败。"));
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -685,7 +706,8 @@ public class ExamServiceImpl implements IExamService {
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60004,
+						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
 			}
 		}
 	}
@@ -703,7 +725,8 @@ public class ExamServiceImpl implements IExamService {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60006,
+						"组卷失败！原因：题目录入judge_exam表中失败。"));
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -715,7 +738,8 @@ public class ExamServiceImpl implements IExamService {
 					log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					return;
+					throw new ServiceException(new ErrorCode(60006,
+							"组卷失败！原因：题目录入judge_exam表中失败。"));
 				}
 			}
 		} else if (questionCount > points.size()) {
@@ -739,7 +763,8 @@ public class ExamServiceImpl implements IExamService {
 									+ "组卷失败！原因：题目录入judge_exam表中失败。");
 							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							return;
+							throw new ServiceException(new ErrorCode(60006,
+									"组卷失败！原因：题目录入judge_exam表中失败。"));
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -751,7 +776,8 @@ public class ExamServiceImpl implements IExamService {
 										+ "组卷失败！原因：题目录入judge_exam表中失败。");
 								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								return;
+								throw new ServiceException(new ErrorCode(60006,
+										"组卷失败！原因：题目录入judge_exam表中失败。"));
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -768,7 +794,8 @@ public class ExamServiceImpl implements IExamService {
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60004,
+						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
 			}
 		}
 	}
@@ -787,7 +814,8 @@ public class ExamServiceImpl implements IExamService {
 						+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60007,
+						"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -800,7 +828,8 @@ public class ExamServiceImpl implements IExamService {
 							+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					return;
+					throw new ServiceException(new ErrorCode(60007,
+							"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
 				}
 			}
 		} else if (questionCount > points.size()) {
@@ -824,7 +853,8 @@ public class ExamServiceImpl implements IExamService {
 									+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							return;
+							throw new ServiceException(new ErrorCode(60007,
+									"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -836,7 +866,8 @@ public class ExamServiceImpl implements IExamService {
 										+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								return;
+								throw new ServiceException(new ErrorCode(60007,
+										"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -853,7 +884,8 @@ public class ExamServiceImpl implements IExamService {
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
 				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				return;
+				throw new ServiceException(new ErrorCode(60004,
+						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
 			}
 		}
 	}

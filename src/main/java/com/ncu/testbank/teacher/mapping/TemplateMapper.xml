@@ -30,13 +30,15 @@
 		judge_score, shortanswer_score, level, easy_ratio, medium_ratio, hard_ratio, create_time, modify_time, user_id, type, point_id
 	</sql>
 
-	<select id="searchData" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="searchData" resultMap="BaseResultMap">
 		SELECT
 			<include refid="Base_Column_List"></include>
 		FROM
 			template
 		WHERE
 			course_id = #{course_id}
+		AND
+			type = #{type}
 	</select>
 	
 	<select id="getOne" resultMap="BaseResultMap" parameterType="java.lang.Long">

@@ -143,10 +143,11 @@ public class TemplateController {
 	@RequestMapping(value = "/templates", method = RequestMethod.GET)
 	@ApiOperation(value = "根据课程ID检索模板", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseMsg searchPoints(
-			@ApiParam(required = true, name = "course_id", value = "课程ID") @RequestParam(value = "course_id", required = true) String course_id) {
+			@ApiParam(required = true, name = "course_id", value = "课程ID") @RequestParam(value = "course_id", required = true) String course_id,
+			@ApiParam(required = true, name = "type", value = "模板类型：1为在线考试模板，2为笔记模板，3为练习模板") @RequestParam(value = "type", required = true) Integer type) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			List<Template> list = templateService.searchData(course_id);
+			List<Template> list = templateService.searchData(course_id, type);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = list;

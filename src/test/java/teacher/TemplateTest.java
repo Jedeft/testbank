@@ -142,7 +142,7 @@ public class TemplateTest {
 	 */
 	@Test
 	public void searchTest() throws Exception{
-		mockMvc.perform(get("/teacher/templates?course_id=1").contentType(MediaType.TEXT_HTML)
+		mockMvc.perform(get("/teacher/templates?course_id=1&type=1").contentType(MediaType.TEXT_HTML)
 											   .characterEncoding(CharEncoding.UTF_8)
 											   .accept(MediaType.APPLICATION_JSON)
 											   .characterEncoding(CharEncoding.UTF_8))

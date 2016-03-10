@@ -9,6 +9,7 @@ public interface IExamService {
 	 * @param user_id
 	 * @param start
 	 * @param end
+	 * @return
 	 */
-	public void createExam(long template_id, String user_id, Timestamp start, Timestamp end);
+	public Long createExam(long template_id, String user_id, Timestamp start, Timestamp end);
 }
