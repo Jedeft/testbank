@@ -58,7 +58,7 @@ public class ExamServiceImpl implements IExamService {
 	private ITeacherDao teacherDao;
 
 	@Override
-	public Long createExam(long template_id, String user_id, Timestamp start,
+	public Exam createExam(long template_id, String user_id, Timestamp start,
 			Timestamp end) {
 		Template template = templateDao.getOne(template_id);
 		Exam exam = new Exam(RandomID.getID(), template_id, start, end, user_id);
@@ -531,7 +531,7 @@ public class ExamServiceImpl implements IExamService {
 			this.createShortAnswer(easyCount, easyPoints, easyMap, exam);
 		}
 
-		return exam.getExam_id();
+		return exam;
 	}
 
 	private void createSingle(int questionCount, List<Long> points,

@@ -15,6 +15,7 @@ import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
 import com.ncu.testbank.teacher.service.IExamService;
@@ -58,7 +59,7 @@ public class ExamController {
 					&& examParams.getStudent_id().size() > 0) {
 
 			}
-			Long exam_id = examService.createExam(template.getTemplate_id(),
+			Exam exam = examService.createExam(template.getTemplate_id(),
 					user.getUsername(), examParams.getStart_time(),
 					examParams.getEnd_time());
 			// TODO 获取exam试卷信息返回前台
