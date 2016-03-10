@@ -62,7 +62,7 @@ public class ExamController {
 					user.getUsername(), examParams.getStart_time(),
 					examParams.getEnd_time());
 			// TODO 获取exam试卷信息返回前台
-
+			// 测试git提交
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
