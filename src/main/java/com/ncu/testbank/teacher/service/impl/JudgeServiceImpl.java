@@ -24,8 +24,10 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.dao.IJudgeDao;
+import com.ncu.testbank.teacher.dao.IJudgeExamDao;
 import com.ncu.testbank.teacher.data.Judge;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.JudgeExamView;
 import com.ncu.testbank.teacher.data.view.JudgeView;
 import com.ncu.testbank.teacher.service.IJudgeService;
 
@@ -36,6 +38,9 @@ public class JudgeServiceImpl implements IJudgeService {
 
 	@Autowired
 	private IJudgeDao judgeDao;
+	
+	@Autowired
+	private IJudgeExamDao judgeExamDao;
 
 	@Override
 	public void insertWriting(Judge judge, User user) {
@@ -200,6 +205,11 @@ public class JudgeServiceImpl implements IJudgeService {
 			judge.setQuestion(filePath + "/" + targetName);
 		}
 		judgeDao.updateOne(judge);
+	}
+
+	@Override
+	public List<JudgeExamView> searchExamJudgeNoAnswer(Long exam_id) {
+		return judgeExamDao.searchExamJudgeNoAnswer(exam_id);
 	}
 
 }

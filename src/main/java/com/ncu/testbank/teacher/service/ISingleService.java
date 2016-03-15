@@ -8,6 +8,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.SingleExamView;
 import com.ncu.testbank.teacher.data.view.SingleView;
 
 public interface ISingleService {
@@ -70,4 +71,11 @@ public interface ISingleService {
 	 */
 	public void updateImge(Single single, User user, MultipartFile file);
 
+	/**
+	 * 根据考试ID获取单选题（结果集无标准答案）
+	 * 
+	 * @param exam_id
+	 * @return
+	 */
+	public List<SingleExamView> searchExamSingleNoAnswer(Long exam_id);
 }

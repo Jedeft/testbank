@@ -8,6 +8,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.ShortAnswerExamView;
 import com.ncu.testbank.teacher.data.view.ShortAnswerView;
 
 public interface IShortAnswerService {
@@ -35,7 +36,8 @@ public interface IShortAnswerService {
 	 * @param shortAnswer
 	 * @return
 	 */
-	public List<ShortAnswerView> searchData(PageInfo pageInfo, ShortAnswer shortAnswer);
+	public List<ShortAnswerView> searchData(PageInfo pageInfo,
+			ShortAnswer shortAnswer);
 
 	/**
 	 * 获取题目详细信息
@@ -54,19 +56,31 @@ public interface IShortAnswerService {
 
 	/**
 	 * 插入图片题目
+	 * 
 	 * @param shortAnswer
 	 * @param user
 	 * @param questionFile
 	 * @param answerFile
 	 */
-	public void insertImge(ShortAnswer shortAnswer, User user, MultipartFile questionFile, MultipartFile answerFile);
+	public void insertImge(ShortAnswer shortAnswer, User user,
+			MultipartFile questionFile, MultipartFile answerFile);
 
 	/**
 	 * 修改图片题目
+	 * 
 	 * @param shortAnswer
 	 * @param user
 	 * @param questionFile
 	 * @param answerFile
 	 */
-	public void updateImge(ShortAnswer shortAnswer, User user, MultipartFile questionFile, MultipartFile answerFile);
+	public void updateImge(ShortAnswer shortAnswer, User user,
+			MultipartFile questionFile, MultipartFile answerFile);
+
+	/**
+	 * 根据考试ID获取简答题（结果集无标准答案）
+	 * 
+	 * @param exam_id
+	 * @return
+	 */
+	public List<ShortAnswerExamView> searchExamShortNoAnswer(Long exam_id);
 }

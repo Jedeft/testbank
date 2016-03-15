@@ -24,8 +24,10 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.dao.ISingleDao;
+import com.ncu.testbank.teacher.dao.ISingleExamDao;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.SingleExamView;
 import com.ncu.testbank.teacher.data.view.SingleView;
 import com.ncu.testbank.teacher.service.ISingleService;
 
@@ -36,6 +38,9 @@ public class SingleServiceImpl implements ISingleService {
 
 	@Autowired
 	private ISingleDao singleDao;
+	
+	@Autowired
+	private ISingleExamDao singleExamDao;
 
 	@Override
 	public void insertWriting(Single single, User user) {
@@ -200,6 +205,11 @@ public class SingleServiceImpl implements ISingleService {
 			single.setQuestion(filePath + "/" + targetName);
 		}
 		singleDao.updateOne(single);
+	}
+
+	@Override
+	public List<SingleExamView> searchExamSingleNoAnswer(Long exam_id) {
+		return singleExamDao.searchExamSingleNoAnswer(exam_id);
 	}
 
 }

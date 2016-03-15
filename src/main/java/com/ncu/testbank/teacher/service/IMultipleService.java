@@ -8,6 +8,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.MultipleExamView;
 import com.ncu.testbank.teacher.data.view.MultipleView;
 
 public interface IMultipleService {
@@ -69,4 +70,12 @@ public interface IMultipleService {
 	 * @param file
 	 */
 	public void updateImge(Multiple multiple, User user, MultipartFile file);
+
+	/**
+	 * 根据考试ID获取多选题（结果集无标准答案）
+	 * 
+	 * @param exam_id
+	 * @return
+	 */
+	public List<MultipleExamView> searchExamMultipleNoAnswer(Long exam_id);
 }

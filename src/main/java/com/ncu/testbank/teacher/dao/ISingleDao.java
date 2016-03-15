@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.teacher.data.Question;
 import com.ncu.testbank.teacher.data.Single;
+import com.ncu.testbank.teacher.data.view.SingleExamView;
 import com.ncu.testbank.teacher.data.view.SingleView;
 
 @Repository

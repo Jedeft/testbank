@@ -2,7 +2,6 @@ package com.ncu.testbank.teacher.data.view;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 public class ExamView {
 	private long exam_id;
@@ -11,10 +10,10 @@ public class ExamView {
 	private Timestamp end_time;
 	private String user_id;
 	// 由于不确定页面具体显示哪些题目信息，故用Map
-	private List<Map<String, Object>> singleList;
-	private List<Map<String, Object>> multipleList;
-	private List<Map<String, Object>> judgeleList;
-	private List<Map<String, Object>> shortAnswerleList;
+	private List<SingleExamView> singleList;
+	private List<MultipleExamView> multipleList;
+	private List<JudgeExamView> judgeleList;
+	private List<ShortAnswerExamView> shortAnswerleList;
 
 	public ExamView() {
 		super();
@@ -70,35 +69,35 @@ public class ExamView {
 		this.user_id = user_id;
 	}
 
-	public List<Map<String, Object>> getSingleList() {
+	public List<SingleExamView> getSingleList() {
 		return singleList;
 	}
 
-	public void setSingleList(List<Map<String, Object>> singleList) {
+	public void setSingleList(List<SingleExamView> singleList) {
 		this.singleList = singleList;
 	}
 
-	public List<Map<String, Object>> getMultipleList() {
+	public List<MultipleExamView> getMultipleList() {
 		return multipleList;
 	}
 
-	public void setMultipleList(List<Map<String, Object>> multipleList) {
+	public void setMultipleList(List<MultipleExamView> multipleList) {
 		this.multipleList = multipleList;
 	}
 
-	public List<Map<String, Object>> getJudgeleList() {
+	public List<JudgeExamView> getJudgeleList() {
 		return judgeleList;
 	}
 
-	public void setJudgeleList(List<Map<String, Object>> judgeleList) {
+	public void setJudgeleList(List<JudgeExamView> judgeleList) {
 		this.judgeleList = judgeleList;
 	}
 
-	public List<Map<String, Object>> getShortAnswerleList() {
+	public List<ShortAnswerExamView> getShortAnswerleList() {
 		return shortAnswerleList;
 	}
 
-	public void setShortAnswerleList(List<Map<String, Object>> shortAnswerleList) {
+	public void setShortAnswerleList(List<ShortAnswerExamView> shortAnswerleList) {
 		this.shortAnswerleList = shortAnswerleList;
 	}
 

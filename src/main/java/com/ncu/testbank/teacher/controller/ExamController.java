@@ -2,6 +2,7 @@ package com.ncu.testbank.teacher.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
+import com.ncu.testbank.teacher.data.params.ExamQuestionParams;
 import com.ncu.testbank.teacher.data.view.ExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 import com.ncu.testbank.teacher.service.IJudgeService;
@@ -82,13 +84,317 @@ public class ExamController {
 					.getTemplate_id());
 			Exam exam = examService.createExam(template, user.getUsername(),
 					examParams.getStart_time(), examParams.getEnd_time());
-			// TODO 获取exam试卷信息返回前台
+			// 获取exam试卷信息返回前台
 			ExamView examView = new ExamView(exam.getExam_id(),
 					exam.getTemplate_id(), exam.getStart_time(),
 					exam.getEnd_time(), user.getUsername());
 			if (template.getSingle_num() > 0) {
+				examView.setSingleList(singleService
+						.searchExamSingleNoAnswer(exam.getExam_id()));
+			}
+			if (template.getMultiple_num() > 0) {
+				examView.setMultipleList(multipleService
+						.searchExamMultipleNoAnswer(exam.getExam_id()));
+			}
+			if (template.getJudge_num() > 0) {
+				examView.setJudgeleList(judgeService
+						.searchExamJudgeNoAnswer(exam.getExam_id()));
+			}
+			if (template.getShortAnswer_num() > 0) {
+				examView.setShortAnswerleList(shortAnswerService
+						.searchExamShortNoAnswer(exam.getExam_id()));
 			}
 			msg.data = examView;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 删除单选题目
+	 * 
+	 * @param question
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/singles", method = RequestMethod.DELETE)
+	@ApiOperation(value = "删除考试单选题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg deleteSingle(
+			@ApiParam(required = true, name = "examQusetion", value = "删除题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				examService.deleteSingle(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 删除多选题目
+	 * 
+	 * @param question
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/multiples", method = RequestMethod.DELETE)
+	@ApiOperation(value = "删除考试多选题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg deleteMultiple(
+			@ApiParam(required = true, name = "examQusetion", value = "删除题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				examService.deleteMultiple(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 删除判断题目
+	 * 
+	 * @param question
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/judges", method = RequestMethod.DELETE)
+	@ApiOperation(value = "删除考试判断题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg deleteJudge(
+			@ApiParam(required = true, name = "examQusetion", value = "删除题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				examService.deleteJudge(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 删除简答题目
+	 * 
+	 * @param question
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/shortAnswers", method = RequestMethod.DELETE)
+	@ApiOperation(value = "删除考试简答题目", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg deleteShortAnswer(
+			@ApiParam(required = true, name = "examQusetion", value = "删除题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				examService.deleteShortAnswer(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 添加考试单选题
+	 * 
+	 * @param judge
+	 * @param session
+	 * @return
+	 */
+	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/exam/singles", method = RequestMethod.POST)
+	@ApiOperation(value = "添加考试单选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg insertSingle(
+			@ApiParam(required = true, name = "examQuestion", value = "添加题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				msg.data = examService.insertSingle(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 添加考试多选题
+	 * 
+	 * @param judge
+	 * @param session
+	 * @return
+	 */
+	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/exam/multiples", method = RequestMethod.POST)
+	@ApiOperation(value = "添加考试多选题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg insertMultiple(
+			@ApiParam(required = true, name = "examQuestion", value = "添加题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				msg.data = examService.insertMultiple(
+						examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 添加考试判断题
+	 * 
+	 * @param judge
+	 * @param session
+	 * @return
+	 */
+	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/exam/judges", method = RequestMethod.POST)
+	@ApiOperation(value = "添加考试判断题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg insertJudge(
+			@ApiParam(required = true, name = "examQuestion", value = "添加题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				msg.data = examService.insertJudge(examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 添加考试简答题
+	 * 
+	 * @param judge
+	 * @param session
+	 * @return
+	 */
+	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/exam/shortAnswer", method = RequestMethod.POST)
+	@ApiOperation(value = "添加考试简答题", httpMethod = "POST", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg insertShortAnswer(
+			@ApiParam(required = true, name = "examQuestion", value = "添加题目json数据") @RequestBody ExamQuestionParams examQuestion) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			if (examQuestion != null && examQuestion.getExam_id() != null
+					&& examQuestion.getQuestion_id() != null) {
+				msg.data = examService.insertShortAnswer(
+						examQuestion.getExam_id(),
+						examQuestion.getQuestion_id());
+			}
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

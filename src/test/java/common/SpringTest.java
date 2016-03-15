@@ -1,13 +1,7 @@
 package common;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -19,7 +13,6 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ncu.testbank.base.utils.ActiveMqUtils;
 import com.ncu.testbank.base.utils.EmailUtils;
-import com.ncu.testbank.base.utils.HttpClientUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
 import com.ncu.testbank.teacher.service.IExamService;
 
@@ -125,12 +117,6 @@ public class SpringTest {
 	@Autowired
 	private IExamService examService;
 
-	@Test
-	public void createExamTest() {
-		examService.createExam(123L, "Jerry",
-				new Timestamp(new Date().getTime()),
-				new Timestamp(new Date().getTime()));
-	}
 	
 	@Test
 	public void httpclientTest() {

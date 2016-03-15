@@ -8,6 +8,7 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Judge;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.JudgeExamView;
 import com.ncu.testbank.teacher.data.view.JudgeView;
 
 public interface IJudgeService {
@@ -69,4 +70,12 @@ public interface IJudgeService {
 	 * @param file
 	 */
 	public void updateImge(Judge judge, User user, MultipartFile file);
+
+	/**
+	 * 根据考试ID获取判断题（结果集无标准答案）
+	 * 
+	 * @param exam_id
+	 * @return
+	 */
+	public List<JudgeExamView> searchExamJudgeNoAnswer(Long exam_id);
 }

@@ -24,8 +24,10 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.dao.IMultipleDao;
+import com.ncu.testbank.teacher.dao.IMultipleExamDao;
 import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.MultipleExamView;
 import com.ncu.testbank.teacher.data.view.MultipleView;
 import com.ncu.testbank.teacher.service.IMultipleService;
 
@@ -36,6 +38,9 @@ public class MultipleServiceImpl implements IMultipleService {
 
 	@Autowired
 	private IMultipleDao multipleDao;
+	
+	@Autowired
+	private IMultipleExamDao multipleExamDao;
 
 	@Override
 	public void insertWriting(Multiple multiple, User user) {
@@ -95,7 +100,8 @@ public class MultipleServiceImpl implements IMultipleService {
 		for (DELQuestionParams question : list) {
 			if (question.getType() == 2) {
 				// 图片题目处理
-				Multiple multiple = multipleDao.getOne(question.getQuestion_id());
+				Multiple multiple = multipleDao.getOne(question
+						.getQuestion_id());
 				String fileName = multiple.getQuestion();
 				File file = new File(fileName);
 				if (file.exists()) {
@@ -200,5 +206,10 @@ public class MultipleServiceImpl implements IMultipleService {
 			multiple.setQuestion(filePath + "/" + targetName);
 		}
 		multipleDao.updateOne(multiple);
+	}
+
+	@Override
+	public List<MultipleExamView> searchExamMultipleNoAnswer(Long exam_id) {
+		return multipleExamDao.searchExamMultipleNoAnswer(exam_id);
 	}
 }

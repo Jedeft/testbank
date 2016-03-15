@@ -75,22 +75,24 @@ public class TemplateTest {
 		template.setEasy_ratio(0.3);
 		template.setHard_ratio(0.5);
 		template.setMedium_ratio(0.2);
-		template.setJudge_num(15);
+		template.setJudge_num(5);
 		template.setJudge_score(30);
 		template.setLevel(5);
-		template.setMultiple_num(15);
+		template.setMultiple_num(5);
 		template.setMultiple_score(30);
 		template.setName("demo");
 		List<Long> point_id = new ArrayList<>();
-		point_id.add(123L);
-		point_id.add(345L);
-		point_id.add(1460L);
+		point_id.add(11L);
+		point_id.add(22L);
+		point_id.add(33L);
+		point_id.add(44L);
+		point_id.add(55L);
 		template.setPoint_id(point_id);
-		template.setShortAnswer_num(16);
+		template.setShortAnswer_num(5);
 		template.setShortAnswer_score(50);
-		template.setSingle_num(15);
+		template.setSingle_num(5);
 		template.setSingle_score(50);
-		template.setType(1);
+		template.setType(2);
 		
 		mockMvc.perform(post("/teacher/templates").session(mockSession)
 											   .contentType(MediaType.APPLICATION_JSON)

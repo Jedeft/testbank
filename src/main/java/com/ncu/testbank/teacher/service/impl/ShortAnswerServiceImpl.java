@@ -24,8 +24,10 @@ import com.ncu.testbank.base.utils.BeanToMapUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.dao.IShortAnswerDao;
+import com.ncu.testbank.teacher.dao.IShortAnswerExamDao;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
+import com.ncu.testbank.teacher.data.view.ShortAnswerExamView;
 import com.ncu.testbank.teacher.data.view.ShortAnswerView;
 import com.ncu.testbank.teacher.service.IShortAnswerService;
 
@@ -36,6 +38,9 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 
 	@Autowired
 	private IShortAnswerDao shortAnswerDao;
+	
+	@Autowired
+	private IShortAnswerExamDao shortAnswerExamDao;
 
 	@Override
 	public void insertWriting(ShortAnswer shortAnswer, User user) {
@@ -262,6 +267,11 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 			shortAnswer.setAnswer(filePath + "/" + targetName);
 		}
 		shortAnswerDao.updateOne(shortAnswer);
+	}
+
+	@Override
+	public List<ShortAnswerExamView> searchExamShortNoAnswer(Long exam_id) {
+		return shortAnswerExamDao.searchExamShortNoAnswer(exam_id);
 	}
 
 }

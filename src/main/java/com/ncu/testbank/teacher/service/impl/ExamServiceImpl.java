@@ -20,14 +20,22 @@ import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.RandomUtils;
 import com.ncu.testbank.teacher.dao.IExamDao;
 import com.ncu.testbank.teacher.dao.IJudgeDao;
+import com.ncu.testbank.teacher.dao.IJudgeExamDao;
 import com.ncu.testbank.teacher.dao.IMultipleDao;
+import com.ncu.testbank.teacher.dao.IMultipleExamDao;
 import com.ncu.testbank.teacher.dao.IShortAnswerDao;
+import com.ncu.testbank.teacher.dao.IShortAnswerExamDao;
 import com.ncu.testbank.teacher.dao.ISingleDao;
+import com.ncu.testbank.teacher.dao.ISingleExamDao;
 import com.ncu.testbank.teacher.dao.ITemplateDao;
 import com.ncu.testbank.teacher.data.Exam;
+import com.ncu.testbank.teacher.data.Judge;
+import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.Question;
 import com.ncu.testbank.teacher.data.QuestionCount;
 import com.ncu.testbank.teacher.data.QuestionLevel;
+import com.ncu.testbank.teacher.data.ShortAnswer;
+import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.service.IExamService;
 
@@ -57,10 +65,23 @@ public class ExamServiceImpl implements IExamService {
 	@Autowired
 	private ITeacherDao teacherDao;
 
+	@Autowired
+	private ISingleExamDao singleExamDao;
+
+	@Autowired
+	private IMultipleExamDao multipleExamDao;
+
+	@Autowired
+	private IJudgeExamDao judgeExamDao;
+
+	@Autowired
+	private IShortAnswerExamDao shortAnswerExamDao;
+
 	@Override
 	public Exam createExam(Template template, String user_id, Timestamp start,
 			Timestamp end) {
-		Exam exam = new Exam(RandomID.getID(), template.getTemplate_id(), start, end, user_id);
+		Exam exam = new Exam(RandomID.getID(), template.getTemplate_id(),
+				start, end, user_id);
 		String pointStr = template.getPoint_id().replaceAll(" ", "");
 		String[] pointStrArray = pointStr.split(",");
 		List<String> tempList = Lists.newArrayList(pointStrArray);
@@ -628,6 +649,9 @@ public class ExamServiceImpl implements IExamService {
 
 	private boolean createSingle(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
+		if (points.size() == 0) {
+			return false;
+		}
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
 			int random = RandomUtils.random(0, points.size() - 1);
@@ -635,7 +659,7 @@ public class ExamServiceImpl implements IExamService {
 			List<Question> questions = map.get(point_id);
 			Question question = questions.get(RandomUtils.random(0,
 					questions.size() - 1));
-			if (examDao.insertSingle(question) < 1) {
+			if (singleExamDao.insertSingle(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入single_exam表中失败。");
 				examDao.deleteOne(exam.getExam_id());
 				return false;
@@ -646,7 +670,7 @@ public class ExamServiceImpl implements IExamService {
 				List<Question> questions = map.get(points.get(i));
 				Question question = questions.get(RandomUtils.random(0,
 						questions.size() - 1));
-				if (examDao.insertSingle(question) < 1) {
+				if (singleExamDao.insertSingle(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入single_exam表中失败。");
 					examDao.deleteOne(exam.getExam_id());
@@ -668,7 +692,7 @@ public class ExamServiceImpl implements IExamService {
 					Question question = questions.get(RandomUtils.random(0,
 							questions.size() - 1));
 					if (count == 0) {
-						if (examDao.insertSingle(question) < 1) {
+						if (singleExamDao.insertSingle(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入single_exam表中失败。");
 							examDao.deleteOne(exam.getExam_id());
@@ -679,7 +703,7 @@ public class ExamServiceImpl implements IExamService {
 					} else {
 						// 查找已经完成组卷的题目是否出现重复
 						if (!question_id.contains(question.getQuestion_id())) {
-							if (examDao.insertSingle(question) < 1) {
+							if (singleExamDao.insertSingle(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入single_exam表中失败。");
 								examDao.deleteOne(exam.getExam_id());
@@ -707,6 +731,9 @@ public class ExamServiceImpl implements IExamService {
 
 	private boolean createMultiple(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
+		if (points.size() == 0) {
+			return false;
+		}
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
 			int random = RandomUtils.random(0, points.size() - 1);
@@ -714,7 +741,7 @@ public class ExamServiceImpl implements IExamService {
 			List<Question> questions = map.get(point_id);
 			Question question = questions.get(RandomUtils.random(0,
 					questions.size() - 1));
-			if (examDao.insertMultiple(question) < 1) {
+			if (multipleExamDao.insertMultiple(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入multiple_exam表中失败。");
 				examDao.deleteOne(exam.getExam_id());
 				return false;
@@ -725,7 +752,7 @@ public class ExamServiceImpl implements IExamService {
 				List<Question> questions = map.get(points.get(i));
 				Question question = questions.get(RandomUtils.random(0,
 						questions.size() - 1));
-				if (examDao.insertMultiple(question) < 1) {
+				if (multipleExamDao.insertMultiple(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 					examDao.deleteOne(exam.getExam_id());
@@ -747,7 +774,7 @@ public class ExamServiceImpl implements IExamService {
 					Question question = questions.get(RandomUtils.random(0,
 							questions.size() - 1));
 					if (count == 0) {
-						if (examDao.insertMultiple(question) < 1) {
+						if (multipleExamDao.insertMultiple(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 							examDao.deleteOne(exam.getExam_id());
@@ -758,7 +785,7 @@ public class ExamServiceImpl implements IExamService {
 					} else {
 						// 查找已经完成组卷的题目是否出现重复
 						if (!question_id.contains(question.getQuestion_id())) {
-							if (examDao.insertMultiple(question) < 1) {
+							if (multipleExamDao.insertMultiple(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入multiple_exam表中失败。");
 								examDao.deleteOne(exam.getExam_id());
@@ -786,6 +813,9 @@ public class ExamServiceImpl implements IExamService {
 
 	private boolean createJudge(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
+		if (points.size() == 0) {
+			return false;
+		}
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
 			int random = RandomUtils.random(0, points.size() - 1);
@@ -793,7 +823,7 @@ public class ExamServiceImpl implements IExamService {
 			List<Question> questions = map.get(point_id);
 			Question question = questions.get(RandomUtils.random(0,
 					questions.size() - 1));
-			if (examDao.insertJudge(question) < 1) {
+			if (judgeExamDao.insertJudge(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
 				examDao.deleteOne(exam.getExam_id());
 				return false;
@@ -804,7 +834,7 @@ public class ExamServiceImpl implements IExamService {
 				List<Question> questions = map.get(points.get(i));
 				Question question = questions.get(RandomUtils.random(0,
 						questions.size() - 1));
-				if (examDao.insertJudge(question) < 1) {
+				if (judgeExamDao.insertJudge(question) < 1) {
 					log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
 					examDao.deleteOne(exam.getExam_id());
 					return false;
@@ -825,7 +855,7 @@ public class ExamServiceImpl implements IExamService {
 					Question question = questions.get(RandomUtils.random(0,
 							questions.size() - 1));
 					if (count == 0) {
-						if (examDao.insertJudge(question) < 1) {
+						if (judgeExamDao.insertJudge(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入judge_exam表中失败。");
 							examDao.deleteOne(exam.getExam_id());
@@ -836,7 +866,7 @@ public class ExamServiceImpl implements IExamService {
 					} else {
 						// 查找已经完成组卷的题目是否出现重复
 						if (!question_id.contains(question.getQuestion_id())) {
-							if (examDao.insertJudge(question) < 1) {
+							if (judgeExamDao.insertJudge(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入judge_exam表中失败。");
 								examDao.deleteOne(exam.getExam_id());
@@ -864,6 +894,9 @@ public class ExamServiceImpl implements IExamService {
 
 	private boolean createShortAnswer(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
+		if (points.size() == 0) {
+			return false;
+		}
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
 			int random = RandomUtils.random(0, points.size() - 1);
@@ -871,7 +904,7 @@ public class ExamServiceImpl implements IExamService {
 			List<Question> questions = map.get(point_id);
 			Question question = questions.get(RandomUtils.random(0,
 					questions.size() - 1));
-			if (examDao.insertShortAnswer(question) < 1) {
+			if (shortAnswerExamDao.insertShortAnswer(question) < 1) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 				examDao.deleteOne(exam.getExam_id());
@@ -883,7 +916,7 @@ public class ExamServiceImpl implements IExamService {
 				List<Question> questions = map.get(points.get(i));
 				Question question = questions.get(RandomUtils.random(0,
 						questions.size() - 1));
-				if (examDao.insertShortAnswer(question) < 1) {
+				if (shortAnswerExamDao.insertShortAnswer(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 					examDao.deleteOne(exam.getExam_id());
@@ -905,7 +938,7 @@ public class ExamServiceImpl implements IExamService {
 					Question question = questions.get(RandomUtils.random(0,
 							questions.size() - 1));
 					if (count == 0) {
-						if (examDao.insertShortAnswer(question) < 1) {
+						if (shortAnswerExamDao.insertShortAnswer(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 							examDao.deleteOne(exam.getExam_id());
@@ -916,7 +949,7 @@ public class ExamServiceImpl implements IExamService {
 					} else {
 						// 查找已经完成组卷的题目是否出现重复
 						if (!question_id.contains(question.getQuestion_id())) {
-							if (examDao.insertShortAnswer(question) < 1) {
+							if (shortAnswerExamDao.insertShortAnswer(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
 								examDao.deleteOne(exam.getExam_id());
@@ -940,5 +973,121 @@ public class ExamServiceImpl implements IExamService {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public void deleteSingle(Long exam_id, Long question_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		if (singleExamDao.deleteOne(params) < 1) {
+			throw new ServiceException(new ErrorCode(25671,
+					"试卷单选题删除失败，请联系管理人员！"));
+		}
+	}
+
+	@Override
+	public void deleteMultiple(Long exam_id, Long question_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		if (multipleExamDao.deleteOne(params) < 1) {
+			throw new ServiceException(new ErrorCode(25672,
+					"试卷多选题删除失败，请联系管理人员！"));
+		}
+	}
+
+	@Override
+	public void deleteJudge(Long exam_id, Long question_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		if (judgeExamDao.deleteOne(params) < 1) {
+			throw new ServiceException(new ErrorCode(25672,
+					"试卷判断题删除失败，请联系管理人员！"));
+		}
+	}
+
+	@Override
+	public void deleteShortAnswer(Long exam_id, Long question_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		if (shortAnswerExamDao.deleteOne(params) < 1) {
+			throw new ServiceException(new ErrorCode(25674,
+					"试卷简答题删除失败，请联系管理人员！"));
+		}
+	}
+
+	@Override
+	public Single insertSingle(Long exam_id, Long question_id) {
+		Single single = singleDao.getOne(question_id);
+		if (single == null) {
+			throw new ServiceException(
+					new ErrorCode(29876, "所插入题目不存在，请联系管理人员！"));
+		}
+		Question question = new Question();
+		question.setAnswer(single.getAnswer());
+		question.setQuestion_id(question_id);
+		question.setTest_id(exam_id);
+		if (singleExamDao.insertSingle(question) < 1) {
+			throw new ServiceException(new ErrorCode(28971,
+					"所插入单选题目失败，请联系管理人员！"));
+		}
+		return single;
+	}
+
+	@Override
+	public Multiple insertMultiple(Long exam_id, Long question_id) {
+		Multiple multiple = multipleDao.getOne(question_id);
+		if (multiple == null) {
+			throw new ServiceException(
+					new ErrorCode(29876, "所插入题目不存在，请联系管理人员！"));
+		}
+		Question question = new Question();
+		question.setAnswer(multiple.getAnswer());
+		question.setQuestion_id(question_id);
+		question.setTest_id(exam_id);
+		if (multipleExamDao.insertMultiple(question) < 1) {
+			throw new ServiceException(new ErrorCode(28972,
+					"所插入多选题目失败，请联系管理人员！"));
+		}
+		return multiple;
+	}
+
+	@Override
+	public Judge insertJudge(Long exam_id, Long question_id) {
+		Judge judge = judgeDao.getOne(question_id);
+		if (judge == null) {
+			throw new ServiceException(
+					new ErrorCode(29876, "所插入题目不存在，请联系管理人员！"));
+		}
+		Question question = new Question();
+		question.setAnswer(judge.getAnswer());
+		question.setQuestion_id(question_id);
+		question.setTest_id(exam_id);
+		if (judgeExamDao.insertJudge(question) < 1) {
+			throw new ServiceException(new ErrorCode(28973,
+					"所插入判断题目失败，请联系管理人员！"));
+		}
+		return judge;
+	}
+
+	@Override
+	public ShortAnswer insertShortAnswer(Long exam_id, Long question_id) {
+		ShortAnswer shortAnswer = shortAnswerDao.getOne(question_id);
+		if (shortAnswer == null) {
+			throw new ServiceException(
+					new ErrorCode(29876, "所插入题目不存在，请联系管理人员！"));
+		}
+		Question question = new Question();
+		question.setAnswer(shortAnswer.getAnswer());
+		question.setQuestion_id(question_id);
+		question.setTest_id(exam_id);
+		if (shortAnswerExamDao.insertShortAnswer(question) < 1) {
+			throw new ServiceException(new ErrorCode(28974,
+					"所插入简答题目失败，请联系管理人员！"));
+		}
+		return shortAnswer;
 	}
 }
