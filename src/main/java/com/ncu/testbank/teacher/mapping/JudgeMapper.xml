@@ -30,6 +30,16 @@
 	  <result column="modify_name" property="modify_teacher_name"/>
 	</resultMap>
 	
+	<resultMap id="ExamViewResultMap" type="com.ncu.testbank.teacher.data.view.JudgeExamView" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="exam_id" property="exam_id"/>
+	  <result column="stuanswer" property="stuanswer"/>
+	  <result column="rightanswer" property="rightanswer"/>
+	  <result column="score" property="score"/>
+	  <result column="question" property="question"/>
+	  <result column="type" property="type"/>
+	</resultMap>
+	
 	<sql id="Base_Column_List">
 		question_id, point_id, question, answer, type, level, create_time, modify_time, create_teacher_id, modify_teacher_id
 	</sql>

@@ -58,10 +58,9 @@ public class ExamServiceImpl implements IExamService {
 	private ITeacherDao teacherDao;
 
 	@Override
-	public Exam createExam(long template_id, String user_id, Timestamp start,
+	public Exam createExam(Template template, String user_id, Timestamp start,
 			Timestamp end) {
-		Template template = templateDao.getOne(template_id);
-		Exam exam = new Exam(RandomID.getID(), template_id, start, end, user_id);
+		Exam exam = new Exam(RandomID.getID(), template.getTemplate_id(), start, end, user_id);
 		String pointStr = template.getPoint_id().replaceAll(" ", "");
 		String[] pointStrArray = pointStr.split(",");
 		List<String> tempList = Lists.newArrayList(pointStrArray);
@@ -72,7 +71,10 @@ public class ExamServiceImpl implements IExamService {
 
 		if (examDao.insertOne(exam) < 1) {
 			log.error(user_id + "使用者组卷失败！原因：插入exam试卷表出错！");
-			// TODO 短信或邮件通知教师组卷失败
+			if ("1".equals(template.getType())) {
+				// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+				return null;
+			}
 			throw new ServiceException(ErrorCode.ERROR_CREATE_EXAM);
 		}
 		// 对应档次难度等级
@@ -160,8 +162,14 @@ public class ExamServiceImpl implements IExamService {
 				mediumCount += (total - hardCount);
 				hardCount = total;
 			}
-			this.createSingle(hardCount, hardPoints, hardMap, exam);
-
+			if (!this.createSingle(hardCount, hardPoints, hardMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60003,
+						"组卷失败！原因：题目录入single_exam表中失败。"));
+			}
 			// 次之难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : mediumMap.entrySet()) {
@@ -173,8 +181,14 @@ public class ExamServiceImpl implements IExamService {
 				easyCount += (total - mediumCount);
 				mediumCount = total;
 			}
-			this.createSingle(mediumCount, mediumPoints, mediumMap, exam);
-
+			if (!this.createSingle(mediumCount, mediumPoints, mediumMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60003,
+						"组卷失败！原因：题目录入single_exam表中失败。"));
+			}
 			// 最低难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : easyMap.entrySet()) {
@@ -184,12 +198,22 @@ public class ExamServiceImpl implements IExamService {
 			// 最高难度题目数量高于题目总数，那么下一级难度题目数量增加
 			if (easyCount > total) {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
 				throw new ServiceException(new ErrorCode(60002,
 						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
-			this.createSingle(easyCount, easyPoints, easyMap, exam);
+			if (!this.createSingle(easyCount, easyPoints, easyMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60003,
+						"组卷失败！原因：题目录入single_exam表中失败。"));
+			}
 		}
 		if (template.getMultiple_num() > 0) {
 			// 对应难度题目数量
@@ -273,8 +297,14 @@ public class ExamServiceImpl implements IExamService {
 				mediumCount += (total - hardCount);
 				hardCount = total;
 			}
-			this.createMultiple(hardCount, hardPoints, hardMap, exam);
-
+			if (!this.createMultiple(hardCount, hardPoints, hardMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60005,
+						"组卷失败！原因：题目录入multiple_exam表中失败。"));
+			}
 			// 次之难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : mediumMap.entrySet()) {
@@ -286,8 +316,15 @@ public class ExamServiceImpl implements IExamService {
 				easyCount += (total - mediumCount);
 				mediumCount = total;
 			}
-			this.createMultiple(mediumCount, mediumPoints, mediumMap, exam);
-
+			if (!this
+					.createMultiple(mediumCount, mediumPoints, mediumMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60005,
+						"组卷失败！原因：题目录入multiple_exam表中失败。"));
+			}
 			// 最低难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : easyMap.entrySet()) {
@@ -297,12 +334,22 @@ public class ExamServiceImpl implements IExamService {
 			// 最高难度题目数量高于题目总数，那么下一级难度题目数量增加
 			if (easyCount > total) {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
 				throw new ServiceException(new ErrorCode(60002,
 						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
-			this.createMultiple(easyCount, easyPoints, easyMap, exam);
+			if (!this.createMultiple(easyCount, easyPoints, easyMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60005,
+						"组卷失败！原因：题目录入multiple_exam表中失败。"));
+			}
 		}
 		if (template.getJudge_num() > 0) {
 			// 对应难度题目数量
@@ -386,8 +433,14 @@ public class ExamServiceImpl implements IExamService {
 				mediumCount += (total - hardCount);
 				hardCount = total;
 			}
-			this.createJudge(hardCount, hardPoints, hardMap, exam);
-
+			if (!this.createJudge(hardCount, hardPoints, hardMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60006,
+						"组卷失败！原因：题目录入judge_exam表中失败。"));
+			}
 			// 次之难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : mediumMap.entrySet()) {
@@ -399,8 +452,14 @@ public class ExamServiceImpl implements IExamService {
 				easyCount += (total - mediumCount);
 				mediumCount = total;
 			}
-			this.createJudge(mediumCount, mediumPoints, mediumMap, exam);
-
+			if (!this.createJudge(mediumCount, mediumPoints, mediumMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60006,
+						"组卷失败！原因：题目录入judge_exam表中失败。"));
+			}
 			// 最低难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : easyMap.entrySet()) {
@@ -410,12 +469,22 @@ public class ExamServiceImpl implements IExamService {
 			// 最高难度题目数量高于题目总数，那么下一级难度题目数量增加
 			if (easyCount > total) {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
 				throw new ServiceException(new ErrorCode(60002,
 						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
-			this.createJudge(easyCount, easyPoints, easyMap, exam);
+			if (!this.createJudge(easyCount, easyPoints, easyMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60006,
+						"组卷失败！原因：题目录入judge_exam表中失败。"));
+			}
 		}
 		if (template.getShortAnswer_num() > 0) {
 			// 对应难度题目数量
@@ -499,8 +568,14 @@ public class ExamServiceImpl implements IExamService {
 				mediumCount += (total - hardCount);
 				hardCount = total;
 			}
-			this.createShortAnswer(hardCount, hardPoints, hardMap, exam);
-
+			if (!this.createShortAnswer(hardCount, hardPoints, hardMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60007,
+						"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+			}
 			// 次之难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : mediumMap.entrySet()) {
@@ -512,8 +587,15 @@ public class ExamServiceImpl implements IExamService {
 				easyCount += (total - mediumCount);
 				mediumCount = total;
 			}
-			this.createShortAnswer(mediumCount, mediumPoints, mediumMap, exam);
-
+			if (!this.createShortAnswer(mediumCount, mediumPoints, mediumMap,
+					exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60007,
+						"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+			}
 			// 最低难度题目组卷
 			total = 0; // 对应难度题目总数量
 			for (Entry<Long, List<Question>> entry : easyMap.entrySet()) {
@@ -523,18 +605,28 @@ public class ExamServiceImpl implements IExamService {
 			// 最高难度题目数量高于题目总数，那么下一级难度题目数量增加
 			if (easyCount > total) {
 				log.error(user_id + "组卷失败！原因：题库题目数量过少，无法完成组卷！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
 				throw new ServiceException(new ErrorCode(60002,
 						"组卷失败！原因：题库题目数量过少，无法完成组卷！"));
 			}
-			this.createShortAnswer(easyCount, easyPoints, easyMap, exam);
+			if (!this.createShortAnswer(easyCount, easyPoints, easyMap, exam)) {
+				if ("1".equals(template.getType())) {
+					// 若为在线考试，出现组卷失败，那么直接返回null。在后台程序处理后统一邮件通知
+					return null;
+				}
+				throw new ServiceException(new ErrorCode(60007,
+						"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+			}
 		}
 
 		return exam;
 	}
 
-	private void createSingle(int questionCount, List<Long> points,
+	private boolean createSingle(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
@@ -545,10 +637,8 @@ public class ExamServiceImpl implements IExamService {
 					questions.size() - 1));
 			if (examDao.insertSingle(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入single_exam表中失败。");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60003,
-						"组卷失败！原因：题目录入single_exam表中失败。"));
+				return false;
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -559,15 +649,12 @@ public class ExamServiceImpl implements IExamService {
 				if (examDao.insertSingle(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入single_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					throw new ServiceException(new ErrorCode(60003,
-							"组卷失败！原因：题目录入single_exam表中失败。"));
+					return false;
 				}
 			}
 		} else if (questionCount > points.size()) {
 			// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-			// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 			int flag = 0;
 			// 总体全部组卷三次需要的大循环次数
 			int max = (questionCount / points.size() + 1) * 3;
@@ -584,10 +671,8 @@ public class ExamServiceImpl implements IExamService {
 						if (examDao.insertSingle(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入single_exam表中失败。");
-							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							throw new ServiceException(new ErrorCode(60003,
-									"组卷失败！原因：题目录入single_exam表中失败。"));
+							return false;
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -597,10 +682,8 @@ public class ExamServiceImpl implements IExamService {
 							if (examDao.insertSingle(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入single_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								throw new ServiceException(new ErrorCode(60003,
-										"组卷失败！原因：题目录入single_exam表中失败。"));
+								return false;
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -615,15 +698,14 @@ public class ExamServiceImpl implements IExamService {
 			if (flag >= max) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60004,
-						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
+				return false;
 			}
 		}
+		return true;
 	}
 
-	private void createMultiple(int questionCount, List<Long> points,
+	private boolean createMultiple(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
@@ -634,10 +716,8 @@ public class ExamServiceImpl implements IExamService {
 					questions.size() - 1));
 			if (examDao.insertMultiple(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入multiple_exam表中失败。");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60005,
-						"组卷失败！原因：题目录入multiple_exam表中失败。"));
+				return false;
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -648,15 +728,12 @@ public class ExamServiceImpl implements IExamService {
 				if (examDao.insertMultiple(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入multiple_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					throw new ServiceException(new ErrorCode(60005,
-							"组卷失败！原因：题目录入multiple_exam表中失败。"));
+					return false;
 				}
 			}
 		} else if (questionCount > points.size()) {
 			// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-			// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 			int flag = 0;
 			// 总体全部组卷三次需要的大循环次数
 			int max = (questionCount / points.size() + 1) * 3;
@@ -673,10 +750,8 @@ public class ExamServiceImpl implements IExamService {
 						if (examDao.insertMultiple(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入multiple_exam表中失败。");
-							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							throw new ServiceException(new ErrorCode(60005,
-									"组卷失败！原因：题目录入multiple_exam表中失败。"));
+							return false;
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -686,10 +761,8 @@ public class ExamServiceImpl implements IExamService {
 							if (examDao.insertMultiple(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入multiple_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								throw new ServiceException(new ErrorCode(60005,
-										"组卷失败！原因：题目录入multiple_exam表中失败。"));
+								return false;
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -704,15 +777,14 @@ public class ExamServiceImpl implements IExamService {
 			if (flag >= max) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60004,
-						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
+				return false;
 			}
 		}
+		return true;
 	}
 
-	private void createJudge(int questionCount, List<Long> points,
+	private boolean createJudge(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
@@ -723,10 +795,8 @@ public class ExamServiceImpl implements IExamService {
 					questions.size() - 1));
 			if (examDao.insertJudge(question) < 1) {
 				log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60006,
-						"组卷失败！原因：题目录入judge_exam表中失败。"));
+				return false;
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -736,15 +806,12 @@ public class ExamServiceImpl implements IExamService {
 						questions.size() - 1));
 				if (examDao.insertJudge(question) < 1) {
 					log.error(exam.getUser_id() + "组卷失败！原因：题目录入judge_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					throw new ServiceException(new ErrorCode(60006,
-							"组卷失败！原因：题目录入judge_exam表中失败。"));
+					return false;
 				}
 			}
 		} else if (questionCount > points.size()) {
 			// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-			// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 			int flag = 0;
 			// 总体全部组卷三次需要的大循环次数
 			int max = (questionCount / points.size() + 1) * 3;
@@ -761,10 +828,8 @@ public class ExamServiceImpl implements IExamService {
 						if (examDao.insertJudge(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入judge_exam表中失败。");
-							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							throw new ServiceException(new ErrorCode(60006,
-									"组卷失败！原因：题目录入judge_exam表中失败。"));
+							return false;
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -774,10 +839,8 @@ public class ExamServiceImpl implements IExamService {
 							if (examDao.insertJudge(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入judge_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								throw new ServiceException(new ErrorCode(60006,
-										"组卷失败！原因：题目录入judge_exam表中失败。"));
+								return false;
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -792,15 +855,14 @@ public class ExamServiceImpl implements IExamService {
 			if (flag >= max) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60004,
-						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
+				return false;
 			}
 		}
+		return true;
 	}
 
-	private void createShortAnswer(int questionCount, List<Long> points,
+	private boolean createShortAnswer(int questionCount, List<Long> points,
 			Map<Long, List<Question>> map, Exam exam) {
 		if (questionCount == 1) {
 			// 只有一道题目时，随机出题
@@ -812,10 +874,8 @@ public class ExamServiceImpl implements IExamService {
 			if (examDao.insertShortAnswer(question) < 1) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60007,
-						"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+				return false;
 			}
 		} else if (questionCount > 1 && questionCount <= points.size()) {
 			// 出题数量大于1，但是小于知识点数量，保证每个题目考点不同
@@ -826,15 +886,12 @@ public class ExamServiceImpl implements IExamService {
 				if (examDao.insertShortAnswer(question) < 1) {
 					log.error(exam.getUser_id()
 							+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
-					// TODO 发送邮件告知教师组卷失败
 					examDao.deleteOne(exam.getExam_id());
-					throw new ServiceException(new ErrorCode(60007,
-							"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+					return false;
 				}
 			}
 		} else if (questionCount > points.size()) {
 			// 出题数量大于题目考点数量，需要检测是否有重题，反复组卷。
-			// TODO 三次依然出现重题失败组卷，那么发送邮件告知教师组卷失败
 			int flag = 0;
 			// 总体全部组卷三次需要的大循环次数
 			int max = (questionCount / points.size() + 1) * 3;
@@ -851,10 +908,8 @@ public class ExamServiceImpl implements IExamService {
 						if (examDao.insertShortAnswer(question) < 1) {
 							log.error(exam.getUser_id()
 									+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
-							// TODO 发送邮件告知教师组卷失败
 							examDao.deleteOne(exam.getExam_id());
-							throw new ServiceException(new ErrorCode(60007,
-									"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+							return false;
 						}
 						question_id.add(question.getQuestion_id());
 						count++;
@@ -864,10 +919,8 @@ public class ExamServiceImpl implements IExamService {
 							if (examDao.insertShortAnswer(question) < 1) {
 								log.error(exam.getUser_id()
 										+ "组卷失败！原因：题目录入shortAnswer_exam表中失败。");
-								// TODO 发送邮件告知教师组卷失败
 								examDao.deleteOne(exam.getExam_id());
-								throw new ServiceException(new ErrorCode(60007,
-										"组卷失败！原因：题目录入shortAnswer_exam表中失败。"));
+								return false;
 							}
 							question_id.add(question.getQuestion_id());
 							count++;
@@ -882,11 +935,10 @@ public class ExamServiceImpl implements IExamService {
 			if (flag >= max) {
 				log.error(exam.getUser_id()
 						+ "组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！");
-				// TODO 发送邮件告知教师组卷失败
 				examDao.deleteOne(exam.getExam_id());
-				throw new ServiceException(new ErrorCode(60004,
-						"组卷失败！原因：可能由于题库题目数量太少，导致重组试卷超过3次以上！"));
+				return false;
 			}
 		}
+		return true;
 	}
 }

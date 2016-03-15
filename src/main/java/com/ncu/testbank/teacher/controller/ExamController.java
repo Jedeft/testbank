@@ -14,11 +14,18 @@ import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
 import com.ncu.testbank.base.response.ResponseMsg;
+import com.ncu.testbank.base.utils.ActiveMqUtils;
+import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
+import com.ncu.testbank.teacher.data.view.ExamView;
 import com.ncu.testbank.teacher.service.IExamService;
+import com.ncu.testbank.teacher.service.IJudgeService;
+import com.ncu.testbank.teacher.service.IMultipleService;
+import com.ncu.testbank.teacher.service.IShortAnswerService;
+import com.ncu.testbank.teacher.service.ISingleService;
 import com.ncu.testbank.teacher.service.ITemplateService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -34,6 +41,18 @@ public class ExamController {
 
 	@Autowired
 	private ITemplateService templateService;
+
+	@Autowired
+	private ISingleService singleService;
+
+	@Autowired
+	private IMultipleService multipleService;
+
+	@Autowired
+	private IJudgeService judgeService;
+
+	@Autowired
+	private IShortAnswerService shortAnswerService;
 
 	/**
 	 * 根据模板生成考试试卷
@@ -52,18 +71,24 @@ public class ExamController {
 			User user = (User) session.getAttribute("currentUser");
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
-			Template template = templateService.getOne(examParams
-					.getTemplate_id());
 			// 若有学生ID，那说明为在线考试，则走消息队列进行异步后台组卷
 			if (examParams.getStudent_id() != null
 					&& examParams.getStudent_id().size() > 0) {
-
+				String json = JSONUtils.convertObject2Json(examParams);
+				ActiveMqUtils.sendMessage(json);
+				return msg;
 			}
-			Exam exam = examService.createExam(template.getTemplate_id(),
-					user.getUsername(), examParams.getStart_time(),
-					examParams.getEnd_time());
+			Template template = templateService.getOne(examParams
+					.getTemplate_id());
+			Exam exam = examService.createExam(template, user.getUsername(),
+					examParams.getStart_time(), examParams.getEnd_time());
 			// TODO 获取exam试卷信息返回前台
-			// 测试git提交
+			ExamView examView = new ExamView(exam.getExam_id(),
+					exam.getTemplate_id(), exam.getStart_time(),
+					exam.getEnd_time(), user.getUsername());
+			if (template.getSingle_num() > 0) {
+			}
+			msg.data = examView;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

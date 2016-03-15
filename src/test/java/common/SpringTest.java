@@ -72,7 +72,6 @@ public class SpringTest {
 		for (int i = 0; i < 100; i++) {
 			ActiveMqUtils.sendMessage("这是第" + i + "条消息！");
 		}
-
 	}
 
 	@Test

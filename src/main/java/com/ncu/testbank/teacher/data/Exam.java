@@ -23,7 +23,7 @@ public class Exam {
 		this.end_time = end_time;
 		this.user_id = user_id;
 	}
-
+	
 	public long getExam_id() {
 		return exam_id;
 	}

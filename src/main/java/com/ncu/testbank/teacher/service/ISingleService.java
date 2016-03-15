@@ -69,4 +69,5 @@ public interface ISingleService {
 	 * @param file
 	 */
 	public void updateImge(Single single, User user, MultipartFile file);
+
 }
