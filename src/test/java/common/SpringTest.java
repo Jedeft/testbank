@@ -123,4 +123,10 @@ public class SpringTest {
 		System.out.println(EmailUtils.sendEmail("Jedeft@163.com", "测试邮件1"));
 		System.out.println(EmailUtils.sendEmail("Jedeft@163.com", "测试邮件2"));
 	}
+	
+	@Test
+	public void testString() {
+		String str = "www.baidu.com/adf/key";
+		System.out.println(str.substring(str.lastIndexOf("/")+1));
+	}
 }

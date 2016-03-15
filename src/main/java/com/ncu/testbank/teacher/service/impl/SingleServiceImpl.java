@@ -21,7 +21,11 @@ import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.utils.BeanToMapUtils;
+import com.ncu.testbank.base.utils.FileUpload;
+import com.ncu.testbank.base.utils.PathUtil;
+import com.ncu.testbank.base.utils.QiniuImgUtil;
 import com.ncu.testbank.base.utils.RandomID;
+import com.ncu.testbank.base.utils.UuidUtil;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.dao.ISingleDao;
 import com.ncu.testbank.teacher.dao.ISingleExamDao;
@@ -38,7 +42,7 @@ public class SingleServiceImpl implements ISingleService {
 
 	@Autowired
 	private ISingleDao singleDao;
-	
+
 	@Autowired
 	private ISingleExamDao singleExamDao;
 
@@ -101,10 +105,14 @@ public class SingleServiceImpl implements ISingleService {
 			if (question.getType() == 2) {
 				// 图片题目处理
 				Single single = singleDao.getOne(question.getQuestion_id());
-				String fileName = single.getQuestion();
-				File file = new File(fileName);
-				if (file.exists()) {
-					file.delete();
+				String questionUrl = single.getQuestion();
+				String key = questionUrl
+						.substring(questionUrl.lastIndexOf("/") + 1);
+				try {
+					QiniuImgUtil.delete("testBank", key);
+				} catch (IOException e) {
+					log.error(e);
+					throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 				}
 			}
 			question_id.add(question.getQuestion_id());
@@ -119,38 +127,31 @@ public class SingleServiceImpl implements ISingleService {
 		single.setCreate_teacher_id(user.getUsername());
 		single.setCreate_time(new Timestamp(new Date().getTime()));
 
-		Properties fileConfig = new Properties();
+		Properties properties = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("questionImg.properties");
+				.getResourceAsStream("qiniu.properties");
 		try {
-			fileConfig.load(in);
+			properties.load(in);
 		} catch (IOException e) {
 			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
 		}
-		String filePath = (String) fileConfig.get("singlePath");
-		String fileName = file.getOriginalFilename();
-		int suffix = fileName.lastIndexOf(".");
-		String targetName = single.getQuestion_id()
-				+ fileName.substring(suffix, fileName.length());
-		File target = new File(filePath, targetName);
-
-		if (!target.getParentFile().exists()) {
-			if (!target.getParentFile().mkdirs()) {
-				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
-			}
+		String filePath = PathUtil.getClasspath() + "uploadFiles/uploadImgs";
+		String fileName = FileUpload.fileUp(file, filePath,
+				UuidUtil.get32UUID()); // 执行上传
+		String url = properties.getProperty("url");
+		File uploadFile = new File(filePath + "/" + fileName);
+		if (!uploadFile.exists()) {
+			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
+		String key = null;
 		try {
-			if (!target.createNewFile()) {
-				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
-			}
-			file.transferTo(target);
+			key = QiniuImgUtil.uploadImg("testbank", fileName, uploadFile);
 		} catch (IOException e) {
 			log.error(e);
 			throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 		}
-
-		single.setQuestion(filePath + "/" + targetName);
+		single.setQuestion("http://" + url + "/" + key);
 		singleDao.insertOne(single);
 	}
 
@@ -166,43 +167,41 @@ public class SingleServiceImpl implements ISingleService {
 					"要修改的题目不存在，请联系管理人员！"));
 		}
 		if (file != null) {
-			File serverFile = new File(dbSingle.getQuestion());
-			if (serverFile.exists()) {
-				serverFile.delete();
-			}
-
-			Properties fileConfig = new Properties();
+			Properties properties = new Properties();
 			InputStream in = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("questionImg.properties");
+					.getResourceAsStream("qiniu.properties");
 			try {
-				fileConfig.load(in);
+				properties.load(in);
 			} catch (IOException e) {
 				log.error(e);
 				throw new ServiceException(ErrorCode.FILE_PROPERTIES_ERROR);
 			}
-			String filePath = (String) fileConfig.get("singlePath");
-			String fileName = file.getOriginalFilename();
-			int suffix = fileName.lastIndexOf(".");
-			String targetName = single.getQuestion_id()
-					+ fileName.substring(suffix, fileName.length());
-			File target = new File(filePath, targetName);
-
-			if (!target.getParentFile().exists()) {
-				if (!target.getParentFile().mkdirs()) {
-					throw new ServiceException(ErrorCode.FILE_IO_ERROR);
-				}
-			}
+			String questionUrl = single.getQuestion();
+			String deleteKey = questionUrl.substring(questionUrl
+					.lastIndexOf("/") + 1);
 			try {
-				if (!target.createNewFile()) {
-					throw new ServiceException(ErrorCode.FILE_IO_ERROR);
-				}
-				file.transferTo(target);
+				QiniuImgUtil.delete("testbank", deleteKey);
 			} catch (IOException e) {
 				log.error(e);
 				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
 			}
-
-			single.setQuestion(filePath + "/" + targetName);
+			String filePath = PathUtil.getClasspath()
+					+ "uploadFiles/uploadImgs";
+			String fileName = FileUpload.fileUp(file, filePath,
+					UuidUtil.get32UUID()); // 执行上传
+			String url = properties.getProperty("url");
+			File uploadFile = new File(filePath + "/" + fileName);
+			if (!uploadFile.exists()) {
+				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+			}
+			String key = null;
+			try {
+				key = QiniuImgUtil.uploadImg("testbank", fileName, uploadFile);
+			} catch (IOException e) {
+				log.error(e);
+				throw new ServiceException(ErrorCode.FILE_IO_ERROR);
+			}
+			single.setQuestion("http://" + url + "/" + key);
 		}
 		singleDao.updateOne(single);
 	}

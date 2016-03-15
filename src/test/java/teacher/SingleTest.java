@@ -17,15 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.codec.CharEncoding;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
@@ -178,7 +175,7 @@ public class SingleTest {
 		single.setLevel(3);
 		single.setAnswer("C");
 
-		File file = new File("D:/img/demo.png");
+		File file = new File("E:/testQiniu.jpg");
 		InputStream in = new FileInputStream(file);
 		MockMultipartFile mockFile = new MockMultipartFile("questionFile",
 				"demo.png", null, in);

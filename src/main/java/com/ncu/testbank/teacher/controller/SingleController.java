@@ -236,7 +236,7 @@ public class SingleController {
 	 * @param session
 	 * @return
 	 */
-	@RequiresRoles("bankBuilder")
+	//@RequiresRoles("bankBuilder")
 	@RequestMapping(value = "/singles/img", method = RequestMethod.POST)
 	@ApiOperation(value = "插入图片题目", httpMethod = "POST", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
 	public ResponseMsg insertImge(
