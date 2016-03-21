@@ -14,5 +14,7 @@ public interface IShortAnswerExamDao {
 	
 	public List<ShortAnswerExamView> searchExamShortNoAnswer(Long exam_id);
 	
+	public List<ShortAnswerExamView> searchExamShort(Long exam_id);
+	
 	public int deleteOne(Map<String, Object> params);
 }

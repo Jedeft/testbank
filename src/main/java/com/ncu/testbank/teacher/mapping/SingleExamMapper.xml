@@ -31,6 +31,16 @@
 			exam_id = #{exam_id}
 	</select>
 	
+	<!-- 检索试卷单选题 -->
+	<select id="searchExamSingle" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, exam_id, stuanswer, rightanswer, score, question, type, A, B, C, D
+		FROM
+			single_exam_v
+		WHERE
+			exam_id = #{exam_id}
+	</select>
+	
 	<delete id="deleteOne">
 		DELETE FROM single_exam
 		WHERE

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.teacher.data.Exam;
+import com.ncu.testbank.teacher.data.view.HistoryExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
 
 @Repository
@@ -30,4 +31,20 @@ public interface IExamDao {
 	 * @return
 	 */
 	public List<OnlineExamView> searchOnlineExam(Map<String, Object> params);
+	
+	
+	/**
+	 * 根据教师ID和课程ID获得历史试卷信息
+	 * @param params
+	 * @return
+	 */
+	public List<HistoryExamView> searchHistoryExam(Map<String, Object> params);
+	
+	/**
+	 * 根据试卷ID获得试卷信息
+	 * 此处为一个事物
+	 * @param params
+	 * @return
+	 */
+	public Exam getExamById(Long user_id);
 }

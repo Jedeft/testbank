@@ -14,5 +14,7 @@ public interface IMultipleExamDao {
 
 	public List<MultipleExamView> searchExamMultipleNoAnswer(Long exam_id);
 	
+	public List<MultipleExamView> searchExamMultiple(Long exam_id);
+	
 	public int deleteOne(Map<String, Object> params);
 }

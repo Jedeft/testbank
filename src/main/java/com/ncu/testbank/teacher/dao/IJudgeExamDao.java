@@ -14,5 +14,7 @@ public interface IJudgeExamDao {
 
 	public List<JudgeExamView> searchExamJudgeNoAnswer(Long exam_id);
 	
+	public List<JudgeExamView> searchExamJudge(Long exam_id);
+	
 	public int deleteOne(Map<String, Object> params);
 }

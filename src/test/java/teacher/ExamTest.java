@@ -95,4 +95,26 @@ public class ExamTest {
 						.andExpect(status().isOk())
 						.andDo(print());
 	}
+	
+	/**
+	 * url : /teacher/exam/detail method : GET
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getExamTest() throws Exception {
+		User user = new User();
+		user.setUsername("Jerry");
+		mockSession.setAttribute("currentUser", user);
+
+		mockMvc.perform(
+				get("/teacher/exam/detail?exam_id=145802680550201")
+						.session(mockSession)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+						.andExpect(status().isOk())
+						.andDo(print());
+	}
 }

@@ -9,6 +9,8 @@ import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.Template;
+import com.ncu.testbank.teacher.data.view.ExamPaperView;
+import com.ncu.testbank.teacher.data.view.HistoryExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
 
 public interface IExamService {
@@ -95,5 +97,23 @@ public interface IExamService {
 	 * @param course_id
 	 * @return
 	 */
-	public List<OnlineExamView> searchOnlineByTID(String teacher_id, String course_id);
+	public List<OnlineExamView> searchOnlineByTID(String teacher_id,
+			String course_id);
+
+	/**
+	 * 根据教师ID和课程ID查询在线考试情况
+	 * 
+	 * @param teacher_id
+	 * @param course_id
+	 * @return
+	 */
+	public List<HistoryExamView> searchHistoryByTID(String teacher_id,
+			String course_id);
+	
+	/**
+	 * 根据使用者ID查询试卷
+	 * @param exam_id
+	 * @return
+	 */
+	public ExamPaperView getExamByID(Long exam_id);
 }

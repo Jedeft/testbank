@@ -27,6 +27,16 @@
 			exam_id = #{exam_id}
 	</select>
 	
+	<!-- 检索判断题 -->
+	<select id="searchExamShort" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, exam_id, stuanswer, rightanswer, score, question, type
+		FROM
+			shortanswer_exam_v
+		WHERE
+			exam_id = #{exam_id}
+	</select>
+	
 	<delete id="deleteOne">
 		DELETE FROM shortanswer_exam
 		WHERE

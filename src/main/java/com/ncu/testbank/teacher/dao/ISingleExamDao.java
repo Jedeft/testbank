@@ -14,5 +14,7 @@ public interface ISingleExamDao {
 
 	public List<SingleExamView> searchExamSingleNoAnswer(Long exam_id);
 	
+	public List<SingleExamView> searchExamSingle(Long exam_id);
+	
 	public int deleteOne(Map<String, Object> params);
 }

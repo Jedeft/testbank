@@ -28,6 +28,7 @@ import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
 import com.ncu.testbank.teacher.data.params.ExamQuestionParams;
 import com.ncu.testbank.teacher.data.view.ExamPaperView;
+import com.ncu.testbank.teacher.data.view.HistoryExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 import com.ncu.testbank.teacher.service.IJudgeService;
@@ -443,6 +444,80 @@ public class ExamController {
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
 			msg.pageCount = examList != null ? examList.size() : 0;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 分页获取历史试卷信息(笔试)
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/history", method = RequestMethod.GET)
+	@ApiOperation(value = "检索历史试卷信息（笔试）", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	public ResponseQueryMsg searchHistoryExam(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = true, name = "course_id", value = "课程ID信息检索") @RequestParam(value = "course_id", required = true) String course_id,
+			@ApiIgnore HttpSession session) {
+		ResponseQueryMsg msg = new ResponseQueryMsg();
+		try {
+			PageInfo pageInfo = new PageInfo(page, rows);
+			User user = (User) session.getAttribute("currentUser");
+			List<HistoryExamView> examList = examService.searchHistoryByTID(
+					user.getUsername(), course_id);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = examList;
+
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
+			msg.pageCount = examList != null ? examList.size() : 0;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 分页获取历史试卷信息(笔试)
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/detail", method = RequestMethod.GET)
+	@ApiOperation(value = "查看考试试卷详细信息（包含题目），笔试类型包含正确答案，在线考试类型包含学生答案和正确答案", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	public ResponseMsg getExamDetail(
+			@ApiParam(required = true, name = "exam_id", value = "试卷ID") @RequestParam(value = "exam_id", required = true) Long exam_id) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			ExamPaperView examPaperView = examService.getExamByID(exam_id);
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = examPaperView;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

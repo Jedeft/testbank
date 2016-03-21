@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.ncu.testbank.admin.dao.ITeacherDao;
@@ -37,6 +38,8 @@ import com.ncu.testbank.teacher.data.QuestionLevel;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.Template;
+import com.ncu.testbank.teacher.data.view.ExamPaperView;
+import com.ncu.testbank.teacher.data.view.HistoryExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 
@@ -1099,5 +1102,41 @@ public class ExamServiceImpl implements IExamService {
 		params.put("teacher_id", teacher_id);
 		params.put("course_id", course_id);
 		return examDao.searchOnlineExam(params);
+	}
+
+	@Override
+	public List<HistoryExamView> searchHistoryByTID(String teacher_id,
+			String course_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("teacher_id", teacher_id);
+		params.put("course_id", course_id);
+		return examDao.searchHistoryExam(params);
+	}
+
+	@Override
+	@Transactional
+	public ExamPaperView getExamByID(Long exam_id) {
+		Exam exam = examDao.getExamById(exam_id);
+		Template template = templateDao.getOne(exam.getTemplate_id());
+		ExamPaperView examView = new ExamPaperView(exam.getExam_id(),
+				exam.getTemplate_id(), exam.getStart_time(),
+				exam.getEnd_time(), exam.getUser_id());
+		if (template.getSingle_num() > 0) {
+			examView.setSingleList(singleExamDao.searchExamSingle(exam
+					.getExam_id()));
+		}
+		if (template.getMultiple_num() > 0) {
+			examView.setMultipleList(multipleExamDao.searchExamMultiple(exam
+					.getExam_id()));
+		}
+		if (template.getJudge_num() > 0) {
+			examView.setJudgeleList(judgeExamDao.searchExamJudge(exam
+					.getExam_id()));
+		}
+		if (template.getShortAnswer_num() > 0) {
+			examView.setShortAnswerleList(shortAnswerExamDao
+					.searchExamShort(exam.getExam_id()));
+		}
+		return examView;
 	}
 }

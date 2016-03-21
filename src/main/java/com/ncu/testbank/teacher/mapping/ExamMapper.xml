@@ -8,6 +8,7 @@
 	  <result column="start_time" property="start_time"/>
 	  <result column="end_time" property="end_time"/>
 	  <result column="score" property="score"/>
+	  <result column="user_id" property="user_id"/>
 	</resultMap>
 	
 	<resultMap id="OnlieViewResultMap" type="com.ncu.testbank.teacher.data.view.OnlineExamView" >
@@ -21,8 +22,22 @@
 	  <result column="level" property="level"/>
 	</resultMap>
 	
+	<resultMap id="HistoryViewResultMap" type="com.ncu.testbank.teacher.data.view.HistoryExamView" >
+	  <id column="exam_id" property="exam_id"/>
+	  <result column="template_id" property="template_id"/>
+	  <result column="start_time" property="start_time"/>
+	  <result column="end_time" property="end_time"/>
+	  <result column="score" property="score"/>
+	  <result column="user_id" property="user_id"/>
+	  <result column="level" property="level"/>
+	  <result column="single_num" property="single_num"/>
+	  <result column="multiple_num" property="multiple_num"/>
+	  <result column="judge_num" property="judge_num"/>
+	  <result column="shortanswer_num" property="shortanswer_num"/>
+	</resultMap>
+	
 	<sql id="Base_Column_List">
-		exam_id, template_id, start_time, end_time, score, level
+		exam_id, template_id, start_time, end_time, score, user_id
 	</sql>
 
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
@@ -47,5 +62,25 @@
 			teacher_id = #{teacher_id}
 		AND
 			course_id = #{course_id}
+	</select>
+	
+	<select id="searchHistoryExam" resultMap="HistoryViewResultMap">
+		SELECT
+			exam_id, template_id, start_time, end_time, score, user_id, level, single_num, multiple_num, judge_num, shortanswer_num
+		FROM
+			historyexam_v
+		WHERE
+			teacher_id = #{teacher_id}
+		AND
+			course_id = #{course_id}
+	</select>
+	
+	<select id="getExamById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			exam 
+		WHERE
+			exam_id = #{exam_id }
 	</select>
 </mapper>
