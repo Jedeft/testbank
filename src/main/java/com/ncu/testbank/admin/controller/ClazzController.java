@@ -239,7 +239,7 @@ public class ClazzController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = clazzList.size();
+			msg.pageCount = clazzList != null ? clazzList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

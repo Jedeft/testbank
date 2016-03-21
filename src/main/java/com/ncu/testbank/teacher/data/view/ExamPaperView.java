@@ -3,7 +3,12 @@ package com.ncu.testbank.teacher.data.view;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class ExamView {
+/**
+ * 考试试卷视图
+ * @author Jedeft
+ *
+ */
+public class ExamPaperView {
 	private long exam_id;
 	private long template_id;
 	private Timestamp start_time;
@@ -15,11 +20,11 @@ public class ExamView {
 	private List<JudgeExamView> judgeleList;
 	private List<ShortAnswerExamView> shortAnswerleList;
 
-	public ExamView() {
+	public ExamPaperView() {
 		super();
 	}
 
-	public ExamView(long exam_id, long template_id, Timestamp start_time,
+	public ExamPaperView(long exam_id, long template_id, Timestamp start_time,
 			Timestamp end_time, String user_id) {
 		super();
 		this.exam_id = exam_id;

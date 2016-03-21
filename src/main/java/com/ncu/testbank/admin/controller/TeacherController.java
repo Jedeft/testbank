@@ -240,7 +240,7 @@ public class TeacherController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = teacherList.size();
+			msg.pageCount = teacherList != null ? teacherList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

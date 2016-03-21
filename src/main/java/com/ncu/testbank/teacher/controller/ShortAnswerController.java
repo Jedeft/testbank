@@ -142,7 +142,7 @@ public class ShortAnswerController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = shortAnswerList.size();
+			msg.pageCount = shortAnswerList != null ? shortAnswerList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

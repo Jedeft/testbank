@@ -239,7 +239,7 @@ public class MajorController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = majorList.size();
+			msg.pageCount = majorList != null ? majorList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

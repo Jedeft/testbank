@@ -134,7 +134,7 @@ public class BankBuilderController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = bankBuilderList.size();
+			msg.pageCount = bankBuilderList != null ? bankBuilderList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

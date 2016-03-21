@@ -10,8 +10,19 @@
 	  <result column="score" property="score"/>
 	</resultMap>
 	
+	<resultMap id="OnlieViewResultMap" type="com.ncu.testbank.teacher.data.view.OnlineExamView" >
+	  <id column="exam_id" property="exam_id"/>
+	  <result column="template_id" property="template_id"/>
+	  <result column="start_time" property="start_time"/>
+	  <result column="end_time" property="end_time"/>
+	  <result column="score" property="score"/>
+	  <result column="student_id" property="student_id"/>
+	  <result column="student_name" property="student_name"/>
+	  <result column="level" property="level"/>
+	</resultMap>
+	
 	<sql id="Base_Column_List">
-		exam_id, template_id, start_time, end_time, score
+		exam_id, template_id, start_time, end_time, score, level
 	</sql>
 
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
@@ -26,4 +37,15 @@
 		WHERE
 			exam_id = #{exam_id}
 	</delete>
+	
+	<select id="searchOnlineExam" resultMap="OnlieViewResultMap">
+		SELECT
+			exam_id, template_id, start_time, end_time, score, student_id, student_name, level
+		FROM
+			onlineexam_v
+		WHERE
+			teacher_id = #{teacher_id}
+		AND
+			course_id = #{course_id}
+	</select>
 </mapper>

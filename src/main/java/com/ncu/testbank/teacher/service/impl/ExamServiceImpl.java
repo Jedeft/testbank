@@ -37,6 +37,7 @@ import com.ncu.testbank.teacher.data.QuestionLevel;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.Template;
+import com.ncu.testbank.teacher.data.view.OnlineExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 
 @Service("examService")
@@ -1089,5 +1090,14 @@ public class ExamServiceImpl implements IExamService {
 					"所插入简答题目失败，请联系管理人员！"));
 		}
 		return shortAnswer;
+	}
+
+	@Override
+	public List<OnlineExamView> searchOnlineByTID(String teacher_id,
+			String course_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("teacher_id", teacher_id);
+		params.put("course_id", course_id);
+		return examDao.searchOnlineExam(params);
 	}
 }

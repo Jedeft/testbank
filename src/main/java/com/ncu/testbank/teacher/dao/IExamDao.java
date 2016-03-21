@@ -1,8 +1,12 @@
 package com.ncu.testbank.teacher.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.teacher.data.Exam;
+import com.ncu.testbank.teacher.data.view.OnlineExamView;
 
 @Repository
 public interface IExamDao {
@@ -19,4 +23,11 @@ public interface IExamDao {
 	 * @return
 	 */
 	public int deleteOne(long exam_id);
+	
+	/**
+	 * 根据教师ID和课程ID获得在线考试学生情况
+	 * @param params
+	 * @return
+	 */
+	public List<OnlineExamView> searchOnlineExam(Map<String, Object> params);
 }

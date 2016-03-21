@@ -1,5 +1,7 @@
 package com.ncu.testbank.teacher.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mangofactory.swagger.annotations.ApiIgnore;
@@ -14,7 +17,9 @@ import com.ncu.testbank.base.exception.DaoException;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
+import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
+import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.ncu.testbank.base.utils.ActiveMqUtils;
 import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.permission.data.User;
@@ -22,7 +27,8 @@ import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
 import com.ncu.testbank.teacher.data.params.ExamQuestionParams;
-import com.ncu.testbank.teacher.data.view.ExamView;
+import com.ncu.testbank.teacher.data.view.ExamPaperView;
+import com.ncu.testbank.teacher.data.view.OnlineExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 import com.ncu.testbank.teacher.service.IJudgeService;
 import com.ncu.testbank.teacher.service.IMultipleService;
@@ -86,7 +92,7 @@ public class ExamController {
 			Exam exam = examService.createExam(template, user.getUsername(),
 					examParams.getStart_time(), examParams.getEnd_time());
 			// 获取exam试卷信息返回前台
-			ExamView examView = new ExamView(exam.getExam_id(),
+			ExamPaperView examView = new ExamPaperView(exam.getExam_id(),
 					exam.getTemplate_id(), exam.getStart_time(),
 					exam.getEnd_time(), user.getUsername());
 			if (template.getSingle_num() > 0) {
@@ -341,7 +347,6 @@ public class ExamController {
 	 * 添加考试判断题
 	 * 
 	 * @param judge
-	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
@@ -378,7 +383,6 @@ public class ExamController {
 	 * 添加考试简答题
 	 * 
 	 * @param judge
-	 * @param session
 	 * @return
 	 */
 	@RequiresRoles("bankBuilder")
@@ -396,6 +400,49 @@ public class ExamController {
 			}
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 分页获取在线考试学生考试情况信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/exam/online", method = RequestMethod.GET)
+	@ApiOperation(value = "检索在线考试学生考试情况信息", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	public ResponseQueryMsg searchOnlineExam(
+			@ApiParam(required = true, name = "page", value = "分页数据") @RequestParam(value = "page", required = true) Integer page,
+			@ApiParam(required = true, name = "rows", value = "每页数据量") @RequestParam(value = "rows", required = true) Integer rows,
+			@ApiParam(required = true, name = "course_id", value = "课程ID信息检索") @RequestParam(value = "course_id", required = true) String course_id,
+			@ApiIgnore HttpSession session) {
+		ResponseQueryMsg msg = new ResponseQueryMsg();
+		try {
+			PageInfo pageInfo = new PageInfo(page, rows);
+			User user = (User) session.getAttribute("currentUser");
+			List<OnlineExamView> examList = examService.searchOnlineByTID(
+					user.getUsername(), course_id);
+
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
+			msg.data = examList;
+
+			msg.total = pageInfo.getTotal();
+			msg.totalPage = pageInfo.getTotalPage();
+			msg.currentPage = pageInfo.getPage();
+			msg.pageCount = examList != null ? examList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

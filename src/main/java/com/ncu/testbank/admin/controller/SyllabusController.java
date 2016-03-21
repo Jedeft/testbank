@@ -240,7 +240,7 @@ public class SyllabusController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = syllabusViewList.size();
+			msg.pageCount = syllabusViewList != null ? syllabusViewList.size() : 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
