@@ -2,6 +2,8 @@ package com.ncu.testbank.background;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.jms.Connection;
@@ -15,14 +17,35 @@ import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ncu.testbank.admin.data.Teacher;
+import com.ncu.testbank.admin.service.ITeacherService;
+import com.ncu.testbank.base.utils.EmailUtils;
+import com.ncu.testbank.base.utils.JSONUtils;
+import com.ncu.testbank.teacher.data.Exam;
+import com.ncu.testbank.teacher.data.Template;
+import com.ncu.testbank.teacher.data.params.ExamParams;
+import com.ncu.testbank.teacher.service.IExamService;
+import com.ncu.testbank.teacher.service.ITemplateService;
+
 /**
  * 后台智能组卷程序
+ * 
  * @author Jedeft
  */
 public class ExamExecutor {
+
+	@Autowired
+	private static IExamService examService;
+
+	@Autowired
+	private static ITemplateService templateService;
+
+	@Autowired
+	private static ITeacherService teacherService;
 
 	public static ExamExecutor executor = null;
 
@@ -69,13 +92,34 @@ public class ExamExecutor {
 			while (true) {
 				TextMessage message = (TextMessage) consumer.receive(100000);
 				if (null != message) {
-					System.out.println(message.getText());
+					String json = message.getText();
+					ExamParams examParams = JSONUtils.convertJson2Object(json,
+							ExamParams.class);
+					Template template = templateService.getOne(examParams
+							.getTemplate_id());
+					List<String> students = examParams.getStudent_id();
+					List<String> failStudents = new ArrayList<>();
+					for (String student_id : students) {
+						Exam exam = examService.createExam(template,
+								student_id, examParams.getStart_time(),
+								examParams.getEnd_time());
+						// 若组卷失败，那么返回null
+						if (exam == null) {
+							failStudents.add(student_id);
+						}
+					}
+					if (failStudents != null && failStudents.size() > 0) {
+						Teacher teacher = teacherService.getTeacher(examParams
+								.getTeacher_id());
+						EmailUtils.sendEmail(teacher.getEmail(), "组卷失败的同学学号为："
+								+ failStudents.toString() + "；请及时重新组卷，避免影响考试！");
+					}
 				} else {
 					break;
 				}
 			}
 		} catch (JMSException e) {
-			// TODO 组卷失败通知
+			// TODO 后台程序崩溃，邮件通知管理员~
 			log.error(e);
 		} finally {
 			try {

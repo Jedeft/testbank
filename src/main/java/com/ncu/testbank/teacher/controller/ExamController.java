@@ -66,7 +66,7 @@ public class ExamController {
 	@RequestMapping(value = "/exam", method = RequestMethod.POST)
 	@ApiOperation(value = "根据模板生成考试试卷", httpMethod = "POST", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
 	public ResponseMsg insertWriting(
-			@ApiParam(required = true, name = "examParams", value = "考试参数json数据，若为人工组卷的笔试，则student_id为空") @RequestBody ExamParams examParams,
+			@ApiParam(required = true, name = "examParams", value = "考试参数json数据，若为人工组卷的笔试，则student_id为空，teacher_id可忽略") @RequestBody ExamParams examParams,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
@@ -76,6 +76,7 @@ public class ExamController {
 			// 若有学生ID，那说明为在线考试，则走消息队列进行异步后台组卷
 			if (examParams.getStudent_id() != null
 					&& examParams.getStudent_id().size() > 0) {
+				examParams.setTeacher_id(user.getUsername());
 				String json = JSONUtils.convertObject2Json(examParams);
 				ActiveMqUtils.sendMessage(json);
 				return msg;
