@@ -1,8 +1,10 @@
 package teacher;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -70,5 +72,27 @@ public class ExamTest {
 						.accept(MediaType.APPLICATION_JSON)
 						.characterEncoding(CharEncoding.UTF_8))
 				.andExpect(jsonPath("$.errorCode").value(0)).andDo(print());
+	}
+	
+	/**
+	 * url : /teacher/exam/online method : GET
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void searchOnlineTest() throws Exception {
+		User user = new User();
+		user.setUsername("Jerry");
+		mockSession.setAttribute("currentUser", user);
+
+		mockMvc.perform(
+				get("/teacher/exam/online?page=1&rows=15&course_id=1")
+						.session(mockSession)
+						.contentType(MediaType.TEXT_HTML)
+						.characterEncoding(CharEncoding.UTF_8)
+						.accept(MediaType.APPLICATION_JSON)
+						.characterEncoding(CharEncoding.UTF_8))
+						.andExpect(status().isOk())
+						.andDo(print());
 	}
 }
