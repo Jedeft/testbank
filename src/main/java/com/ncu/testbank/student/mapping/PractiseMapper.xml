@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.teacher.dao.IPractiseDao" >
+
+	<resultMap id="BaseResultMap" type="com.ncu.testbank.student.data.Practise" >
+	  <id column="practise_id" property="practise_id"/>
+	  <result column="template_id" property="template_id"/>
+	  <result column="start_time" property="start_time"/>
+	  <result column="end_time" property="end_time"/>
+	  <result column="right_ratio" property="right_ratio"/>
+	  <result column="user_id" property="user_id"/>
+	</resultMap>
+	
+	<resultMap id="PractiseViewResultMap" type="com.ncu.testbank.student.data.view.PractiseView" >
+	  <id column="practise_id" property="practise_id"/>
+	  <result column="template_id" property="template_id"/>
+	  <result column="start_time" property="start_time"/>
+	  <result column="end_time" property="end_time"/>
+	  <result column="right_ratio" property="right_ratio"/>
+	  <result column="level" property="level"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		practise_id, template_id, start_time, end_time, right_ratio, user_id
+	</sql>
+
+	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
+		INSERT INTO
+			practise(practise_id, template_id, start_time, end_time, user_id)
+		VALUES(#{practise_id}, #{template_id}, #{start_time}, #{end_time}, #{user_id})
+	</insert>
+	
+	<delete id="deleteOne" parameterType="java.lang.Long">
+		DELETE FROM
+			practise
+		WHERE
+			practise_id = #{practise_id}
+	</delete>
+	
+	<select id="searchData" resultMap="PractiseViewResultMap">
+		SELECT
+			practise_id, template_id, start_time, end_time, right_ratio, level
+		FROM
+			practise_v
+		WHERE
+			student_id = #{student_id}
+	</select>
+	
+	<select id="getPracitseById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			practise 
+		WHERE
+			practise_id = #{practise_id }
+	</select>
+</mapper>

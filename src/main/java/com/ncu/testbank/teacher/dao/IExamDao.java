@@ -42,9 +42,8 @@ public interface IExamDao {
 	
 	/**
 	 * 根据试卷ID获得试卷信息
-	 * 此处为一个事物
-	 * @param params
+	 * @param exam_id
 	 * @return
 	 */
-	public Exam getExamById(Long user_id);
+	public Exam getExamById(Long exam_id);
 }
