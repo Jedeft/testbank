@@ -27,8 +27,8 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "template-api", description = "模板CRUD操作", position = 3)
-@RestController
+@Api(value = "examTemplate-api", description = "考试模板CRUD操作", position = 3)
+@RestController("examTemplate")
 @RequestMapping("/teacher")
 public class TemplateController {
 	@Autowired
@@ -174,9 +174,9 @@ public class TemplateController {
 	 * @return
 	 */
 	@RequestMapping(value = "/templates", method = RequestMethod.DELETE)
-	@ApiOperation(value = "删除模板", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要bankBuilder权限，请header中携带Token")
+	@ApiOperation(value = "删除模板", httpMethod = "DELETE", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseMsg deleteTemplates(
-			@ApiParam(required = true, name = "template_id", value = "删除模板json数组，集合中为template_id数组，每道题目携带题目类型type") @RequestBody Map<String, List<Long>> map) {
+			@ApiParam(required = true, name = "template_id", value = "删除模板json数组，集合中为template_id数组") @RequestBody Map<String, List<Long>> map) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<Long> params = null;

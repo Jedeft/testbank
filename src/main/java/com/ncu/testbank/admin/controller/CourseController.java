@@ -30,7 +30,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 @Api(value = "course-api", description = "有关于课程的CURD操作", position = 2)
-@RestController
+@RestController("adminCourse")
 @RequestMapping("/admin")
 public class CourseController {
 

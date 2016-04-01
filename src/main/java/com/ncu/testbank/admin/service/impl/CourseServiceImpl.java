@@ -4,6 +4,8 @@ import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ncu.testbank.admin.dao.IBankBuilderDao;
 import com.ncu.testbank.admin.dao.ICourseDao;
+import com.ncu.testbank.admin.dao.ISyllabusDao;
 import com.ncu.testbank.admin.data.Course;
 import com.ncu.testbank.admin.service.ICourseService;
 import com.ncu.testbank.base.exception.ErrorCode;
@@ -27,6 +31,12 @@ public class CourseServiceImpl implements ICourseService {
 
 	@Autowired
 	private ICourseDao courseDao;
+
+	@Autowired
+	private ISyllabusDao syllabusDao;
+
+	@Autowired
+	private IBankBuilderDao bankBuilderDao;
 
 	@Override
 	public List<Course> searchData(PageInfo page, Course course) {
@@ -108,6 +118,19 @@ public class CourseServiceImpl implements ICourseService {
 	@Override
 	public void deleteData(List<String> course_id) {
 		courseDao.deleteData(course_id);
+	}
+
+	@Override
+	public List<Course> searchFromSyllabus(String teacher_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("teacher_id", teacher_id);
+		params.put("today", new Date());
+		return syllabusDao.searchCourseByTID(params);
+	}
+
+	@Override
+	public List<Course> searchFromBankBuilder(String teacher_id) {
+		return bankBuilderDao.searchCourseByTID(teacher_id);
 	}
 
 }

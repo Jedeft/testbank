@@ -36,7 +36,15 @@
 				AND course_name = #{course_name}
 			</if>
 		</where>
-		
+	</select>
+	
+	<select id="searchCourseByTID" resultType="com.ncu.testbank.admin.data.Course" parameterType="java.lang.String">
+		SELECT 
+			course_id, course_name as name
+		FROM
+			bankbuilder_v
+		WHERE
+			teacher_id = #{teacher_id}
 	</select>
 	
 	<select id="searchData" resultMap="BaseResultMap">

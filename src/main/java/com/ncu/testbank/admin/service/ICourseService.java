@@ -16,7 +16,25 @@ public interface ICourseService {
 	 * @return
 	 */
 	public List<Course> searchData(PageInfo page, Course course);
-
+	
+	/**
+	 * 根据教师ID获取该教师带课course信息
+	 * 
+	 * @param page
+	 * @param course
+	 * @return
+	 */
+	public List<Course> searchFromSyllabus(String teacher_id);
+	
+	/**
+	 * 根据教师ID获取该教师题库建设course信息
+	 * 
+	 * @param page
+	 * @param course
+	 * @return
+	 */
+	public List<Course> searchFromBankBuilder(String teacher_id);
+	
 	/**
 	 * 插入一条course信息
 	 * 

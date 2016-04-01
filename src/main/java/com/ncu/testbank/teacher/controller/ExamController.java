@@ -78,8 +78,6 @@ public class ExamController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
-			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			// 若有学生ID，那说明为在线考试，则走消息队列进行异步后台组卷
 			if (examParams.getStudent_id() != null
 					&& examParams.getStudent_id().size() > 0) {
@@ -113,6 +111,8 @@ public class ExamController {
 						.searchExamShortNoAnswer(exam.getExam_id()));
 			}
 			msg.data = examView;
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;

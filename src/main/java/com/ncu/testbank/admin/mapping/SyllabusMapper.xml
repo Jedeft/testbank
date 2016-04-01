@@ -59,6 +59,19 @@
 		LIMIT ${page * rows}, #{rows}
 	</select>
 	
+	<select id="searchCourseByTID" resultType="com.ncu.testbank.admin.data.Course">
+		SELECT 
+			course_id, course_name as name
+		FROM 
+			syllabus_v
+		WHERE
+			end > #{today}
+		AND
+			 #{today} >= start
+		AND 
+			teacher_id = #{teacher_id}
+	</select>
+	
 	<select id="getSyllabus" parameterType="java.lang.String" resultMap="ViewResultMap">
 		SELECT 
 			<include refid="View_Column_List"/>
