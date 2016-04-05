@@ -3,7 +3,6 @@
 <mapper namespace="com.ncu.testbank.teacher.dao.IShortAnswerExamDao" >
 	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.ShortAnswerExamView" >
 	  <id column="question_id" property="question_id"/>
-	  <result column="exam_id" property="exam_id"/>
 	  <result column="stuanswer" property="stuanswer"/>
 	  <result column="rightanswer" property="rightanswer"/>
 	  <result column="score" property="score"/>
@@ -20,7 +19,7 @@
 	<!-- 检索结果里没有答案字段的题目 -->
 	<select id="searchExamShortNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, score, question, type
+			question_id, stuanswer, score, question, type
 		FROM
 			shortanswer_exam_v
 		WHERE
@@ -30,7 +29,7 @@
 	<!-- 检索判断题 -->
 	<select id="searchExamShort" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, rightanswer, score, question, type
+			question_id, stuanswer, rightanswer, score, question, type
 		FROM
 			shortanswer_exam_v
 		WHERE

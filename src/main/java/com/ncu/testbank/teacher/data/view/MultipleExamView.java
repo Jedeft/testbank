@@ -1,7 +1,6 @@
 package com.ncu.testbank.teacher.data.view;
 
 public class MultipleExamView {
-	private long exam_id;
 	private long question_id;
 	private String stuanswer;
 	private String rightanswer;
@@ -12,14 +11,6 @@ public class MultipleExamView {
 	private String C;
 	private String D;
 	private int type;
-
-	public long getExam_id() {
-		return exam_id;
-	}
-
-	public void setExam_id(long exam_id) {
-		this.exam_id = exam_id;
-	}
 
 	public long getQuestion_id() {
 		return question_id;

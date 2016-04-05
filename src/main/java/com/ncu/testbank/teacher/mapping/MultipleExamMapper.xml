@@ -24,7 +24,7 @@
 	<!-- 检索结果里没有答案字段的题目 -->
 	<select id="searchExamMultipleNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, score, question, type, A, B, C, D
+			question_id, stuanswer, score, question, type, A, B, C, D
 		FROM
 			multiple_exam_v
 		WHERE
@@ -34,7 +34,7 @@
 	<!-- 检索试卷多选题 -->
 	<select id="searchExamMultiple" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, rightanswer, score, question, type, A, B, C, D
+			question_id, stuanswer, rightanswer, score, question, type, A, B, C, D
 		FROM
 			multiple_exam_v
 		WHERE

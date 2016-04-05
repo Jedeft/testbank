@@ -3,7 +3,6 @@
 <mapper namespace="com.ncu.testbank.teacher.dao.ISingleExamDao" >
 	<resultMap id="ViewResultMap" type="com.ncu.testbank.teacher.data.view.SingleExamView" >
 	  <id column="question_id" property="question_id"/>
-	  <result column="exam_id" property="exam_id"/>
 	  <result column="stuanswer" property="stuanswer"/>
 	  <result column="rightanswer" property="rightanswer"/>
 	  <result column="score" property="score"/>
@@ -24,7 +23,7 @@
 	<!-- 检索结果里没有答案字段的题目 -->
 	<select id="searchExamSingleNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, score, question, type, A, B, C, D
+			question_id, stuanswer, score, question, type, A, B, C, D
 		FROM
 			single_exam_v
 		WHERE
@@ -34,7 +33,7 @@
 	<!-- 检索试卷单选题 -->
 	<select id="searchExamSingle" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, rightanswer, score, question, type, A, B, C, D
+			question_id, stuanswer, rightanswer, score, question, type, A, B, C, D
 		FROM
 			single_exam_v
 		WHERE

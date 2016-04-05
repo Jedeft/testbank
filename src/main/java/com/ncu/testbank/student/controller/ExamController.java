@@ -327,7 +327,6 @@ public class ExamController {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
-			
 			List<QuestionParams> questionParamsList = BatchStudentAnswer.getQuestionParams();
 			for (QuestionParams qusetionParams : questionParamsList) {
 				shortAnswerService.updateExamStuAnswer(BatchStudentAnswer.getTest_id(),
@@ -335,6 +334,7 @@ public class ExamController {
 						qusetionParams.getAnswer());
 			}
 			examService.updateStatus(BatchStudentAnswer.getTest_id());
+			//TODO 单选，多选，判断题此处执行自动改卷
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {

@@ -79,7 +79,7 @@ public class ExamTest {
 	@Test
 	public void getExamTest() throws Exception {
 		User user = new User();
-		user.setUsername("Jerry");
+		user.setUsername("Tom");
 		mockSession.setAttribute("currentUser", user);
 
 		mockMvc.perform(

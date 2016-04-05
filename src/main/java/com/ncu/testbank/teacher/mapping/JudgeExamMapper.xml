@@ -20,7 +20,7 @@
 	<!-- 检索结果里没有答案字段的题目 -->
 	<select id="searchExamJudgeNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, score, question, type
+			question_id, stuanswer, score, question, type
 		FROM
 			judge_exam_v
 		WHERE
@@ -30,7 +30,7 @@
 	<!-- 检索判断题 -->
 	<select id="searchExamJudge" parameterType="java.lang.Long" resultMap="ViewResultMap">
 		SELECT
-			question_id, exam_id, stuanswer, rightanswer, score, question, type
+			question_id, stuanswer, rightanswer, score, question, type
 		FROM
 			judge_exam_v
 		WHERE
