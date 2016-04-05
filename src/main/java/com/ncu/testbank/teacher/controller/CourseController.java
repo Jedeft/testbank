@@ -42,7 +42,7 @@ public class CourseController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			List<Course> courseList = courseService.searchFromSyllabus(user
+			List<Course> courseList = courseService.searchFromSyllabusByTID(user
 					.getUsername());
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -75,7 +75,7 @@ public class CourseController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			List<Course> courseList = courseService.searchFromSyllabus(user
+			List<Course> courseList = courseService.searchFromSyllabusByTID(user
 					.getUsername());
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

@@ -20,11 +20,18 @@ public interface ICourseService {
 	/**
 	 * 根据教师ID获取该教师带课course信息
 	 * 
-	 * @param page
-	 * @param course
+	 * @param teacher_id
 	 * @return
 	 */
-	public List<Course> searchFromSyllabus(String teacher_id);
+	public List<Course> searchFromSyllabusByTID(String teacher_id);
+	
+	/**
+	 * 根据学生ID获取该学生上课course信息
+	 * 
+	 * @param student_id
+	 * @return
+	 */
+	public List<Course> searchFromSyllabusBySID(String student_id);
 	
 	/**
 	 * 根据教师ID获取该教师题库建设course信息

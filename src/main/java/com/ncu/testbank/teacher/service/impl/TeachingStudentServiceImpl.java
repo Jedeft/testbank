@@ -17,8 +17,8 @@ import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.teacher.dao.ITeachingStudentDao;
-import com.ncu.testbank.teacher.data.TeachingStudent;
-import com.ncu.testbank.teacher.data.view.TeachingStudentView;
+import com.ncu.testbank.teacher.data.SyllabusStudent;
+import com.ncu.testbank.teacher.data.view.SyllabusStudentView;
 import com.ncu.testbank.teacher.service.ITeachingStudentService;
 
 @Service("teachingStudentService")
@@ -42,7 +42,7 @@ public class TeachingStudentServiceImpl implements ITeachingStudentService {
 		List<String> failList = new ArrayList<>();
 		// syllabus_id和student_id插入到授课表中
 		for (String student_id : list) {
-			TeachingStudent teachingStudent = new TeachingStudent(
+			SyllabusStudent teachingStudent = new SyllabusStudent(
 					syllabus.getSyllabus_id(), student_id);
 			if (teachingStudentDao.insertOne(teachingStudent) < 1) {
 				// 插入失败的学生ID
@@ -65,8 +65,8 @@ public class TeachingStudentServiceImpl implements ITeachingStudentService {
 	}
 
 	@Override
-	public List<TeachingStudentView> searchData(PageInfo page,
-			TeachingStudentView teachingStudentView, String teacher_id) {
+	public List<SyllabusStudentView> searchData(PageInfo page,
+			SyllabusStudentView teachingStudentView, String teacher_id) {
 
 		// 1.通过教师ID、课程ID以及当下时间来确定出课程表syllabus_id
 		Syllabus syllabus = getSyllabus(teacher_id,
@@ -101,7 +101,7 @@ public class TeachingStudentServiceImpl implements ITeachingStudentService {
 		Syllabus syllabus = getSyllabus(teacher_id, course_id);
 		List<String> failList = new ArrayList<>();
 		for (String student_id : list) {
-			TeachingStudent teachingStudent = new TeachingStudent(
+			SyllabusStudent teachingStudent = new SyllabusStudent(
 					syllabus.getSyllabus_id(), student_id);
 			// 2.通过syllabus_id和学生ID，删除授课学生
 			if (teachingStudentDao.deleteOne(teachingStudent) < 1) {

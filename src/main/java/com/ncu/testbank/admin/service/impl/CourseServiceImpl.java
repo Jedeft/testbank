@@ -121,7 +121,7 @@ public class CourseServiceImpl implements ICourseService {
 	}
 
 	@Override
-	public List<Course> searchFromSyllabus(String teacher_id) {
+	public List<Course> searchFromSyllabusByTID(String teacher_id) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("teacher_id", teacher_id);
 		params.put("today", new Date());
@@ -131,6 +131,14 @@ public class CourseServiceImpl implements ICourseService {
 	@Override
 	public List<Course> searchFromBankBuilder(String teacher_id) {
 		return bankBuilderDao.searchCourseByTID(teacher_id);
+	}
+
+	@Override
+	public List<Course> searchFromSyllabusBySID(String student_id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("student_id", student_id);
+		params.put("today", new Date());
+		return syllabusDao.searchCourseByTID(params);
 	}
 
 }

@@ -23,7 +23,7 @@ import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.params.TeachingStudentParams;
-import com.ncu.testbank.teacher.data.view.TeachingStudentView;
+import com.ncu.testbank.teacher.data.view.SyllabusStudentView;
 import com.ncu.testbank.teacher.service.ITeachingStudentService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -136,11 +136,11 @@ public class TeachingStudentController {
 		ResponseQueryMsg msg = new ResponseQueryMsg();
 		try {
 			PageInfo pageInfo = new PageInfo(page, rows);
-			TeachingStudentView teachingStudentView = new TeachingStudentView(
+			SyllabusStudentView teachingStudentView = new SyllabusStudentView(
 					course_id, student_id, student_name);
 
 			User user = (User) session.getAttribute("currentUser");
-			List<TeachingStudentView> list = teachingStudentService.searchData(
+			List<SyllabusStudentView> list = teachingStudentService.searchData(
 					pageInfo, teachingStudentView, user.getUsername());
 
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
