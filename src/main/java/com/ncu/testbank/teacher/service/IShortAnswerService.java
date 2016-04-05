@@ -8,7 +8,6 @@ import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.ShortAnswerExamView;
 import com.ncu.testbank.teacher.data.view.ShortAnswerView;
 
 public interface IShortAnswerService {
@@ -75,12 +74,12 @@ public interface IShortAnswerService {
 	 */
 	public void updateImge(ShortAnswer shortAnswer, User user,
 			MultipartFile questionFile, MultipartFile answerFile);
-
+	
 	/**
-	 * 根据考试ID获取简答题（结果集无标准答案）
-	 * 
+	 * 更新考试学生答案
 	 * @param exam_id
-	 * @return
+	 * @param question_id
+	 * @param answer
 	 */
-	public List<ShortAnswerExamView> searchExamShortNoAnswer(Long exam_id);
+	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer);
 }

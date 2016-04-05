@@ -1101,7 +1101,7 @@ public class ExamServiceImpl implements IExamService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("teacher_id", teacher_id);
 		params.put("course_id", course_id);
-		return examDao.searchOnlineExam(params);
+		return examDao.searchOnlineExamByTID(params);
 	}
 
 	@Override
@@ -1115,7 +1115,7 @@ public class ExamServiceImpl implements IExamService {
 
 	@Override
 	@Transactional
-	public ExamPaperView getExamByID(Long exam_id) {
+	public ExamPaperView getExamDetailByID(Long exam_id) {
 		Exam exam = examDao.getExamById(exam_id);
 		Template template = templateDao.getOne(exam.getTemplate_id());
 		ExamPaperView examView = new ExamPaperView(exam.getExam_id(),
@@ -1138,5 +1138,46 @@ public class ExamServiceImpl implements IExamService {
 					.searchExamShort(exam.getExam_id()));
 		}
 		return examView;
+	}
+
+	@Override
+	public List<OnlineExamView> searchOnlineBySID(String student_id) {
+		return examDao.searchOnlineExamBySID(student_id);
+	}
+
+	@Override
+	public Exam getExamByID(Long exam_id) {
+		return examDao.getExamById(exam_id);
+	}
+
+	@Override
+	public ExamPaperView getExamDetailByIDNoAnswer(Long exam_id) {
+		Exam exam = examDao.getExamById(exam_id);
+		Template template = templateDao.getOne(exam.getTemplate_id());
+		ExamPaperView examView = new ExamPaperView(exam.getExam_id(),
+				exam.getTemplate_id(), exam.getStart_time(),
+				exam.getEnd_time(), exam.getUser_id());
+		if (template.getSingle_num() > 0) {
+			examView.setSingleList(singleExamDao.searchExamSingleNoAnswer(exam
+					.getExam_id()));
+		}
+		if (template.getMultiple_num() > 0) {
+			examView.setMultipleList(multipleExamDao.searchExamMultipleNoAnswer(exam
+					.getExam_id()));
+		}
+		if (template.getJudge_num() > 0) {
+			examView.setJudgeleList(judgeExamDao.searchExamJudgeNoAnswer(exam
+					.getExam_id()));
+		}
+		if (template.getShortAnswer_num() > 0) {
+			examView.setShortAnswerleList(shortAnswerExamDao
+					.searchExamShortNoAnswer(exam.getExam_id()));
+		}
+		return examView;
+	}
+
+	@Override
+	public void updateStatus(Long exam_id) {
+		
 	}
 }

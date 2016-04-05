@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -31,7 +32,6 @@ import com.ncu.testbank.teacher.dao.IMultipleDao;
 import com.ncu.testbank.teacher.dao.IMultipleExamDao;
 import com.ncu.testbank.teacher.data.Multiple;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.MultipleExamView;
 import com.ncu.testbank.teacher.data.view.MultipleView;
 import com.ncu.testbank.teacher.service.IMultipleService;
 
@@ -210,7 +210,11 @@ public class MultipleServiceImpl implements IMultipleService {
 	}
 
 	@Override
-	public List<MultipleExamView> searchExamMultipleNoAnswer(Long exam_id) {
-		return multipleExamDao.searchExamMultipleNoAnswer(exam_id);
+	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		multipleExamDao.updateStuAnswer(params);
 	}
 }

@@ -30,7 +30,14 @@ public interface IExamDao {
 	 * @param params
 	 * @return
 	 */
-	public List<OnlineExamView> searchOnlineExam(Map<String, Object> params);
+	public List<OnlineExamView> searchOnlineExamByTID(Map<String, Object> params);
+	
+	/**
+	 * 根据教师ID和课程ID获得在线考试学生情况
+	 * @param params
+	 * @return
+	 */
+	public List<OnlineExamView> searchOnlineExamBySID(String student_id);
 	
 	
 	/**
@@ -41,9 +48,16 @@ public interface IExamDao {
 	public List<HistoryExamView> searchHistoryExam(Map<String, Object> params);
 	
 	/**
-	 * 根据试卷ID获得试卷信息
+	 * 根据试卷ID获得试卷详细信息
 	 * @param exam_id
 	 * @return
 	 */
 	public Exam getExamById(Long exam_id);
+	
+	/**
+	 * 更新试卷状态
+	 * @param exam_id
+	 * @return
+	 */
+	public int updateStatus(Long exam_id);
 }

@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -31,7 +32,6 @@ import com.ncu.testbank.teacher.dao.ISingleDao;
 import com.ncu.testbank.teacher.dao.ISingleExamDao;
 import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.SingleExamView;
 import com.ncu.testbank.teacher.data.view.SingleView;
 import com.ncu.testbank.teacher.service.ISingleService;
 
@@ -207,8 +207,11 @@ public class SingleServiceImpl implements ISingleService {
 	}
 
 	@Override
-	public List<SingleExamView> searchExamSingleNoAnswer(Long exam_id) {
-		return singleExamDao.searchExamSingleNoAnswer(exam_id);
+	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		singleExamDao.updateStuAnswer(params);
 	}
-
 }

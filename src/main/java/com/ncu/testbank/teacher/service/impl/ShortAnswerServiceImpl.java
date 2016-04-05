@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -31,7 +32,6 @@ import com.ncu.testbank.teacher.dao.IShortAnswerDao;
 import com.ncu.testbank.teacher.dao.IShortAnswerExamDao;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.ShortAnswerExamView;
 import com.ncu.testbank.teacher.data.view.ShortAnswerView;
 import com.ncu.testbank.teacher.service.IShortAnswerService;
 
@@ -256,8 +256,11 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 	}
 
 	@Override
-	public List<ShortAnswerExamView> searchExamShortNoAnswer(Long exam_id) {
-		return shortAnswerExamDao.searchExamShortNoAnswer(exam_id);
+	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		shortAnswerExamDao.updateStuAnswer(params);
 	}
-
 }

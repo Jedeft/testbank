@@ -36,6 +36,7 @@ import com.ncu.testbank.teacher.service.ITemplateService;
  * 
  * @author Jedeft
  */
+//TODO 后台需要重构，用quartz框架做作业调度
 public class ExamExecutor {
 
 	@Autowired

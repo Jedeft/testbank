@@ -99,9 +99,17 @@ public interface IExamService {
 	 */
 	public List<OnlineExamView> searchOnlineByTID(String teacher_id,
 			String course_id);
+	
+	/**
+	 * 根据学生ID查询在线考试情况
+	 * 
+	 * @param student_id
+	 * @return
+	 */
+	public List<OnlineExamView> searchOnlineBySID(String student_id);
 
 	/**
-	 * 根据教师ID和课程ID查询在线考试情况
+	 * 根据教师ID和课程ID查询历史笔试卷情况
 	 * 
 	 * @param teacher_id
 	 * @param course_id
@@ -111,9 +119,28 @@ public interface IExamService {
 			String course_id);
 	
 	/**
-	 * 根据使用者ID查询试卷
+	 * 根据试卷ID获得试卷详细（结果集包含正确答案）
 	 * @param exam_id
 	 * @return
 	 */
-	public ExamPaperView getExamByID(Long exam_id);
+	public ExamPaperView getExamDetailByID(Long exam_id);
+	
+	/**
+	 * 根据试卷ID获得试卷详细（结果集不包含正确答案）
+	 * @param exam_id
+	 * @return
+	 */
+	public ExamPaperView getExamDetailByIDNoAnswer(Long exam_id);
+	
+	/**
+	 * 根据试卷ID获得试卷基本信息
+	 * @param exam_id
+	 * @return
+	 */
+	public Exam getExamByID(Long exam_id);
+	
+	/**
+	 * 更新考试状态，置为已提交，后续不可修改
+	 */
+	public void updateStatus(Long exam_id);
 }

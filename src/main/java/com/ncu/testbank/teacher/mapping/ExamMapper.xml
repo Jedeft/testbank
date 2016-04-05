@@ -9,6 +9,7 @@
 	  <result column="end_time" property="end_time"/>
 	  <result column="score" property="score"/>
 	  <result column="user_id" property="user_id"/>
+	  <result column="status" property="status"/>
 	</resultMap>
 	
 	<resultMap id="OnlineViewResultMap" type="com.ncu.testbank.teacher.data.view.OnlineExamView" >
@@ -37,7 +38,7 @@
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		exam_id, template_id, start_time, end_time, score, user_id
+		exam_id, template_id, start_time, end_time, score, user_id, status
 	</sql>
 
 	<insert id="insertOne" parameterType="com.ncu.testbank.teacher.data.Exam">
@@ -53,7 +54,7 @@
 			exam_id = #{exam_id}
 	</delete>
 	
-	<select id="searchOnlineExam" resultMap="OnlineViewResultMap">
+	<select id="searchOnlineExamByTID" resultMap="OnlineViewResultMap">
 		SELECT
 			exam_id, template_id, start_time, end_time, score, student_id, student_name, level
 		FROM
@@ -62,6 +63,15 @@
 			teacher_id = #{teacher_id}
 		AND
 			course_id = #{course_id}
+	</select>
+	
+	<select id="searchOnlineExamBySID" resultMap="OnlineViewResultMap" parameterType="java.lang.String">
+		SELECT
+			exam_id, template_id, start_time, end_time, score, student_id, student_name, level
+		FROM
+			onlineexam_v
+		WHERE
+			student_id = #{teacher_id}
 	</select>
 	
 	<select id="searchHistoryExam" resultMap="HistoryViewResultMap">
@@ -83,4 +93,13 @@
 		WHERE
 			exam_id = #{exam_id }
 	</select>
+	
+	<update id="updateStatus" parameterType="java.lang.Long">
+		UPDATE
+			exam
+		SET
+			status = 1
+		WHERE
+			exam_id = #{exam_id }
+	</update>
 </mapper>

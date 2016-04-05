@@ -36,7 +36,7 @@ public class CourseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/syllabus/course", method = RequestMethod.GET)
-	@ApiOperation(value = "检索教师带课课程", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	@ApiOperation(value = "检索教师带课课程", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseStudent权限，请header中携带Token")
 	public ResponseMsg searchFromSyllabus(@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {

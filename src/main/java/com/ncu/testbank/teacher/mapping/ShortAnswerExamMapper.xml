@@ -44,4 +44,15 @@
 		AND
 			question_id = #{question_id}
 	</delete>
+	
+	<update id="updateStuAnswer">
+		UPDATE
+			shortanswer_exam
+		SET
+			stuanswer = #{answer }
+		WHERE
+			exam_id = #{exam_id }
+		AND
+			question_id = #{question_id }
+	</update>
 </mapper>

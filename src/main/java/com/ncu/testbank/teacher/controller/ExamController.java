@@ -40,8 +40,8 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Api(value = "exam-api", description = "考试模块", position = 3)
-@RestController
+@Api(value = "teacherExam-api", description = "教师组卷模块", position = 3)
+@RestController("teacherExam")
 @RequestMapping("/teacher")
 public class ExamController {
 
@@ -90,26 +90,9 @@ public class ExamController {
 					.getTemplate_id());
 			Exam exam = examService.createExam(template, user.getUsername(),
 					examParams.getStart_time(), examParams.getEnd_time());
-			// 获取exam试卷信息返回前台
-			ExamPaperView examView = new ExamPaperView(exam.getExam_id(),
-					exam.getTemplate_id(), exam.getStart_time(),
-					exam.getEnd_time(), user.getUsername());
-			if (template.getSingle_num() > 0) {
-				examView.setSingleList(singleService
-						.searchExamSingleNoAnswer(exam.getExam_id()));
-			}
-			if (template.getMultiple_num() > 0) {
-				examView.setMultipleList(multipleService
-						.searchExamMultipleNoAnswer(exam.getExam_id()));
-			}
-			if (template.getJudge_num() > 0) {
-				examView.setJudgeleList(judgeService
-						.searchExamJudgeNoAnswer(exam.getExam_id()));
-			}
-			if (template.getShortAnswer_num() > 0) {
-				examView.setShortAnswerleList(shortAnswerService
-						.searchExamShortNoAnswer(exam.getExam_id()));
-			}
+			
+			// 获取exam试卷信息返回前台（包含正确答案）
+			ExamPaperView examView = examService.getExamDetailByID(exam.getExam_id());
 			msg.data = examView;
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -504,17 +487,17 @@ public class ExamController {
 	}
 
 	/**
-	 * 分页获取历史试卷信息(笔试)
+	 * 获取试卷信息
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/exam/detail", method = RequestMethod.GET)
-	@ApiOperation(value = "查看考试试卷详细信息（包含题目），笔试类型包含正确答案，在线考试类型包含学生答案和正确答案", httpMethod = "GET", response = ResponseQueryMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
+	@ApiOperation(value = "查看考试试卷详细信息（包含题目），笔试类型包含正确答案，在线考试类型包含学生答案和正确答案", httpMethod = "GET", response = ResponseMsg.class, notes = "需要baseTeacher权限，请header中携带Token")
 	public ResponseMsg getExamDetail(
 			@ApiParam(required = true, name = "exam_id", value = "试卷ID") @RequestParam(value = "exam_id", required = true) Long exam_id) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			ExamPaperView examPaperView = examService.getExamByID(exam_id);
+			ExamPaperView examPaperView = examService.getExamDetailByID(exam_id);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = examPaperView;

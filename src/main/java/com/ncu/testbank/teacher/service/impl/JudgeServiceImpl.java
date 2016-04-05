@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -31,7 +32,6 @@ import com.ncu.testbank.teacher.dao.IJudgeDao;
 import com.ncu.testbank.teacher.dao.IJudgeExamDao;
 import com.ncu.testbank.teacher.data.Judge;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
-import com.ncu.testbank.teacher.data.view.JudgeExamView;
 import com.ncu.testbank.teacher.data.view.JudgeView;
 import com.ncu.testbank.teacher.service.IJudgeService;
 
@@ -208,8 +208,11 @@ public class JudgeServiceImpl implements IJudgeService {
 	}
 
 	@Override
-	public List<JudgeExamView> searchExamJudgeNoAnswer(Long exam_id) {
-		return judgeExamDao.searchExamJudgeNoAnswer(exam_id);
+	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		judgeExamDao.updateStuAnswer(params);
 	}
-
 }

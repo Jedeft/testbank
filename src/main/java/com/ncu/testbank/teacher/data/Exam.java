@@ -9,6 +9,7 @@ public class Exam {
 	private Timestamp end_time;
 	private double score;
 	private String user_id;
+	private int status;
 
 	public Exam() {
 		super();
@@ -23,7 +24,7 @@ public class Exam {
 		this.end_time = end_time;
 		this.user_id = user_id;
 	}
-	
+
 	public long getExam_id() {
 		return exam_id;
 	}
@@ -70,6 +71,14 @@ public class Exam {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }
