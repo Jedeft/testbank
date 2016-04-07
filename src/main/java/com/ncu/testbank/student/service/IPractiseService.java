@@ -3,10 +3,9 @@ package com.ncu.testbank.student.service;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.ncu.testbank.teacher.data.Exam;
+import com.ncu.testbank.student.data.Practise;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.view.ExamPaperView;
-import com.ncu.testbank.teacher.data.view.HistoryExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
 
 public interface IPractiseService {
@@ -19,7 +18,7 @@ public interface IPractiseService {
 	 * @param end
 	 * @return
 	 */
-	public Exam createPractise(Template template, String student_id, Timestamp start,
+	public Practise createPractise(Template template, String student_id, Timestamp start,
 			Timestamp end);
 	
 	/**

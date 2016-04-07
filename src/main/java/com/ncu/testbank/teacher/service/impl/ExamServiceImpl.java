@@ -1178,6 +1178,6 @@ public class ExamServiceImpl implements IExamService {
 
 	@Override
 	public void updateStatus(Long exam_id) {
-		
+		examDao.updateStatus(exam_id);
 	}
 }

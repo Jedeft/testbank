@@ -90,7 +90,6 @@ public class ExamController {
 					.getTemplate_id());
 			Exam exam = examService.createExam(template, user.getUsername(),
 					examParams.getStart_time(), examParams.getEnd_time());
-			
 			// 获取exam试卷信息返回前台（包含正确答案）
 			ExamPaperView examView = examService.getExamDetailByID(exam.getExam_id());
 			msg.data = examView;
