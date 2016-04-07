@@ -5,16 +5,16 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.ncu.testbank.student.data.view.JudgePractiseView;
 import com.ncu.testbank.teacher.data.Question;
-import com.ncu.testbank.teacher.data.view.JudgeExamView;
 
 @Repository
 public interface IJudgePractiseDao {
 	public int insertJudge(Question question);
 
-	public List<JudgeExamView> searchExamJudgeNoAnswer(Long exam_id);
+	public List<JudgePractiseView> searchExamJudgeNoAnswer(Long exam_id);
 	
-	public List<JudgeExamView> searchExamJudge(Long exam_id);
+	public List<JudgePractiseView> searchExamJudge(Long exam_id);
 	
 	public int deleteOne(Map<String, Object> params);
 	
