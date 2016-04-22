@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.student.data.Practise;
-import com.ncu.testbank.teacher.data.view.OnlineExamView;
+import com.ncu.testbank.student.data.view.PractiseView;
 
 @Repository
 public interface IPractiseDao {
@@ -31,7 +31,7 @@ public interface IPractiseDao {
 	 * @param student_id
 	 * @return
 	 */
-	public List<OnlineExamView> searchData(long student_id);
+	public List<PractiseView> searchData(long student_id);
 
 	/**
 	 * 根据练习ID获得练习信息 此处为一个事物
@@ -39,5 +39,5 @@ public interface IPractiseDao {
 	 * @param pracitse_id
 	 * @return
 	 */
-	public Practise getPracitseById(Long pracitse_id);
+	public Practise getPractiseById(Long pracitse_id);
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.student.dao.IMultiplePractiseDao" >
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.student.data.view.MultiplePractiseView" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="practise_id" property="practise_id"/>
+	  <result column="stuanswer" property="stuanswer"/>
+	  <result column="rightanswer" property="rightanswer"/>
+	  <result column="status" property="status"/>
+	  <result column="question" property="question"/>
+	  <result column="type" property="type"/>
+	  <result column="A" property="A"/>
+	  <result column="B" property="B"/>
+	  <result column="C" property="C"/>
+	  <result column="D" property="D"/>
+	</resultMap>
+
+	<insert id="insertMultiple" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			multiple_practise(practise_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
+	
+	<!-- 检索结果里没有答案字段的题目 -->
+	<select id="searchPractiseMultipleNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, stuanswer, status, question, type, A, B, C, D
+		FROM
+			multiple_practise_v
+		WHERE
+			practise_id = #{practise_id}
+	</select>
+	
+	<!-- 检索试卷多选题 -->
+	<select id="searchPractiseMultiple" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, stuanswer, rightanswer, status, question, type, A, B, C, D
+		FROM
+			multiple_practise_v
+		WHERE
+			practise_id = #{practise_id}
+	</select>
+	
+	<delete id="deleteOne">
+		DELETE FROM multiple_practise
+		WHERE
+			practise_id = #{practise_id}
+		AND
+			question_id = #{question_id}
+	</delete>
+	
+	<update id="updateStuAnswer">
+		UPDATE
+			multiple_practise
+		SET
+			stuanswer = #{answer }
+		WHERE
+			practise_id = #{practise_id }
+		AND
+			question_id = #{question_id }
+	</update>
+</mapper>

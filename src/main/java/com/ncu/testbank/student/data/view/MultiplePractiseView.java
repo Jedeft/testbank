@@ -4,7 +4,7 @@ public class MultiplePractiseView {
 	private long question_id;
 	private String stuanswer;
 	private String rightanswer;
-	private double score;
+	private String status;
 	private String question;
 	private String A;
 	private String B;
@@ -36,12 +36,12 @@ public class MultiplePractiseView {
 		this.rightanswer = rightanswer;
 	}
 
-	public double getScore() {
-		return score;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setScore(double score) {
-		this.score = score;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getQuestion() {

@@ -12,9 +12,9 @@ import com.ncu.testbank.teacher.data.Question;
 public interface ISinglePractiseDao {
 	public int insertSingle(Question question);
 
-	public List<SinglePractiseView> searchExamSingleNoAnswer(Long exam_id);
+	public List<SinglePractiseView> searchPractiseSingleNoAnswer(Long exam_id);
 	
-	public List<SinglePractiseView> searchExamSingle(Long exam_id);
+	public List<SinglePractiseView> searchPractiseSingle(Long exam_id);
 	
 	public int deleteOne(Map<String, Object> params);
 	

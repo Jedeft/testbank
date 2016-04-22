@@ -4,7 +4,7 @@ public class SinglePractiseView {
 	private long question_id;
 	private String stuanswer;
 	private String rightanswer;
-	private double score;
+	private String status;
 	private String question;
 	private String A;
 	private String B;
@@ -34,14 +34,6 @@ public class SinglePractiseView {
 
 	public void setRightanswer(String rightanswer) {
 		this.rightanswer = rightanswer;
-	}
-
-	public double getScore() {
-		return score;
-	}
-
-	public void setScore(double score) {
-		this.score = score;
 	}
 
 	public String getQuestion() {
@@ -90,6 +82,14 @@ public class SinglePractiseView {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

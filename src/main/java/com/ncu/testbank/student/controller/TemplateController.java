@@ -44,13 +44,16 @@ public class TemplateController {
 	@RequestMapping(value = "/templates", method = RequestMethod.POST)
 	@ApiOperation(value = "添加练习模板", httpMethod = "POST", response = ResponseMsg.class, notes = "需要baseStudent权限，请header中携带Token")
 	public ResponseMsg insertStudents(
-			@ApiParam(required = true, name = "template", value = "添加的练习模板json数据，ID为后台自生成，前台校验三个ratio比例加起来为100%，type默认为3，可无这个参数") @RequestBody TemplateParams template,
+			@ApiParam(required = true, name = "template", value = "添加的练习模板json数据，ID为后台自生成，前台校验三个ratio比例加起来为100%，type默认为3，可无这个参数，学生端模板没有简答题。") @RequestBody TemplateParams template,
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			User user = (User) session.getAttribute("currentUser");
 			//此处默认为3模板
 			template.setType(3);
+			//练习模板没有简答题
+			template.setShortAnswer_num(0);
+			template.setShortAnswer_score(0);
 			Template data = templateService.insertOne(template, user);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
@@ -81,9 +84,12 @@ public class TemplateController {
 	@RequestMapping(value = "/templates", method = RequestMethod.PATCH)
 	@ApiOperation(value = "修改练习模板", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要baseStudent权限，请header中携带Token")
 	public ResponseMsg updateWriting(
-			@ApiParam(required = true, name = "template", value = "修改的模板json数据，前台校验三个ratio比例加起来为100%") @RequestBody TemplateParams template) {
+			@ApiParam(required = true, name = "template", value = "修改的模板json数据，前台校验三个ratio比例加起来为100%，学生端模板没有简答题。") @RequestBody TemplateParams template) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
+			//练习模板没有简答题
+			template.setShortAnswer_num(0);
+			template.setShortAnswer_score(0);
 			templateService.updateOne(template);
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;

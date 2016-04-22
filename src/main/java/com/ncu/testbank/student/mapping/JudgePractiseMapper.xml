@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.testbank.student.dao.IJudgePractiseDao" >
+	<resultMap id="ViewResultMap" type="com.ncu.testbank.student.data.view.JudgePractiseView" >
+	  <id column="question_id" property="question_id"/>
+	  <result column="practise_id" property="practise_id"/>
+	  <result column="stuanswer" property="stuanswer"/>
+	  <result column="rightanswer" property="rightanswer"/>
+	  <result column="status" property="status"/>
+	  <result column="question" property="question"/>
+	  <result column="type" property="type"/>
+	</resultMap>
+	
+	<insert id="insertJudge" parameterType="com.ncu.testbank.teacher.data.Question">
+		INSERT INTO
+			judge_practise(practise_id, question_id, rightanswer)
+		VALUES(#{test_id}, #{question_id}, #{answer})
+	</insert>
+	
+	<!-- 检索结果里没有答案字段的题目 -->
+	<select id="searchPractiseJudgeNoAnswer" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, stuanswer, status, question, type
+		FROM
+			judge_practise_v
+		WHERE
+			practise_id = #{practise_id}
+	</select>
+	
+	<!-- 检索判断题 -->
+	<select id="searchPractiseJudge" parameterType="java.lang.Long" resultMap="ViewResultMap">
+		SELECT
+			question_id, stuanswer, rightanswer, status, question, type
+		FROM
+			judge_practise_v
+		WHERE
+			practise_id = #{practise_id}
+	</select>
+	
+	<delete id="deleteOne">
+		DELETE FROM judge_practise
+		WHERE
+			practise_id = #{practise_id}
+		AND
+			question_id = #{question_id}
+	</delete>
+	
+	<update id="updateStuAnswer">
+		UPDATE
+			judge_practise
+		SET
+			stuanswer = #{answer }
+		WHERE
+			practise_id = #{practise_id }
+		AND
+			question_id = #{question_id }
+	</update>
+</mapper>

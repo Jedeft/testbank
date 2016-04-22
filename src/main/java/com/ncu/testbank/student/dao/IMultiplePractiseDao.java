@@ -12,9 +12,9 @@ import com.ncu.testbank.teacher.data.Question;
 public interface IMultiplePractiseDao {
 	public int insertMultiple(Question question);
 
-	public List<MultiplePractiseView> searchExamMultipleNoAnswer(Long exam_id);
+	public List<MultiplePractiseView> searchPractiseMultipleNoAnswer(Long exam_id);
 	
-	public List<MultiplePractiseView> searchExamMultiple(Long exam_id);
+	public List<MultiplePractiseView> searchPractiseMultiple(Long exam_id);
 	
 	public int deleteOne(Map<String, Object> params);
 	

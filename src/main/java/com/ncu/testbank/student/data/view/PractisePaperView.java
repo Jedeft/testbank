@@ -1,21 +1,25 @@
-package com.ncu.testbank.student.data;
+package com.ncu.testbank.student.data.view;
 
 import java.sql.Timestamp;
+import java.util.List;
 
-public class Practise {
+public class PractisePaperView {
 	private long practise_id;
 	private long template_id;
 	private Timestamp start_time;
 	private Timestamp end_time;
-	private double right_ratio;
 	private String user_id;
+	// 由于不确定页面具体显示哪些题目信息，故用Map
+	private List<SinglePractiseView> singleList;
+	private List<MultiplePractiseView> multipleList;
+	private List<JudgePractiseView> judgeleList;
 
-	public Practise() {
+	public PractisePaperView() {
 		super();
 	}
 
-	public Practise(long practise_id, long template_id, Timestamp start_time,
-			Timestamp end_time, String user_id) {
+	public PractisePaperView(long practise_id, long template_id,
+			Timestamp start_time, Timestamp end_time, String user_id) {
 		super();
 		this.practise_id = practise_id;
 		this.template_id = template_id;
@@ -56,20 +60,36 @@ public class Practise {
 		this.end_time = end_time;
 	}
 
-	public double getRight_ratio() {
-		return right_ratio;
-	}
-
-	public void setRight_ratio(double right_ratio) {
-		this.right_ratio = right_ratio;
-	}
-
 	public String getUser_id() {
 		return user_id;
 	}
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public List<SinglePractiseView> getSingleList() {
+		return singleList;
+	}
+
+	public void setSingleList(List<SinglePractiseView> singleList) {
+		this.singleList = singleList;
+	}
+
+	public List<MultiplePractiseView> getMultipleList() {
+		return multipleList;
+	}
+
+	public void setMultipleList(List<MultiplePractiseView> multipleList) {
+		this.multipleList = multipleList;
+	}
+
+	public List<JudgePractiseView> getJudgeleList() {
+		return judgeleList;
+	}
+
+	public void setJudgeleList(List<JudgePractiseView> judgeleList) {
+		this.judgeleList = judgeleList;
 	}
 
 }
