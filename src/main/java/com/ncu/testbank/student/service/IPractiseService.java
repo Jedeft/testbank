@@ -37,4 +37,16 @@ public interface IPractiseService {
 	 * @return
 	 */
 	public PractisePaperView getPracitseDetailByIDNoAnswer(Long practise_id);
+	
+	/**
+	 * 根据练习ID获得练习基本信息
+	 * @param practise_id
+	 * @return
+	 */
+	public Practise getPractiseByID(Long practise_id);
+	
+	/**
+	 * 更新练习状态，置为已提交，后续不可修改
+	 */
+	public void updateStatus(Long practise_id);
 }

@@ -37,6 +37,7 @@ import com.ncu.testbank.teacher.service.ITemplateService;
  * @author Jedeft
  */
 //TODO 后台需要重构，用quartz框架做作业调度
+//TODO 判断考试是否过了考试时间，过了考试时间的试卷自动改卷
 public class ExamExecutor {
 
 	@Autowired

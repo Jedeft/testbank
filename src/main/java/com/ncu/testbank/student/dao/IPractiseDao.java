@@ -34,10 +34,17 @@ public interface IPractiseDao {
 	public List<PractiseView> searchData(long student_id);
 
 	/**
-	 * 根据练习ID获得练习信息 此处为一个事物
+	 * 根据练习ID获得练习信息 
 	 * 
 	 * @param pracitse_id
 	 * @return
 	 */
-	public Practise getPractiseById(Long pracitse_id);
+	public Practise getPractiseById(Long practise_id);
+	
+	/**
+	 * 更新练习状态
+	 * @param exam_id
+	 * @return
+	 */
+	public int updateStatus(Long practise_id);
 }

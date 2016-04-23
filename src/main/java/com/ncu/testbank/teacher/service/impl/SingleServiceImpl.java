@@ -28,6 +28,7 @@ import com.ncu.testbank.base.utils.QiniuImgUtil;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.UuidUtil;
 import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.student.dao.ISinglePractiseDao;
 import com.ncu.testbank.teacher.dao.ISingleDao;
 import com.ncu.testbank.teacher.dao.ISingleExamDao;
 import com.ncu.testbank.teacher.data.Single;
@@ -45,6 +46,9 @@ public class SingleServiceImpl implements ISingleService {
 
 	@Autowired
 	private ISingleExamDao singleExamDao;
+
+	@Autowired
+	private ISinglePractiseDao singlePractiseDao;
 
 	@Override
 	public void insertWriting(Single single, User user) {
@@ -207,11 +211,22 @@ public class SingleServiceImpl implements ISingleService {
 	}
 
 	@Override
-	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+	public void updateExamStuAnswer(Long exam_id, Long question_id,
+			String answer) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("answer", answer);
 		params.put("exam_id", exam_id);
 		params.put("question_id", question_id);
 		singleExamDao.updateStuAnswer(params);
+	}
+
+	@Override
+	public void updatePractiseStuAnswer(Long practise_id, Long question_id,
+			String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("practise_id", practise_id);
+		params.put("question_id", question_id);
+		singlePractiseDao.updateStuAnswer(params);
 	}
 }

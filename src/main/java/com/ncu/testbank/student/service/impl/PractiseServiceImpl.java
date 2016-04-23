@@ -779,4 +779,14 @@ public class PractiseServiceImpl implements IPractiseService {
 		}
 		return true;
 	}
+
+	@Override
+	public Practise getPractiseByID(Long practise_id) {
+		return practiseDao.getPractiseById(practise_id);
+	}
+
+	@Override
+	public void updateStatus(Long practise_id) {
+		practiseDao.updateStatus(practise_id);
+	}
 }

@@ -9,6 +9,7 @@ public class Practise {
 	private Timestamp end_time;
 	private double right_ratio;
 	private String user_id;
+	private int status;
 
 	public Practise() {
 		super();
@@ -70,6 +71,14 @@ public class Practise {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }

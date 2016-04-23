@@ -9,6 +9,7 @@
 	  <result column="end_time" property="end_time"/>
 	  <result column="right_ratio" property="right_ratio"/>
 	  <result column="user_id" property="user_id"/>
+	  <result column="status" property="status"/>
 	</resultMap>
 	
 	<resultMap id="PractiseViewResultMap" type="com.ncu.testbank.student.data.view.PractiseView" >
@@ -21,7 +22,7 @@
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		practise_id, template_id, start_time, end_time, right_ratio, user_id
+		practise_id, template_id, start_time, end_time, right_ratio, user_id, status
 	</sql>
 
 	<insert id="insertOne" parameterType="com.ncu.testbank.student.data.Practise">
@@ -54,4 +55,13 @@
 		WHERE
 			practise_id = #{practise_id }
 	</select>
+	
+	<update id="updateStatus" parameterType="java.lang.Long">
+		UPDATE
+			practise
+		SET
+			status = 1
+		WHERE
+			practise_id = #{practise_id }
+	</update>
 </mapper>

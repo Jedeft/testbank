@@ -69,12 +69,24 @@ public interface IMultipleService {
 	 * @param file
 	 */
 	public void updateImge(Multiple multiple, User user, MultipartFile file);
-	
+
 	/**
 	 * 更新考试学生答案
+	 * 
 	 * @param exam_id
 	 * @param question_id
 	 * @param answer
 	 */
-	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer);
+	public void updateExamStuAnswer(Long exam_id, Long question_id,
+			String answer);
+
+	/**
+	 * 更新练习学生答案
+	 * 
+	 * @param practise_id
+	 * @param question_id
+	 * @param answer
+	 */
+	public void updatePractiseStuAnswer(Long practise_id, Long question_id,
+			String answer);
 }

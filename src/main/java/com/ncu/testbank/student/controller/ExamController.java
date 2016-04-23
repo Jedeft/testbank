@@ -245,7 +245,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getExam_id() == 1 ) {
+			if ( exam.getStatus() == 1 ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -284,7 +284,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getExam_id() == 1 ) {
+			if ( exam.getStatus() == 1 ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -323,7 +323,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(BatchStudentAnswer.getTest_id());
-			if ( exam.getExam_id() == 1 ) {
+			if ( exam.getStatus() == 1 ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}

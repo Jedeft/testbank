@@ -28,6 +28,7 @@ import com.ncu.testbank.base.utils.QiniuImgUtil;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.UuidUtil;
 import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.student.dao.IMultiplePractiseDao;
 import com.ncu.testbank.teacher.dao.IMultipleDao;
 import com.ncu.testbank.teacher.dao.IMultipleExamDao;
 import com.ncu.testbank.teacher.data.Multiple;
@@ -45,6 +46,9 @@ public class MultipleServiceImpl implements IMultipleService {
 
 	@Autowired
 	private IMultipleExamDao multipleExamDao;
+
+	@Autowired
+	private IMultiplePractiseDao multiplePractiseDao;
 
 	@Override
 	public void insertWriting(Multiple multiple, User user) {
@@ -210,11 +214,22 @@ public class MultipleServiceImpl implements IMultipleService {
 	}
 
 	@Override
-	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+	public void updateExamStuAnswer(Long exam_id, Long question_id,
+			String answer) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("answer", answer);
 		params.put("exam_id", exam_id);
 		params.put("question_id", question_id);
 		multipleExamDao.updateStuAnswer(params);
+	}
+
+	@Override
+	public void updatePractiseStuAnswer(Long practise_id, Long question_id,
+			String answer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("answer", answer);
+		params.put("practise_id", practise_id);
+		params.put("question_id", question_id);
+		multiplePractiseDao.updateStuAnswer(params);
 	}
 }
