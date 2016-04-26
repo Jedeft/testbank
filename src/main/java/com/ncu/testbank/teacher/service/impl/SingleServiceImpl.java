@@ -72,6 +72,7 @@ public class SingleServiceImpl implements ISingleService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SingleView> searchData(PageInfo page, Single single) {
 		Map<String, Object> params = null;

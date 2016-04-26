@@ -16,7 +16,7 @@ public interface ITemplateDao {
 	public int updateOne(Template template);
 
 	public Template getOne(long template_id);
-	
+
 	public Template getOneByExamId(long exam_id);
 
 	public int deleteData(List<Long> template_id);

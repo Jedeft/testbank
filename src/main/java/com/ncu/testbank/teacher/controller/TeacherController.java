@@ -80,7 +80,7 @@ public class TeacherController {
 			User user = (User) session.getAttribute("currentUser");
 
 			if (user != null) {
-				if ( !user.getUsername().equals(teacherInfo.getTeacher_id()) ) {
+				if (!user.getUsername().equals(teacherInfo.getTeacher_id())) {
 					msg.errorCode = 666666;
 					msg.msg = "只可以修改个人资料！";
 					return msg;

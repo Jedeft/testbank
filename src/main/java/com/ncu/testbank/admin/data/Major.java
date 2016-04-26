@@ -1,6 +1,5 @@
 package com.ncu.testbank.admin.data;
 
-import com.ncu.testbank.base.response.PageInfo;
 
 /**
  * 基础数据模块

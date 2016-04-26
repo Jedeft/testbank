@@ -25,9 +25,10 @@ public interface IPointService {
 	 * @param point
 	 */
 	public void updatePoint(Point point);
-	
+
 	/**
 	 * 获取考点
+	 * 
 	 * @param point_id
 	 * @return
 	 */
@@ -40,5 +41,5 @@ public interface IPointService {
 	 * @return
 	 */
 	public List<Point> searchPoint(String course_id);
-	
+
 }

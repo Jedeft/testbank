@@ -38,6 +38,7 @@ public class CourseServiceImpl implements ICourseService {
 	@Autowired
 	private IBankBuilderDao bankBuilderDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Course> searchData(PageInfo page, Course course) {
 		Map<String, Object> params = null;

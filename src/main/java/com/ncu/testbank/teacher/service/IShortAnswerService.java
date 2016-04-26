@@ -74,12 +74,14 @@ public interface IShortAnswerService {
 	 */
 	public void updateImge(ShortAnswer shortAnswer, User user,
 			MultipartFile questionFile, MultipartFile answerFile);
-	
+
 	/**
 	 * 更新考试学生答案
+	 * 
 	 * @param exam_id
 	 * @param question_id
 	 * @param answer
 	 */
-	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer);
+	public void updateExamStuAnswer(Long exam_id, Long question_id,
+			String answer);
 }

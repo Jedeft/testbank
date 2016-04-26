@@ -42,6 +42,7 @@ public class MultipleController {
 
 	/**
 	 * 添加文字多选题
+	 * 
 	 * @param multiple
 	 * @param session
 	 * @return
@@ -77,6 +78,7 @@ public class MultipleController {
 
 	/**
 	 * 修改文字多选题
+	 * 
 	 * @param multiple
 	 * @param session
 	 * @return
@@ -269,6 +271,7 @@ public class MultipleController {
 
 	/**
 	 * 修改图片题目
+	 * 
 	 * @param questionFile
 	 * @param question_id
 	 * @param point_id

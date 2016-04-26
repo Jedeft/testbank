@@ -2,7 +2,6 @@ package com.ncu.testbank.permission.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ncu.testbank.permission.data.User;
@@ -56,9 +55,10 @@ public interface IUserDao {
 	 * @param username
 	 */
 	public void deleteData(List<String> username);
-	
+
 	/**
 	 * 获取批量用户
+	 * 
 	 * @param username
 	 * @return
 	 */

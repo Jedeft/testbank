@@ -28,6 +28,7 @@ public class ClazzServiceImpl implements IClazzService {
 	@Autowired
 	private IClazzDao clazzDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Clazz> searchData(PageInfo page, Clazz clazz) {
 		Map<String, Object> params = null;

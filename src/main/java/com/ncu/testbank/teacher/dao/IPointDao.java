@@ -11,13 +11,14 @@ public interface IPointDao {
 	public int insertOne(Point point);
 
 	public int deleteData(List<Long> point_id);
-	
+
 	public int updateOne(Point point);
-	
+
 	public Point getPoint(long point_id);
-	
+
 	/**
 	 * 通过课程ID，检索该课程下所有的考点
+	 * 
 	 * @param course_id
 	 * @return
 	 */

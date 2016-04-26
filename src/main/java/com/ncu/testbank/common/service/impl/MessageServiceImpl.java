@@ -55,6 +55,7 @@ public class MessageServiceImpl implements IMessageService {
 		return messageDao.searchTitleData(params);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<MessageView> searchMessage(PageInfo page, Message message) {
 		Map<String, Object> params = null;

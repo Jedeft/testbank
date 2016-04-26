@@ -33,6 +33,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
 	@Autowired
 	private ISyllabusDao syllabusDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SyllabusView> searchData(PageInfo page, Syllabus syllabus) {
 		Map<String, Object> params = null;

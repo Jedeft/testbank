@@ -42,6 +42,7 @@ public class JudgeController {
 
 	/**
 	 * 添加文字判断题
+	 * 
 	 * @param judge
 	 * @param session
 	 * @return
@@ -77,6 +78,7 @@ public class JudgeController {
 
 	/**
 	 * 修改文字判断题
+	 * 
 	 * @param judge
 	 * @param session
 	 * @return
@@ -200,7 +202,7 @@ public class JudgeController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<DELQuestionParams> params = null;
-			if (question!= null && question.get("question") != null) {
+			if (question != null && question.get("question") != null) {
 				params = question.get("question");
 			} else {
 				msg.errorCode = 66666;
@@ -269,6 +271,7 @@ public class JudgeController {
 
 	/**
 	 * 修改图片题目
+	 * 
 	 * @param questionFile
 	 * @param question_id
 	 * @param point_id

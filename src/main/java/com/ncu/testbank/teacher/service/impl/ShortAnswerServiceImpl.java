@@ -69,6 +69,7 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ShortAnswerView> searchData(PageInfo page,
 			ShortAnswer shortAnswer) {
@@ -256,7 +257,8 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 	}
 
 	@Override
-	public void updateExamStuAnswer(Long exam_id, Long question_id, String answer) {
+	public void updateExamStuAnswer(Long exam_id, Long question_id,
+			String answer) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("answer", answer);
 		params.put("exam_id", exam_id);

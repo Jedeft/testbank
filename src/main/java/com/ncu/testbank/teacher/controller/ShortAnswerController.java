@@ -142,7 +142,8 @@ public class ShortAnswerController {
 			msg.total = pageInfo.getTotal();
 			msg.totalPage = pageInfo.getTotalPage();
 			msg.currentPage = pageInfo.getPage();
-			msg.pageCount = shortAnswerList != null ? shortAnswerList.size() : 0;
+			msg.pageCount = shortAnswerList != null ? shortAnswerList.size()
+					: 0;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
@@ -204,7 +205,7 @@ public class ShortAnswerController {
 		ResponseMsg msg = new ResponseMsg();
 		try {
 			List<DELQuestionParams> params = null;
-			if (question!= null && question.get("question") != null) {
+			if (question != null && question.get("question") != null) {
 				params = question.get("question");
 			} else {
 				msg.errorCode = 66666;

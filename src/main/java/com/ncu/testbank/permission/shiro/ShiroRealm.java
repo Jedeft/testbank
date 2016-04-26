@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -109,7 +108,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		User user = userService.getUser(token.getUsername());
 		if (null == user) {
 			throw new ShiroException(ErrorCode.USERNAME_MISSING);
-			//throw new AccountException(ErrorCode.USERNAME_MISSING.name);
+			// throw new AccountException(ErrorCode.USERNAME_MISSING.name);
 		}
 		// 这里的密码没有加密，实际应该有加密操作的
 		char[] c = token.getPassword();

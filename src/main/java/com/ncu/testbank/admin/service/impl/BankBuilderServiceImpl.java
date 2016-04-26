@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.ncu.testbank.admin.dao.IBankBuilderDao;
 import com.ncu.testbank.admin.data.BankBuilder;
-import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.admin.data.view.BankBuilderView;
 import com.ncu.testbank.admin.service.IBankBuilderService;
 import com.ncu.testbank.base.exception.ErrorCode;
@@ -25,14 +24,16 @@ import com.ncu.testbank.permission.dao.IRoleDao;
 public class BankBuilderServiceImpl implements IBankBuilderService {
 
 	private Logger log = Logger.getLogger("testbankLog");
-	
+
 	@Autowired
 	private IBankBuilderDao bankBuilderDao;
 	@Autowired
 	private IRoleDao roleDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<BankBuilderView> searchData(PageInfo page, BankBuilderView bankBuilder){
+	public List<BankBuilderView> searchData(PageInfo page,
+			BankBuilderView bankBuilder) {
 		Map<String, Object> params = null;
 		try {
 			params = BeanToMapUtils.convertBean(bankBuilder);

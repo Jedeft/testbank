@@ -27,6 +27,7 @@ public class MajorServiceImpl implements IMajorService {
 	@Autowired
 	private IMajorDao majorDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Major> searchData(PageInfo page, Major major) {
 		Map<String, Object> params = null;

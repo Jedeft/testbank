@@ -1,7 +1,5 @@
 package com.ncu.testbank.admin.data;
 
-import com.ncu.testbank.base.response.PageInfo;
-
 /**
  * 基础数据模块
  * 
@@ -11,7 +9,7 @@ import com.ncu.testbank.base.response.PageInfo;
 public class Academy {
 	private String academy_id;
 	private String name;
-	
+
 	public Academy() {
 		super();
 	}

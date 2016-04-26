@@ -72,6 +72,7 @@ public class JudgeServiceImpl implements IJudgeService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<JudgeView> searchData(PageInfo page, Judge judge) {
 		Map<String, Object> params = null;

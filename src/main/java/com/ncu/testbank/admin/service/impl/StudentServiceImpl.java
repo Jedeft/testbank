@@ -39,6 +39,7 @@ public class StudentServiceImpl implements IStudentService {
 	@Autowired
 	private IUserDao userDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Student> searchData(PageInfo page, Student student) {
 		Map<String, Object> params = null;
@@ -115,8 +116,8 @@ public class StudentServiceImpl implements IStudentService {
 			user.setUsername(student.getStudent_id());
 			user.setName(student.getName());
 			if (userDao.updateOne(user) < 1) {
-				throw new ServiceException(
-						new ErrorCode(30001, "学生账号不存在，账号信息更新失败！"));
+				throw new ServiceException(new ErrorCode(30001,
+						"学生账号不存在，账号信息更新失败！"));
 			}
 		}
 	}

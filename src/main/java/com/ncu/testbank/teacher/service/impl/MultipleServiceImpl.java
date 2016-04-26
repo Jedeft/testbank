@@ -72,6 +72,7 @@ public class MultipleServiceImpl implements IMultipleService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<MultipleView> searchData(PageInfo page, Multiple multiple) {
 		Map<String, Object> params = null;

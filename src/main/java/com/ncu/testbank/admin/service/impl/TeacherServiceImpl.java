@@ -39,6 +39,7 @@ public class TeacherServiceImpl implements ITeacherService {
 	@Autowired
 	private IUserDao userDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Teacher> searchData(PageInfo page, Teacher teacher) {
 		Map<String, Object> params = null;
@@ -114,8 +115,8 @@ public class TeacherServiceImpl implements ITeacherService {
 			user.setUsername(teacher.getTeacher_id());
 			user.setName(teacher.getName());
 			if (userDao.updateOne(user) < 1) {
-				throw new ServiceException(
-						new ErrorCode(30001, "教师账号不存在，账号信息更新失败！"));
+				throw new ServiceException(new ErrorCode(30001,
+						"教师账号不存在，账号信息更新失败！"));
 			}
 		}
 	}

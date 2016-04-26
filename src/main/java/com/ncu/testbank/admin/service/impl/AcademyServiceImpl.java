@@ -28,6 +28,7 @@ public class AcademyServiceImpl implements IAcademyService {
 	@Autowired
 	private IAcademyDao academyDao;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Academy> searchData(PageInfo page, Academy academy) {
 		Map<String, Object> params = null;
