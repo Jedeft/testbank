@@ -54,7 +54,10 @@ public interface IPractiseService {
 	public Practise getPractiseByID(Long practise_id);
 
 	/**
+	 * 自动改卷
 	 * 更新练习状态，置为已提交，后续不可修改
+	 * 此处开启事物
+	 * @param practise_id
 	 */
-	public void updateStatus(Long practise_id);
+	public void AutoCheckPractise(Long practise_id);
 }

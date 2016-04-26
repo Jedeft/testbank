@@ -17,6 +17,7 @@ import com.ncu.testbank.base.exception.DaoException;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
 import com.ncu.testbank.base.exception.ShiroException;
+import com.ncu.testbank.base.response.Const;
 import com.ncu.testbank.base.response.PageInfo;
 import com.ncu.testbank.base.response.ResponseMsg;
 import com.ncu.testbank.base.response.ResponseQueryMsg;
@@ -167,7 +168,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getExam_id() == 1 ) {
+			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -206,7 +207,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getExam_id() == 1 ) {
+			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -245,7 +246,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == 1 ) {
+			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -284,7 +285,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == 1 ) {
+			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -323,7 +324,7 @@ public class ExamController {
 		try {
 			//判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(BatchStudentAnswer.getTest_id());
-			if ( exam.getStatus() == 1 ) {
+			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}

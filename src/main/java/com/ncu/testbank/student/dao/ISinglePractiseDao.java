@@ -12,11 +12,20 @@ import com.ncu.testbank.teacher.data.Question;
 public interface ISinglePractiseDao {
 	public int insertSingle(Question question);
 
-	public List<SinglePractiseView> searchPractiseSingleNoAnswer(Long exam_id);
+	public List<SinglePractiseView> searchPractiseSingleNoAnswer(Long practise_id);
 	
-	public List<SinglePractiseView> searchPractiseSingle(Long exam_id);
+	public List<SinglePractiseView> searchPractiseSingle(Long practise_id);
 	
 	public int deleteOne(Map<String, Object> params);
 	
 	public int updateStuAnswer(Map<String, Object> params);
+	
+	/**
+	 * 更新题目正确性
+	 * @param practise_id
+	 * @param question_id
+	 * @param status
+	 * @return
+	 */
+	public int updateStatus(Long practise_id, Long question_id, String status);
 }

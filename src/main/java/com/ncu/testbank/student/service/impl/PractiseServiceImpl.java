@@ -10,10 +10,12 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.ncu.testbank.base.exception.ErrorCode;
 import com.ncu.testbank.base.exception.ServiceException;
+import com.ncu.testbank.base.response.Const;
 import com.ncu.testbank.base.utils.ExamUtils;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.RandomUtils;
@@ -22,8 +24,11 @@ import com.ncu.testbank.student.dao.IMultiplePractiseDao;
 import com.ncu.testbank.student.dao.IPractiseDao;
 import com.ncu.testbank.student.dao.ISinglePractiseDao;
 import com.ncu.testbank.student.data.Practise;
+import com.ncu.testbank.student.data.view.JudgePractiseView;
+import com.ncu.testbank.student.data.view.MultiplePractiseView;
 import com.ncu.testbank.student.data.view.PractisePaperView;
 import com.ncu.testbank.student.data.view.PractiseView;
+import com.ncu.testbank.student.data.view.SinglePractiseView;
 import com.ncu.testbank.student.service.IPractiseService;
 import com.ncu.testbank.teacher.dao.IJudgeDao;
 import com.ncu.testbank.teacher.dao.IMultipleDao;
@@ -533,8 +538,42 @@ public class PractiseServiceImpl implements IPractiseService {
 	}
 
 	@Override
-	public void updateStatus(Long practise_id) {
+	@Transactional
+	public void AutoCheckPractise(Long practise_id) {
 		practiseDao.updateStatus(practise_id);
+		PractisePaperView practiseView = this
+				.getPractiseDetailByID(practise_id);
+		List<SinglePractiseView> singleList = practiseView.getSingleList();
+		List<MultiplePractiseView> multipleList = practiseView
+				.getMultipleList();
+		List<JudgePractiseView> judgeList = practiseView.getJudgeleList();
+		for (SinglePractiseView single : singleList) {
+			if (single.getRightanswer().equals(single.getStuanswer())) {
+				singlePractiseDao.updateStatus(practise_id,
+						single.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+			} else {
+				singlePractiseDao.updateStatus(practise_id,
+						single.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+			}
+		}
+		for (MultiplePractiseView multiple : multipleList) {
+			if (multiple.getRightanswer().equals(multiple.getStuanswer())) {
+				multiplePractiseDao.updateStatus(practise_id,
+						multiple.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+			} else {
+				multiplePractiseDao.updateStatus(practise_id,
+						multiple.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+			}
+		}
+		for (JudgePractiseView judge : judgeList) {
+			if (judge.getRightanswer().equals(judge.getStuanswer())) {
+				judgePractiseDao.updateStatus(practise_id,
+						judge.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+			} else {
+				judgePractiseDao.updateStatus(practise_id,
+						judge.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+			}
+		}
 	}
 
 	@Override
