@@ -59,4 +59,15 @@
 		AND
 			question_id = #{question_id }
 	</update>
+	
+	<update id="updateStatus">
+		UPDATE
+			multiple_practise
+		SET
+			status = #{status }
+		WHERE
+			practise_id = #{practise_id }
+		AND
+			question_id = #{question_id }
+	</update>
 </mapper>

@@ -140,7 +140,10 @@ public interface IExamService {
 	public Exam getExamByID(Long exam_id);
 	
 	/**
+	 * 自动改卷
 	 * 更新考试状态，置为已提交，后续不可修改
+	 * 此处开启事物
+	 * @param exam_id
 	 */
-	public void updateStatus(Long exam_id);
+	public void AutoCheckExam(Long exam_id);
 }

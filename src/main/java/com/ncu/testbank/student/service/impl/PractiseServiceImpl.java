@@ -547,32 +547,34 @@ public class PractiseServiceImpl implements IPractiseService {
 		List<MultiplePractiseView> multipleList = practiseView
 				.getMultipleList();
 		List<JudgePractiseView> judgeList = practiseView.getJudgeleList();
+		Map<String, Object> params = new HashMap<>();
+		params.put("practise_id", practise_id);
 		for (SinglePractiseView single : singleList) {
+			params.put("question_id", single.getQuestion_id());
 			if (single.getRightanswer().equals(single.getStuanswer())) {
-				singlePractiseDao.updateStatus(practise_id,
-						single.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+				params.put("status", Const.PRACTISE_STATUS_RIGHT);
 			} else {
-				singlePractiseDao.updateStatus(practise_id,
-						single.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
+			singlePractiseDao.updateStatus(params);
 		}
 		for (MultiplePractiseView multiple : multipleList) {
+			params.put("question_id", multiple.getQuestion_id());
 			if (multiple.getRightanswer().equals(multiple.getStuanswer())) {
-				multiplePractiseDao.updateStatus(practise_id,
-						multiple.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+				params.put("status", Const.PRACTISE_STATUS_RIGHT);
 			} else {
-				multiplePractiseDao.updateStatus(practise_id,
-						multiple.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
+			multiplePractiseDao.updateStatus(params);
 		}
 		for (JudgePractiseView judge : judgeList) {
+			params.put("question_id", judge.getQuestion_id());
 			if (judge.getRightanswer().equals(judge.getStuanswer())) {
-				judgePractiseDao.updateStatus(practise_id,
-						judge.getQuestion_id(), Const.PRACTISE_STATUS_RIGHT);
+				params.put("status", Const.PRACTISE_STATUS_RIGHT);
 			} else {
-				judgePractiseDao.updateStatus(practise_id,
-						judge.getQuestion_id(), Const.PRACTISE_STATUS_WRONG);
+				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
+			judgePractiseDao.updateStatus(params);
 		}
 	}
 

@@ -40,7 +40,10 @@ import com.ncu.testbank.teacher.data.Single;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.view.ExamPaperView;
 import com.ncu.testbank.teacher.data.view.HistoryExamView;
+import com.ncu.testbank.teacher.data.view.JudgeExamView;
+import com.ncu.testbank.teacher.data.view.MultipleExamView;
 import com.ncu.testbank.teacher.data.view.OnlineExamView;
+import com.ncu.testbank.teacher.data.view.SingleExamView;
 import com.ncu.testbank.teacher.service.IExamService;
 
 @Service("examService")
@@ -1162,8 +1165,8 @@ public class ExamServiceImpl implements IExamService {
 					.getExam_id()));
 		}
 		if (template.getMultiple_num() > 0) {
-			examView.setMultipleList(multipleExamDao.searchExamMultipleNoAnswer(exam
-					.getExam_id()));
+			examView.setMultipleList(multipleExamDao
+					.searchExamMultipleNoAnswer(exam.getExam_id()));
 		}
 		if (template.getJudge_num() > 0) {
 			examView.setJudgeleList(judgeExamDao.searchExamJudgeNoAnswer(exam
@@ -1177,7 +1180,35 @@ public class ExamServiceImpl implements IExamService {
 	}
 
 	@Override
-	public void updateStatus(Long exam_id) {
+	public void AutoCheckExam(Long exam_id) {
 		examDao.updateStatus(exam_id);
+		Template template = templateDao.getOneByExamId(exam_id);
+		ExamPaperView examView = this.getExamDetailByID(exam_id);
+		List<SingleExamView> singleList = examView.getSingleList();
+		List<MultipleExamView> multipleList = examView.getMultipleList();
+		List<JudgeExamView> judgeList = examView.getJudgeleList();
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		for (SingleExamView single : singleList) {
+			params.put("question_id", single.getQuestion_id());
+			if (single.getRightanswer().equals(single.getStuanswer())) {
+				params.put("score", template.getSingle_score());
+				singleExamDao.updateScore(params);
+			}
+		}
+		for (MultipleExamView multiple : multipleList) {
+			params.put("question_id", multiple.getQuestion_id());
+			if (multiple.getRightanswer().equals(multiple.getStuanswer())) {
+				params.put("score", template.getMultiple_score());
+				singleExamDao.updateScore(params);
+			}
+		}
+		for (JudgeExamView judge : judgeList) {
+			params.put("question_id", judge.getQuestion_id());
+			if (judge.getRightanswer().equals(judge.getStuanswer())) {
+				params.put("score", template.getJudge_score());
+				singleExamDao.updateScore(params);
+			}
+		}
 	}
 }

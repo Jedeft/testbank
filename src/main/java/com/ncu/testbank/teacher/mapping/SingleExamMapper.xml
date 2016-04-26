@@ -58,4 +58,15 @@
 		AND
 			question_id = #{question_id }
 	</update>
+	
+	<update id="updateScore">
+		UPDATE
+			single_exam
+		SET
+			score = #{score }
+		WHERE
+			exam_id = #{exam_id }
+		AND
+			question_id = #{question_id }
+	</update>
 </mapper>
