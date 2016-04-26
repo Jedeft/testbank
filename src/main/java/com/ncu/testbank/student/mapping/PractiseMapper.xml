@@ -19,6 +19,7 @@
 	  <result column="end_time" property="end_time"/>
 	  <result column="right_ratio" property="right_ratio"/>
 	  <result column="level" property="level"/>
+	  <result column="course_name" property="course_name"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -40,7 +41,7 @@
 	
 	<select id="searchData" resultMap="PractiseViewResultMap">
 		SELECT
-			practise_id, template_id, start_time, end_time, right_ratio, level
+			practise_id, template_id, start_time, end_time, right_ratio, level, course_name
 		FROM
 			practise_v
 		WHERE

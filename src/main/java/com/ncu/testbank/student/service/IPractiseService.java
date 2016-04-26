@@ -18,33 +18,41 @@ public interface IPractiseService {
 	 * @param end
 	 * @return
 	 */
-	public Practise createPractise(Template template, String student_id, Timestamp start,
-			Timestamp end);
-	
+	public Practise createPractise(Template template, String student_id,
+			Timestamp start, Timestamp end);
+
 	/**
-	 * 根据课程ID和学生ID查询在线练习情况
+	 * 根据学生ID查询在线练习情况
 	 * 
 	 * @param student_id
-	 * @param course_id
 	 * @return
 	 */
-	public List<PractiseView> searchBySID(String student_id,
-			String course_id);
+	public List<PractiseView> searchData(String student_id);
+
+	/**
+	 * 根据试卷ID获得试卷详细（结果集包含正确答案）
+	 * 
+	 * @param practise_id
+	 * @return
+	 */
+	public PractisePaperView getPractiseDetailByID(Long practise_id);
 
 	/**
 	 * 根据练习ID获取无答案练习卷
+	 * 
 	 * @param practise_id
 	 * @return
 	 */
 	public PractisePaperView getPracitseDetailByIDNoAnswer(Long practise_id);
-	
+
 	/**
 	 * 根据练习ID获得练习基本信息
+	 * 
 	 * @param practise_id
 	 * @return
 	 */
 	public Practise getPractiseByID(Long practise_id);
-	
+
 	/**
 	 * 更新练习状态，置为已提交，后续不可修改
 	 */

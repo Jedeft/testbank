@@ -500,9 +500,8 @@ public class PractiseServiceImpl implements IPractiseService {
 	}
 
 	@Override
-	public List<PractiseView> searchBySID(String student_id, String course_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PractiseView> searchData(String student_id) {
+		return practiseDao.searchData(new Long(student_id));
 	}
 
 	@Override
@@ -526,6 +525,39 @@ public class PractiseServiceImpl implements IPractiseService {
 					.searchPractiseJudgeNoAnswer(practise.getPractise_id()));
 		}
 		return practiseView;
+	}
+
+	@Override
+	public Practise getPractiseByID(Long practise_id) {
+		return practiseDao.getPractiseById(practise_id);
+	}
+
+	@Override
+	public void updateStatus(Long practise_id) {
+		practiseDao.updateStatus(practise_id);
+	}
+
+	@Override
+	public PractisePaperView getPractiseDetailByID(Long practise_id) {
+		Practise practise = practiseDao.getPractiseById(practise_id);
+		Template template = templateDao.getOne(practise.getTemplate_id());
+		PractisePaperView examView = new PractisePaperView(
+				practise.getPractise_id(), practise.getTemplate_id(),
+				practise.getStart_time(), practise.getEnd_time(),
+				practise.getUser_id());
+		if (template.getSingle_num() > 0) {
+			examView.setSingleList(singlePractiseDao
+					.searchPractiseSingle(practise.getPractise_id()));
+		}
+		if (template.getMultiple_num() > 0) {
+			examView.setMultipleList(multiplePractiseDao
+					.searchPractiseMultiple(practise.getPractise_id()));
+		}
+		if (template.getJudge_num() > 0) {
+			examView.setJudgeleList(judgePractiseDao
+					.searchPractiseJudge(practise.getPractise_id()));
+		}
+		return examView;
 	}
 
 	private boolean createSingle(int questionCount, List<Long> points,
@@ -780,13 +812,4 @@ public class PractiseServiceImpl implements IPractiseService {
 		return true;
 	}
 
-	@Override
-	public Practise getPractiseByID(Long practise_id) {
-		return practiseDao.getPractiseById(practise_id);
-	}
-
-	@Override
-	public void updateStatus(Long practise_id) {
-		practiseDao.updateStatus(practise_id);
-	}
 }
