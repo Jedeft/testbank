@@ -18,6 +18,7 @@ public class OnlineExamView {
 	private String student_name;
 	private int level;
 	private String course_name;
+	private int status;
 
 	public long getExam_id() {
 		return exam_id;
@@ -89,6 +90,14 @@ public class OnlineExamView {
 
 	public void setCourse_name(String course_name) {
 		this.course_name = course_name;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }

@@ -10,6 +10,10 @@ public class PractiseView {
 	private double right_ratio;
 	private int level;
 	private String course_name;
+	/**
+	 * 练习状态。1为已提交试卷，0为未提交试卷
+	 */
+	private int status;
 
 	public long getPractise_id() {
 		return practise_id;
@@ -65,6 +69,14 @@ public class PractiseView {
 
 	public void setCourse_name(String course_name) {
 		this.course_name = course_name;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }
