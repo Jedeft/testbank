@@ -1,6 +1,7 @@
 package com.ncu.testbank.student.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -34,17 +35,26 @@ public interface IPractiseDao {
 	public List<PractiseView> searchData(long student_id);
 
 	/**
-	 * 根据练习ID获得练习信息 
+	 * 根据练习ID获得练习信息
 	 * 
 	 * @param pracitse_id
 	 * @return
 	 */
 	public Practise getPractiseById(Long practise_id);
-	
+
 	/**
 	 * 更新练习状态
+	 * 
 	 * @param exam_id
 	 * @return
 	 */
 	public int updateStatus(Long practise_id);
+
+	/**
+	 * 更新练习正确率
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public int updateRightRatio(Map<String, Object> params);
 }

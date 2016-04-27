@@ -1189,11 +1189,13 @@ public class ExamServiceImpl implements IExamService {
 		List<JudgeExamView> judgeList = examView.getJudgeleList();
 		Map<String, Object> params = new HashMap<>();
 		params.put("exam_id", exam_id);
+		Double score = 0.0;
 		for (SingleExamView single : singleList) {
 			params.put("question_id", single.getQuestion_id());
 			if (single.getRightanswer().equals(single.getStuanswer())) {
 				params.put("score", template.getSingle_score());
 				singleExamDao.updateScore(params);
+				score += template.getSingle_score();
 			}
 		}
 		for (MultipleExamView multiple : multipleList) {
@@ -1201,6 +1203,7 @@ public class ExamServiceImpl implements IExamService {
 			if (multiple.getRightanswer().equals(multiple.getStuanswer())) {
 				params.put("score", template.getMultiple_score());
 				singleExamDao.updateScore(params);
+				score += template.getMultiple_score();
 			}
 		}
 		for (JudgeExamView judge : judgeList) {
@@ -1208,7 +1211,13 @@ public class ExamServiceImpl implements IExamService {
 			if (judge.getRightanswer().equals(judge.getStuanswer())) {
 				params.put("score", template.getJudge_score());
 				singleExamDao.updateScore(params);
+				score += template.getJudge_score();
 			}
 		}
+
+		params.clear();
+		params.put("exam_id", exam_id);
+		params.put("score", score);
+		examDao.updateScore(params);
 	}
 }

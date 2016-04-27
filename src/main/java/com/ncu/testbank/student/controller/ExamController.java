@@ -166,9 +166,9 @@ public class ExamController {
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			//判断试卷是否已经提交过
+			// 判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
+			if (exam.getStatus() == Const.COMMITTED_TEST) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -205,9 +205,9 @@ public class ExamController {
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			//判断试卷是否已经提交过
+			// 判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
+			if (exam.getStatus() == Const.COMMITTED_TEST) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -244,9 +244,9 @@ public class ExamController {
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			//判断试卷是否已经提交过
+			// 判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
+			if (exam.getStatus() == Const.COMMITTED_TEST) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -283,9 +283,9 @@ public class ExamController {
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			//判断试卷是否已经提交过
+			// 判断试卷是否已经提交过
 			Exam exam = examService.getExamByID(studentAnswer.getTest_id());
-			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
+			if (exam.getStatus() == Const.COMMITTED_TEST) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
@@ -322,20 +322,22 @@ public class ExamController {
 			@ApiIgnore HttpSession session) {
 		ResponseMsg msg = new ResponseMsg();
 		try {
-			//判断试卷是否已经提交过
-			Exam exam = examService.getExamByID(BatchStudentAnswer.getTest_id());
-			if ( exam.getStatus() == Const.COMMITTED_TEST ) {
+			// 判断试卷是否已经提交过
+			Exam exam = examService
+					.getExamByID(BatchStudentAnswer.getTest_id());
+			if (exam.getStatus() == Const.COMMITTED_TEST) {
 				msg.errorCode = ErrorCode.EXAM_COMPLETENESS.code;
 				msg.msg = ErrorCode.EXAM_COMPLETENESS.name;
 			}
-			List<QuestionParams> questionParamsList = BatchStudentAnswer.getQuestionParams();
+			List<QuestionParams> questionParamsList = BatchStudentAnswer
+					.getQuestionParams();
 			for (QuestionParams qusetionParams : questionParamsList) {
-				shortAnswerService.updateExamStuAnswer(BatchStudentAnswer.getTest_id(),
+				shortAnswerService.updateExamStuAnswer(
+						BatchStudentAnswer.getTest_id(),
 						qusetionParams.getQuestion_id(),
 						qusetionParams.getAnswer());
 			}
 			examService.AutoCheckExam(BatchStudentAnswer.getTest_id());
-			//TODO 单选，多选，判断题此处执行自动改卷
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {

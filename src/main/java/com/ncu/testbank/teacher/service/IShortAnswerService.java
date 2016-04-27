@@ -84,4 +84,14 @@ public interface IShortAnswerService {
 	 */
 	public void updateExamStuAnswer(Long exam_id, Long question_id,
 			String answer);
+
+	/**
+	 * 更新试卷简答题分数，并修改试卷总分数，开启事物
+	 * 
+	 * @param exam_id
+	 * @param question_id
+	 * @param score
+	 */
+	public void updateStuAnswerScore(Long exam_id, Long question_id,
+			Double score);
 }

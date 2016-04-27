@@ -66,4 +66,13 @@
 		WHERE
 			practise_id = #{practise_id }
 	</update>
+	
+	<update id="updateScore">
+		UPDATE
+			practise
+		SET
+			right_ratio = #{right_ratio }
+		WHERE
+			practise_id = #{practise_id }
+	</update>
 </mapper>

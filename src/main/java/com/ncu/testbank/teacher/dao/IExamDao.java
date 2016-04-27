@@ -66,4 +66,11 @@ public interface IExamDao {
 	 * @return
 	 */
 	public int updateStatus(Long exam_id);
+	
+	/**
+	 * 更改试卷分数
+	 * @param params
+	 * @return
+	 */
+	public int updateScore(Map<String, Object> params);
 }

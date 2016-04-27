@@ -549,10 +549,17 @@ public class PractiseServiceImpl implements IPractiseService {
 		List<JudgePractiseView> judgeList = practiseView.getJudgeleList();
 		Map<String, Object> params = new HashMap<>();
 		params.put("practise_id", practise_id);
+
+		Integer rightCount = 0;
+		Integer questionCount = (singleList == null ? 0 : singleList.size())
+				+ (multipleList == null ? 0 : multipleList.size())
+				+ (judgeList == null ? 0 : judgeList.size());
+
 		for (SinglePractiseView single : singleList) {
 			params.put("question_id", single.getQuestion_id());
 			if (single.getRightanswer().equals(single.getStuanswer())) {
 				params.put("status", Const.PRACTISE_STATUS_RIGHT);
+				rightCount++;
 			} else {
 				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
@@ -562,6 +569,7 @@ public class PractiseServiceImpl implements IPractiseService {
 			params.put("question_id", multiple.getQuestion_id());
 			if (multiple.getRightanswer().equals(multiple.getStuanswer())) {
 				params.put("status", Const.PRACTISE_STATUS_RIGHT);
+				rightCount++;
 			} else {
 				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
@@ -571,11 +579,20 @@ public class PractiseServiceImpl implements IPractiseService {
 			params.put("question_id", judge.getQuestion_id());
 			if (judge.getRightanswer().equals(judge.getStuanswer())) {
 				params.put("status", Const.PRACTISE_STATUS_RIGHT);
+				rightCount++;
 			} else {
 				params.put("status", Const.PRACTISE_STATUS_WRONG);
 			}
 			judgePractiseDao.updateStatus(params);
 		}
+
+		Double right_ratio = rightCount.doubleValue()
+				/ questionCount.doubleValue();
+		// 更新练习正确率
+		params.clear();
+		params.put("practise_id", practise_id);
+		params.put("right_ratio", right_ratio);
+		practiseDao.updateRightRatio(params);
 	}
 
 	@Override

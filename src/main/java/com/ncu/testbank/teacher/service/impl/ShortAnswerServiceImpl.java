@@ -16,6 +16,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ncu.testbank.base.exception.ErrorCode;
@@ -28,8 +29,10 @@ import com.ncu.testbank.base.utils.QiniuImgUtil;
 import com.ncu.testbank.base.utils.RandomID;
 import com.ncu.testbank.base.utils.UuidUtil;
 import com.ncu.testbank.permission.data.User;
+import com.ncu.testbank.teacher.dao.IExamDao;
 import com.ncu.testbank.teacher.dao.IShortAnswerDao;
 import com.ncu.testbank.teacher.dao.IShortAnswerExamDao;
+import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.ShortAnswer;
 import com.ncu.testbank.teacher.data.params.DELQuestionParams;
 import com.ncu.testbank.teacher.data.view.ShortAnswerView;
@@ -45,6 +48,9 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 
 	@Autowired
 	private IShortAnswerExamDao shortAnswerExamDao;
+
+	@Autowired
+	private IExamDao examDao;
 
 	@Override
 	public void insertWriting(ShortAnswer shortAnswer, User user) {
@@ -264,5 +270,22 @@ public class ShortAnswerServiceImpl implements IShortAnswerService {
 		params.put("exam_id", exam_id);
 		params.put("question_id", question_id);
 		shortAnswerExamDao.updateStuAnswer(params);
+	}
+
+	@Override
+	@Transactional
+	public void updateStuAnswerScore(Long exam_id, Long question_id,
+			Double score) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("exam_id", exam_id);
+		params.put("question_id", question_id);
+		params.put("score", score);
+		shortAnswerExamDao.updateScore(params);
+
+		Exam exam = examDao.getExamById(exam_id);
+		params.clear();
+		params.put("exam_id", exam_id);
+		params.put("score", exam.getScore() + score);
+		examDao.updateScore(params);
 	}
 }

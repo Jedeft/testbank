@@ -25,6 +25,7 @@ import com.ncu.testbank.base.utils.JSONUtils;
 import com.ncu.testbank.permission.data.User;
 import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
+import com.ncu.testbank.teacher.data.params.CheckParams;
 import com.ncu.testbank.teacher.data.params.ExamParams;
 import com.ncu.testbank.teacher.data.params.ExamQuestionParams;
 import com.ncu.testbank.teacher.data.view.ExamPaperView;
@@ -502,6 +503,39 @@ public class ExamController {
 			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
 			msg.msg = ErrorCode.CALL_SUCCESS.name;
 			msg.data = examPaperView;
+		} catch (ShiroException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (ServiceException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		} catch (DaoException e) {
+			ErrorCode error = e.getErrorCode();
+			msg.errorCode = error.code;
+			msg.msg = error.name;
+		}
+		return msg;
+	}
+
+	/**
+	 * 添加考试简答题
+	 * 
+	 * @param judge
+	 * @return
+	 */
+	@RequiresRoles("bankBuilder")
+	@RequestMapping(value = "/exam/online/shortAnswer", method = RequestMethod.PATCH)
+	@ApiOperation(value = "考试简答题改分", httpMethod = "PATCH", response = ResponseMsg.class, notes = "需要teacher权限，请header中携带Token")
+	public ResponseMsg checkShortAnswer(
+			@ApiParam(required = true, name = "checkParams", value = "题目打分参数") @RequestBody CheckParams checkParams) {
+		ResponseMsg msg = new ResponseMsg();
+		try {
+			shortAnswerService.updateStuAnswerScore(checkParams.getExam_id(),
+					checkParams.getQuestion_id(), checkParams.getScore());
+			msg.errorCode = ErrorCode.CALL_SUCCESS.code;
+			msg.msg = ErrorCode.CALL_SUCCESS.name;
 		} catch (ShiroException e) {
 			ErrorCode error = e.getErrorCode();
 			msg.errorCode = error.code;
