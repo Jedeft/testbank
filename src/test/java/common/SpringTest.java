@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.ncu.testbank.base.utils.ActiveMqUtils;
 import com.ncu.testbank.base.utils.EmailUtils;
 import com.ncu.testbank.base.utils.JWTUtils;
+import com.ncu.testbank.student.service.IPractiseService;
 import com.ncu.testbank.teacher.service.IExamService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +39,22 @@ public class SpringTest {
 		System.out.println(JWTUtils.validateToken(token, "Jedeft"));
 		List<String> list = new ArrayList<>();
 		list.toString();
+	}
+
+	@Autowired
+	private IPractiseService practiseService;
+
+	@Autowired
+	private IExamService examService;
+
+	@Test
+	public void testCheckPractise() {
+		System.out.println(practiseService.searchOverduePractise());
+	}
+
+	@Test
+	public void testCheckExam() {
+		System.out.println(examService.searchOverdueExam());
 	}
 
 	@Test
@@ -114,19 +131,15 @@ public class SpringTest {
 		}
 	}
 
-	@Autowired
-	private IExamService examService;
-
-	
 	@Test
 	public void httpclientTest() {
 		System.out.println(EmailUtils.sendEmail("Jedeft@163.com", "测试邮件1"));
 		System.out.println(EmailUtils.sendEmail("Jedeft@163.com", "测试邮件2"));
 	}
-	
+
 	@Test
 	public void testString() {
 		String str = "www.baidu.com/adf/key";
-		System.out.println(str.substring(str.lastIndexOf("/")+1));
+		System.out.println(str.substring(str.lastIndexOf("/") + 1));
 	}
 }

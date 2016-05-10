@@ -2,6 +2,7 @@ package com.ncu.testbank.student.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -506,7 +507,7 @@ public class PractiseServiceImpl implements IPractiseService {
 
 	@Override
 	public List<PractiseView> searchData(String student_id) {
-		return practiseDao.searchData(new Long(student_id));
+		return practiseDao.searchData(student_id);
 	}
 
 	@Override
@@ -868,6 +869,11 @@ public class PractiseServiceImpl implements IPractiseService {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public List<Practise> searchOverduePractise() {
+		return practiseDao.searchOverduePractise(new Date());
 	}
 
 }

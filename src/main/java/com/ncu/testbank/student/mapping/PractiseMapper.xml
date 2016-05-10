@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ncu.testbank.teacher.dao.IPractiseDao" >
+<mapper namespace="com.ncu.testbank.student.dao.IPractiseDao" >
 
 	<resultMap id="BaseResultMap" type="com.ncu.testbank.student.data.Practise" >
 	  <id column="practise_id" property="practise_id"/>
@@ -56,6 +56,17 @@
 			practise 
 		WHERE
 			practise_id = #{practise_id }
+	</select>
+	
+	<select id="searchOverduePractise" resultMap="BaseResultMap" parameterType="java.util.Date">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			practise 
+		WHERE
+			status = 0
+		AND
+			#{now } > end_time
 	</select>
 	
 	<update id="updateStatus" parameterType="java.lang.Long">

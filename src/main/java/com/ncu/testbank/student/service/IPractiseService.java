@@ -59,4 +59,11 @@ public interface IPractiseService {
 	 * @param practise_id
 	 */
 	public void AutoCheckPractise(Long practise_id);
+
+	/**
+	 * 检索已过练习时间，未交卷的试卷
+	 * 
+	 * @return
+	 */
+	public List<Practise> searchOverduePractise();
 }

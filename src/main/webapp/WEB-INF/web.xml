@@ -11,7 +11,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring-mybatis.xml</param-value>
 	</context-param>
-
+	
 	<!-- 配置Shiro过滤器,先让Shiro过滤系统接收到的请求 -->
 	<!-- 这里filter-name必须对应applicationContext.xml中定义的<bean id="shiroFilter"/> -->
 	<!-- 使用[/*]匹配所有请求,保证所有的可控请求都经过Shiro的过滤 -->

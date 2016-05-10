@@ -96,6 +96,17 @@
 			exam_id = #{exam_id }
 	</select>
 	
+	<select id="searchOverdueExam" resultMap="BaseResultMap" parameterType="java.util.Date">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			exam 
+		WHERE
+			status = 0
+		AND
+			#{now } > end_time 
+	</select>
+	
 	<update id="updateStatus" parameterType="java.lang.Long">
 		UPDATE
 			exam

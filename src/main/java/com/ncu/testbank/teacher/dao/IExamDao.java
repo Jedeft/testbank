@@ -1,5 +1,6 @@
 package com.ncu.testbank.teacher.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +67,20 @@ public interface IExamDao {
 	 * @return
 	 */
 	public int updateStatus(Long exam_id);
-	
+
 	/**
 	 * 更改试卷分数
+	 * 
 	 * @param params
 	 * @return
 	 */
 	public int updateScore(Map<String, Object> params);
+
+	/**
+	 * 检索已过考试时间，未交卷的试卷
+	 * 
+	 * @param now
+	 * @return
+	 */
+	public List<Exam> searchOverdueExam(Date now);
 }

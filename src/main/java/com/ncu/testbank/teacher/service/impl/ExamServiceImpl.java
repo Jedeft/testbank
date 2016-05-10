@@ -2,6 +2,7 @@ package com.ncu.testbank.teacher.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1219,5 +1220,10 @@ public class ExamServiceImpl implements IExamService {
 		params.put("exam_id", exam_id);
 		params.put("score", score);
 		examDao.updateScore(params);
+	}
+
+	@Override
+	public List<Exam> searchOverdueExam() {
+		return examDao.searchOverdueExam(new Date());
 	}
 }

@@ -54,7 +54,7 @@
 	<select id="getOneByExamId" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		SELECT
 			t.template_id, course_id, name, single_num, multiple_num, judge_num, shortanswer_num, single_score, multiple_score, 
-			judge_score, shortanswer_score, level, easy_ratio, medium_ratio, hard_ratio, create_time, modify_time, user_id, type, point_id
+			judge_score, shortanswer_score, level, easy_ratio, medium_ratio, hard_ratio, create_time, modify_time, e.user_id, type, point_id
 		FROM
 			template t
 		INNER JOIN exam e on e.template_id = t.template_id

@@ -1,5 +1,6 @@
 package com.ncu.testbank.student.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public interface IPractiseDao {
 	 * @param student_id
 	 * @return
 	 */
-	public List<PractiseView> searchData(long student_id);
+	public List<PractiseView> searchData(String student_id);
 
 	/**
 	 * 根据练习ID获得练习信息
@@ -57,4 +58,12 @@ public interface IPractiseDao {
 	 * @return
 	 */
 	public int updateRightRatio(Map<String, Object> params);
+
+	/**
+	 * 检索已过练习时间，未交卷的试卷
+	 * 
+	 * @param now
+	 * @return
+	 */
+	public List<Practise> searchOverduePractise(Date now);
 }

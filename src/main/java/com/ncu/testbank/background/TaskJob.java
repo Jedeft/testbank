@@ -18,13 +18,15 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.ncu.testbank.admin.data.Teacher;
 import com.ncu.testbank.admin.service.ITeacherService;
 import com.ncu.testbank.base.utils.EmailUtils;
 import com.ncu.testbank.base.utils.JSONUtils;
+import com.ncu.testbank.student.data.Practise;
+import com.ncu.testbank.student.service.IPractiseService;
 import com.ncu.testbank.teacher.data.Exam;
 import com.ncu.testbank.teacher.data.Template;
 import com.ncu.testbank.teacher.data.params.ExamParams;
@@ -32,32 +34,32 @@ import com.ncu.testbank.teacher.service.IExamService;
 import com.ncu.testbank.teacher.service.ITemplateService;
 
 /**
- * 后台智能组卷程序
+ * 后台作业
  * 
  * @author Jedeft
+ * 
  */
-//TODO 后台需要重构，用quartz框架做作业调度
-//TODO 判断考试是否过了考试时间，过了考试时间的试卷自动改卷
-public class ExamExecutor {
+@Component
+public class TaskJob {
+	@Autowired
+	private IExamService examService;
 
 	@Autowired
-	private static IExamService examService;
+	private IPractiseService practiseService;
 
 	@Autowired
-	private static ITemplateService templateService;
+	private ITemplateService templateService;
 
 	@Autowired
-	private static ITeacherService teacherService;
+	private ITeacherService teacherService;
 
-	public static ExamExecutor executor = null;
+	private Logger log = Logger.getLogger("testbankLog");
 
-	private static Logger log = Logger.getLogger("testbankLog");
-
-	public static void main(String[] args) {
-		ApplicationContext ac = new ClassPathXmlApplicationContext(
-				"spring4background.xml");
-		executor = (ExamExecutor) ac.getBean("examExecutor");
-
+	/**
+	 * 检查队列，智能组卷
+	 */
+	@Scheduled(cron = "0/5 * * * * ?")
+	public void MQJob() {
 		Properties properties = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("activemq.properties");
@@ -134,4 +136,25 @@ public class ExamExecutor {
 		}
 	}
 
+	/**
+	 * 检查考试试卷状态，自动交卷改卷
+	 */
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void checkExamStatus() {
+		List<Exam> examList = examService.searchOverdueExam();
+		for (Exam exam : examList) {
+			examService.AutoCheckExam(exam.getExam_id());
+		}
+	}
+
+	/**
+	 * 检查练习试卷状态，自动交卷改卷
+	 */
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void checkPractiseStatus() {
+		List<Practise> practiseList = practiseService.searchOverduePractise();
+		for (Practise practise : practiseList) {
+			practiseService.AutoCheckPractise(practise.getPractise_id());
+		}
+	}
 }

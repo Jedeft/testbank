@@ -148,4 +148,11 @@ public interface IExamService {
 	 * @param exam_id
 	 */
 	public void AutoCheckExam(Long exam_id);
+
+	/**
+	 * 检索已过考试时间，未交卷的试卷
+	 * 
+	 * @return
+	 */
+	public List<Exam> searchOverdueExam();
 }
