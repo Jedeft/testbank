@@ -91,39 +91,36 @@ public class TaskJob {
 			connection.start();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			// 获取服务器上的消息
-			destination = session.createQueue("examQueue");
+			destination = session.createQueue(properties.getProperty("queueName"));
 			consumer = session.createConsumer(destination);
-			while (true) {
-				TextMessage message = (TextMessage) consumer.receive(100000);
-				if (null != message) {
-					String json = message.getText();
-					ExamParams examParams = JSONUtils.convertJson2Object(json,
-							ExamParams.class);
-					Template template = templateService.getOne(examParams
-							.getTemplate_id());
-					List<String> students = examParams.getStudent_id();
-					List<String> failStudents = new ArrayList<>();
-					for (String student_id : students) {
-						Exam exam = examService.createExam(template,
-								student_id, examParams.getStart_time(),
-								examParams.getEnd_time());
-						// 若组卷失败，那么返回null
-						if (exam == null) {
-							failStudents.add(student_id);
-						}
+			TextMessage message = (TextMessage) consumer.receive(100000);
+			if (null != message) {
+				String json = message.getText();
+				ExamParams examParams = JSONUtils.convertJson2Object(json,
+						ExamParams.class);
+				Template template = templateService.getOne(examParams
+						.getTemplate_id());
+				List<String> students = examParams.getStudent_id();
+				List<String> failStudents = new ArrayList<>();
+				for (String student_id : students) {
+					Exam exam = examService.createExam(template,
+							student_id, examParams.getStart_time(),
+							examParams.getEnd_time());
+					// 若组卷失败，那么返回null
+					if (exam == null) {
+						failStudents.add(student_id);
 					}
-					if (failStudents != null && failStudents.size() > 0) {
-						Teacher teacher = teacherService.getTeacher(examParams
-								.getTeacher_id());
-						EmailUtils.sendEmail(teacher.getEmail(), "组卷失败的同学学号为："
-								+ failStudents.toString() + "；请及时重新组卷，避免影响考试！");
-					}
-				} else {
-					break;
+				}
+				if (failStudents != null && failStudents.size() > 0) {
+					Teacher teacher = teacherService.getTeacher(examParams
+							.getTeacher_id());
+					EmailUtils.sendEmail(teacher.getEmail(), "组卷失败的同学学号为："
+							+ failStudents.toString() + "；请及时重新组卷，避免影响考试！");
 				}
 			}
-		} catch (JMSException e) {
+		} catch (Exception e) {
 			// TODO 后台程序崩溃，邮件通知管理员~
+			// Spring task的机制为，若当前作业抛出异常那么就会停止当前作业处理，并且不再调用后续其他作业的执行
 			log.error(e);
 		} finally {
 			try {

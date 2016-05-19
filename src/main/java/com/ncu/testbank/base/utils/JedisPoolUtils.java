@@ -45,8 +45,9 @@ public class JedisPoolUtils {
 			// 在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
 			config.setTestOnBorrow(true);
 			String host = property.getProperty("host");
+			String password = property.getProperty("password");
 			int port = Integer.valueOf(property.getProperty("port"));
-			pool = new JedisPool(config, host, port);
+			pool = new JedisPool(config, host, port, 500, password);
 		}
 		return pool;
 	}

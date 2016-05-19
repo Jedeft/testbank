@@ -92,9 +92,15 @@
 
 		<!-- swagger -->
 		<dependency>
-			<groupId>com.mangofactory</groupId>
-			<artifactId>swagger-springmvc</artifactId>
-			<version>1.0.0</version>
+		    <groupId>com.mangofactory</groupId>
+		    <artifactId>swagger-springmvc</artifactId>
+		    <version>1.0.2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>18.0</version>
 		</dependency>
 
 		<dependency>
@@ -300,7 +306,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>firstmaven</finalName>
+		<finalName>testbank</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
