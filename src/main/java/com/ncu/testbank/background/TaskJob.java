@@ -95,6 +95,7 @@ public class TaskJob {
 			consumer = session.createConsumer(destination);
 			while (true) {
 				//接收者接收消息的时间，这里为100秒
+				//参数：接收消息的超时时间，为0的话则不超时，receive返回下一个消息，但是超时了或者消费者被关闭，返回null
 				TextMessage message = (TextMessage) consumer.receive(100000);
 				if (null != message) {
 					String json = message.getText();
