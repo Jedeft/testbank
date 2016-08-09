@@ -94,6 +94,7 @@ public class TaskJob {
 			destination = session.createQueue("examQueue");
 			consumer = session.createConsumer(destination);
 			while (true) {
+				//接收者接收消息的时间，这里为100秒
 				TextMessage message = (TextMessage) consumer.receive(100000);
 				if (null != message) {
 					String json = message.getText();
