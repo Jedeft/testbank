@@ -114,12 +114,6 @@ public class TaskJob {
 							failStudents.add(student_id);
 						}
 					}
-					if (failStudents != null && failStudents.size() > 0) {
-						Teacher teacher = teacherService.getTeacher(examParams
-								.getTeacher_id());
-						EmailUtils.sendEmail(teacher.getEmail(), "组卷失败的同学学号为："
-								+ failStudents.toString() + "；请及时重新组卷，避免影响考试！");
-					}
 				}
 			}
 		} catch (Exception e) {
